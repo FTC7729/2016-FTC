@@ -76,7 +76,7 @@ public class FtcOpModeRegister implements OpModeRegister {
         /**
          * Register OpModes that use the annotation-based registration mechanism.
          */
-        manager.register("NullOp", NullOp.class);
+    //   manager.register("NullOp", NullOp.class);
 
         manager.register("Michael Jackson Moves", PushbotAutoDriveByTime_Linear.class);
 
