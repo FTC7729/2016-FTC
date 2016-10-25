@@ -35,7 +35,11 @@ import com.google.blocks.ftcrobotcontroller.runtime.BlocksOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 import com.qualcomm.robotcore.eventloop.opmode.AnnotatedOpModeRegistrar;
+
 import org.firstinspires.ftc.robotcontroller.external.samples.ConceptNullOp;
+import org.firstinspires.ftc.robotcontroller.external.samples.PushbotAutoDriveByTime_Linear;
+import org.firstinspires.ftc.robotcontroller.external.samples.PushbotTeleopPOV_Linear;
+import org.firstinspires.ftc.robotcontroller.external.samples.PushbotTeleopTank_Iterative;
 
 /**
  * {@link FtcOpModeRegister} is responsible for registering opmodes for use in an FTC game.
@@ -72,6 +76,16 @@ public class FtcOpModeRegister implements OpModeRegister {
         /**
          * Register OpModes that use the annotation-based registration mechanism.
          */
+        manager.register("NullOp", NullOp.class);
+
+        manager.register("Michael Jackson Moves", PushbotAutoDriveByTime_Linear.class);
+
+        manager.register("TeleOp Bot Config", PushbotTeleopPOV_Linear.class);
+
+        manager.register("TeleOp Tank Drive", PushbotTeleopTank_Iterative.class);
+
+
+
         AnnotatedOpModeRegistrar.register(manager);
 
         /**
