@@ -1,2 +1,7 @@
-include ':FtcRobotController'
-include ':TeamCode'
+//Libraries
+include ':opencv-java'
+include ':ftc-visionlib'
+
+//Demos and Tests
+include ':ftc-cameratest'
+include ':ftc-robotcontroller'
