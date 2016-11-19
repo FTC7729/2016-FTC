@@ -3,7 +3,7 @@ include ':opencv-java'
 include ':ftc-visionlib'
 
 //Demos and Tests
-//include ':ftc-cameratest'
+include ':ftc-cameratest'
 //include ':ftc-robotcontroller'
 include ':FtcRobotController'
 include ':TeamCode'
