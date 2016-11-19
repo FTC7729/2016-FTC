@@ -71,8 +71,8 @@ public class PushbotTeleopTank_Iterative extends OpMode{
     /* Declare OpMode members. */
     HardwarePushbot robot       = new HardwarePushbot(); // use the class created to define a Pushbot's hardware
     // could also use HardwarePushbotMatrix class.
-   double          clawOffset  = 0.0 ;                  // Servo mid position
-    final double    CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
+  // double          clawOffset  = 0.0 ;                  // Servo mid position
+   // final double    CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
 
 
     static final double     FORWARD_SPEED = 0.6;
@@ -194,6 +194,7 @@ public class PushbotTeleopTank_Iterative extends OpMode{
     /*
      * Code to run ONCE after the driver hits STOP
      */
+    //Assertion failed: stop() should be called only if start() called before
     @Override
     public void stop() {
     }
