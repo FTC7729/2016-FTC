@@ -37,6 +37,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 import com.qualcomm.robotcore.eventloop.opmode.AnnotatedOpModeRegistrar;
 
+import org.firstinspires.ftc.robotcontroller.external.samples.CameraTestVisionOpMode;
 import org.firstinspires.ftc.robotcontroller.external.samples.ConceptNullOp;
 import org.firstinspires.ftc.robotcontroller.external.samples.PushbotAutoDriveByTime_Linear;
 import org.firstinspires.ftc.robotcontroller.external.samples.PushbotTeleopPOV_Linear;
@@ -85,7 +86,9 @@ public class FtcOpModeRegister implements OpModeRegister {
 
         manager.register("TeleOp Tank Drive", PushbotTeleopTank_Iterative.class);
 
-        manager.register("TEST OP MODE", BasicVisionSample.class);
+        manager.register("Vision Telemetry", BasicVisionSample.class);
+
+        manager.register("Camera Vision With Screen", CameraTestVisionOpMode.class);
 
         AnnotatedOpModeRegistrar.register(manager);
 

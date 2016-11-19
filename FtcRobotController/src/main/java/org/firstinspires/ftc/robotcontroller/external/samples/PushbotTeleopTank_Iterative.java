@@ -36,6 +36,19 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.lasarobotics.vision.android.Cameras;
+import org.lasarobotics.vision.ftc.resq.Beacon;
+import org.lasarobotics.vision.image.Drawing;
+import org.lasarobotics.vision.opmode.TestableVisionOpMode;
+import org.lasarobotics.vision.opmode.extensions.CameraControlExtension;
+import org.lasarobotics.vision.util.ScreenOrientation;
+import org.lasarobotics.vision.util.color.Color;
+import org.lasarobotics.vision.util.color.ColorGRAY;
+import org.lasarobotics.vision.util.color.ColorRGBA;
+import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Size;
+
 /**
  * This file provides basic Telop driving for a Pushbot robot.
  * The code is structured as an Iterative OpMode
@@ -83,6 +96,8 @@ public class PushbotTeleopTank_Iterative extends OpMode{
      */
     @Override
     public void init_loop() {
+
+
     }
 
     /*
@@ -100,35 +115,41 @@ public class PushbotTeleopTank_Iterative extends OpMode{
         double left;
         double right;
 
-        // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-        left = -gamepad1.left_stick_y;
-        right = -gamepad1.right_stick_y;
-        robot.leftMotor.setPower(left);
-        robot.rightMotor.setPower(right);
-        robot.leftMotorBack.setPower(left);
-        robot.rightMotorBack.setPower(right);
+        if (gamepad1.dpad_right){
 
-
-//hold down for a few seconds it goes wild - fix strafing
-
-
-
-   /*
-        while (gamepad1.dpad_right){
-
-        strafeRight();
+            strafeRight();
 
 
         }
 
-        while (gamepad1.dpad_left){
+       else if (gamepad1.dpad_left){
 
             strafeLeft();
 
 
         }
 
-*/
+        else{
+            // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
+            left = -gamepad1.left_stick_y;
+            right = -gamepad1.right_stick_y;
+
+            robot.leftMotor.setPower(left);
+            robot.rightMotor.setPower(right);
+            robot.leftMotorBack.setPower(left);
+            robot.rightMotorBack.setPower(right);
+        }
+
+
+
+
+//hold down for a few seconds it goes wild - fix strafing
+
+
+
+
+
+
 
 
         // Use gamepad left & right Bumpers to open and close the claw
@@ -143,8 +164,7 @@ public class PushbotTeleopTank_Iterative extends OpMode{
 
 
         // Send telemetry message to signify robot running;
-        telemetry.addData("left",  "%.2f", left);
-        telemetry.addData("right", "%.2f", right);
+
     }
 
 
