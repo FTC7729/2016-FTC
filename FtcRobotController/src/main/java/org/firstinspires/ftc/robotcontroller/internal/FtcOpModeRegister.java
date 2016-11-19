@@ -30,6 +30,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package org.firstinspires.ftc.robotcontroller.internal;
+//package org.firstinspires.ftc.robotcontroller.
 
 import com.google.blocks.ftcrobotcontroller.runtime.BlocksOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
@@ -40,7 +41,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.ConceptNullOp;
 import org.firstinspires.ftc.robotcontroller.external.samples.PushbotAutoDriveByTime_Linear;
 import org.firstinspires.ftc.robotcontroller.external.samples.PushbotTeleopPOV_Linear;
 import org.firstinspires.ftc.robotcontroller.external.samples.PushbotTeleopTank_Iterative;
-
+import org.firstinspires.ftc.robotcontroller.external.samples.BasicVisionSample;
 /**
  * {@link FtcOpModeRegister} is responsible for registering opmodes for use in an FTC game.
  * @see #register(OpModeManager)
@@ -84,7 +85,7 @@ public class FtcOpModeRegister implements OpModeRegister {
 
         manager.register("TeleOp Tank Drive", PushbotTeleopTank_Iterative.class);
 
-
+        manager.register("TEST OP MODE", BasicVisionSample.class);
 
         AnnotatedOpModeRegistrar.register(manager);
 

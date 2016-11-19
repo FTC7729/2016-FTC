@@ -58,7 +58,7 @@ public class PushbotTeleopTank_Iterative extends OpMode{
     /* Declare OpMode members. */
     HardwarePushbot robot       = new HardwarePushbot(); // use the class created to define a Pushbot's hardware
     // could also use HardwarePushbotMatrix class.
-    double          clawOffset  = 0.0 ;                  // Servo mid position
+   double          clawOffset  = 0.0 ;                  // Servo mid position
     final double    CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
 
 
@@ -109,7 +109,11 @@ public class PushbotTeleopTank_Iterative extends OpMode{
         robot.rightMotorBack.setPower(right);
 
 
+//hold down for a few seconds it goes wild - fix strafing
 
+
+
+   /*
         while (gamepad1.dpad_right){
 
         strafeRight();
@@ -123,6 +127,8 @@ public class PushbotTeleopTank_Iterative extends OpMode{
 
 
         }
+
+*/
 
 
         // Use gamepad left & right Bumpers to open and close the claw
