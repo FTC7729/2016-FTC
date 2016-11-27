@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.robotcontroller.external.samples;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -25,11 +26,21 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class HardwarePushbot
 {
     /* Public OpMode members. */
+    /* Motor Controller 2 */
+    //public DcMotorController motorController2 = null;
+
+    /* motors per Motor Controller 2, back */
+    public DcMotor    leftMotorBack    = null;
+    public DcMotor    rightMotorBack   = null;
+
+    /* Motor Contoller 3 */
+    //public DcMotorController motorController3 = null;
+
+    /* motors per Motor Controller 3, front */
     public DcMotor  leftMotor   = null;
     public DcMotor  rightMotor  = null;
     public DcMotor  armMotor    = null;
-    public DcMotor    leftMotorBack    = null;
-    public DcMotor    rightMotorBack   = null;
+
 
     public static final double MID_SERVO       =  0.5 ;
     //public static final double ARM_UP_POWER    =  0.45 ;
@@ -51,10 +62,13 @@ public class HardwarePushbot
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftMotor   = hwMap.dcMotor.get("left_driveForward");
-        rightMotor  = hwMap.dcMotor.get("right_driveForward");
-        leftMotorBack = hwMap.dcMotor.get("left_driveBack");
-        rightMotorBack = hwMap.dcMotor.get("right_driveBack");
+       // motorController2 = hwMap.dcMotorController.get("Motor Controller 2");
+        leftMotorBack = hwMap.dcMotor.get("lB");
+        rightMotorBack = hwMap.dcMotor.get("rB");
+       // motorController3 = hwMap.dcMotorController.get("Motor Controller 3");
+        leftMotor   = hwMap.dcMotor.get("lF");
+        rightMotor  = hwMap.dcMotor.get("rF");
+
        // armMotor    = hwMap.dcMotor.get("left_arm");
         leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors

@@ -40,7 +40,7 @@ public class CameraTestVisionOpMode extends TestableVisionOpMode {
          * Larger = sometimes more accurate, but also much slower
          * After this method runs, it will set the "width" and "height" of the frame
          **/
-        this.setFrameSize(new Size(200, 200));
+        this.setFrameSize(new Size(900, 900));
 
         /**
          * Enable extensions. Use what you need.
@@ -48,7 +48,7 @@ public class CameraTestVisionOpMode extends TestableVisionOpMode {
          */
         enableExtension(Extensions.BEACON);         //Beacon detection
         enableExtension(Extensions.ROTATION);       //Automatic screen rotation correction
-       // enableExtension(Extensions.CAMERA_CONTROL); //Manual camera control
+        enableExtension(Extensions.CAMERA_CONTROL); //Manual camera control
 
         /**
          * Set the beacon analysis method
@@ -60,11 +60,6 @@ public class CameraTestVisionOpMode extends TestableVisionOpMode {
          * Set color tolerances
          * 0 is default, -1 is minimum and 1 is maximum tolerance
          */
-
-        //change color tolerance depending on what color team we are
-
-
-
         beacon.setColorToleranceRed(0);
         beacon.setColorToleranceBlue(0);
 
@@ -73,7 +68,7 @@ public class CameraTestVisionOpMode extends TestableVisionOpMode {
          * Enable this only if you're running test app - otherwise, you should turn it off
          * (Although it doesn't harm anything if you leave it on, only slows down image processing)
          */
-      //  beacon.enableDebug();
+        beacon.enableDebug();
 
         /**
          * Set the rotation parameters of the screen
@@ -89,8 +84,6 @@ public class CameraTestVisionOpMode extends TestableVisionOpMode {
         rotation.setIsUsingSecondaryCamera(false);
         rotation.disableAutoRotate();
         rotation.setActivityOrientationFixed(ScreenOrientation.LANDSCAPE);
-
-
         //rotation.setZeroOrientation(ScreenOrientation.LANDSCAPE_REVERSE);
 
         /**
