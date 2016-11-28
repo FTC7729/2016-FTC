@@ -35,6 +35,7 @@ package org.firstinspires.ftc.robotcontroller.external.samples;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.Range;
 
 import org.lasarobotics.vision.android.Cameras;
 import org.lasarobotics.vision.ftc.resq.Beacon;
@@ -48,6 +49,11 @@ import org.lasarobotics.vision.util.color.ColorRGBA;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Size;
+
+import static android.R.attr.scaleX;
+import static android.R.attr.x;
+import static android.R.attr.y;
+import static com.qualcomm.robotcore.util.Range.scale;
 
 /**
  * This file provides basic Telop driving for a Pushbot robot.
@@ -88,7 +94,7 @@ public class PushbotTeleopTank_Iterative extends OpMode{
         robot.init(hardwareMap);
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "Hello Driver");    //
+        telemetry.addData("Say", "Hello Driver :D! ");    //
     }
 
     /*
@@ -112,8 +118,23 @@ public class PushbotTeleopTank_Iterative extends OpMode{
      */
     @Override
     public void loop() {
+        /*
         double left;
         double right;
+        */
+        //
+        float left = -gamepad1.left_stick_y;
+        float right = -gamepad1.right_stick_y;
+
+
+        /*
+        motorRight.setPower(right);
+        motorLeft.setPower(left);
+        Before this you have to make sure to “clip” the joystick values to they never go above 1 and below -1, because those are the only value range that the motors now take.  To do this:
+        // clip the right/left values so that the values never exceed +/- 1
+        right = Range.clip(right, -1, 1);
+        left = Range.clip(left, -1, 1);
+         */
 
         if (gamepad1.dpad_right){
 
@@ -131,13 +152,17 @@ public class PushbotTeleopTank_Iterative extends OpMode{
 
         else{
             // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-            left = -gamepad1.left_stick_y;
-            right = -gamepad1.right_stick_y;
+            // This turns the robot around with the left joystick
 
             robot.leftMotor.setPower(left);
             robot.rightMotor.setPower(right);
             robot.leftMotorBack.setPower(left);
             robot.rightMotorBack.setPower(right);
+
+            //right = Range.clip(right, -1, 1);
+            //left = Range.clip(left, -1, 1);
+
+
         }
 
 
@@ -170,23 +195,71 @@ public class PushbotTeleopTank_Iterative extends OpMode{
 
     public void strafeRight(){
 
+            /*
+            rf: +1
+            lf: -1
+            rb: -1
+            lb: +1
 
+            rf: x
+            lf: -x
+            rb: -x
+            lb: x
+             ---- > together we have
+                rf: y+x
+                lf: y-x
+                rb: y-x
+                lb: y+x
+
+            ----- > how to do diagonals, turns
+            rf: -1
+            lf: +1
+            rb: -1
+            lb: +1
+
+                That's Z axis
+                rf: -z
+                lf: +z
+                rb: -z
+                lb: +z
+            --->>>> How put x+y+z together
+                    rf: y+x-z
+                    lf: y-x+z
+                    rb: y-x-z
+                    lb: y+x+z
+
+             */
+        /*
+            frontright.setPower(scale(y+x-z));
+            frontleft.setPower(scale(y-x+z));
+            backright.setPower(scale(y-x-z));
+            backleft.setPower(scale(y+x+z));
+         */
+        /*
+        robot.rightMotor.setPower(FORWARD_SPEED);
         robot.leftMotor.setPower(BACKWARDS_SPEED);
+        robot.rightMotorBack.setPower(BACKWARDS_SPEED);
         robot.leftMotorBack.setPower(FORWARD_SPEED);
+        */
+
+        robot.rightMotor.setPower(FORWARD_SPEED);
+        robot.leftMotor.setPower(BACKWARDS_SPEED);
+        robot.rightMotorBack.setPower(BACKWARDS_SPEED);
+        robot.leftMotorBack.setPower(FORWARD_SPEED);
+
         telemetry.addData("right", "%.2f", FORWARD_SPEED, BACKWARDS_SPEED);
 
-        robot.rightMotorBack.setPower(BACKWARDS_SPEED);
-        robot.rightMotor.setPower(FORWARD_SPEED);
+
     }
 
     public void strafeLeft(){
         robot.leftMotor.setPower(FORWARD_SPEED);
         robot.leftMotorBack.setPower(BACKWARDS_SPEED);
-
+        telemetry.addData("left", "%.2f", FORWARD_SPEED, BACKWARDS_SPEED);
         robot.rightMotorBack.setPower(FORWARD_SPEED);
         robot.rightMotor.setPower(BACKWARDS_SPEED);
 
-        telemetry.addData("right", "%.2f", FORWARD_SPEED, BACKWARDS_SPEED);
+
 
 
     }

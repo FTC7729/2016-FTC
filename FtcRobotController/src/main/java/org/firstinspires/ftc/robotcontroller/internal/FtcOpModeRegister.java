@@ -80,7 +80,7 @@ public class FtcOpModeRegister implements OpModeRegister {
          */
     //   manager.register("NullOp", NullOp.class);
 
-        manager.register("Michael Jackson Moves", PushbotAutoDriveByTime_Linear.class);
+     //   manager.register("Michael Jackson Moves", PushbotAutoDriveByTime_Linear.class);
 
         manager.register("TeleOp Bot Config", PushbotTeleopPOV_Linear.class);
 
