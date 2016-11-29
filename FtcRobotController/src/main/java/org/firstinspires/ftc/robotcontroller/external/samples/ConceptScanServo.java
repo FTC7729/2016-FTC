@@ -24,6 +24,8 @@ import com.qualcomm.robotcore.util.Range;
 @Autonomous(name = "Concept: Scan Servo", group = "Concept")
 //@Disabled
 public class ConceptScanServo extends LinearOpMode {
+    /* Declare OpMode members. */
+    HardwarePushbot robot           = new HardwarePushbot();   // Use a Pushbot's hardware
 
     static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
     static final int    CYCLE_MS    =   50;     // period of each cycle
@@ -33,7 +35,7 @@ public class ConceptScanServo extends LinearOpMode {
     public final static double SERVO_MIN_RANGE  = 0.20;
     public final static double SERVO_MAX_RANGE  = 0.90;
     // Define class members
-    Servo   servo;
+    //Servo   servo;
     double  position = (MAX_POS - MIN_POS) / 2; // Start at halfway position
     boolean rampUp = true;
     double servoPosition;
@@ -45,7 +47,8 @@ public class ConceptScanServo extends LinearOpMode {
         // Connect to servo (Assume PushBot Left Hand)
         // Change the text in quotes to match any servo name on your robot.
         //servo = hardwareMap.servo.get("left_hand");
-        servo = hardwareMap.servo.get("s1");
+        robot.init(hardwareMap);
+        //servo = hardwareMap.servo.get("s1");
         servoPosition = 0.5;
 
         // Wait for the start button
@@ -61,9 +64,9 @@ public class ConceptScanServo extends LinearOpMode {
 
             //double C1LX = gamepad1.left_stick_x;
             //double C1LY = -gamepad1.left_stick_x;
-            servo.setPosition(SERVO_HOME);
+            robot.servo1.setPosition(SERVO_HOME);
 
-            servo.scaleRange(SERVO_MIN_RANGE, SERVO_MAX_RANGE);
+            robot.servo1.scaleRange(SERVO_MIN_RANGE, SERVO_MAX_RANGE);
             telemetry.addData("Servo Range Min", "%5.2f", SERVO_MIN_RANGE);
             telemetry.addData("Servo Range Max", "%5.2f", SERVO_MAX_RANGE);
 
@@ -82,8 +85,8 @@ public class ConceptScanServo extends LinearOpMode {
                 servoPosition = Range.clip(servoPosition, 0, 1);
 
                 // write position values to the servo
-                servo.setPosition(servoPosition);
-                telemetry.addData("servo", servo.getPosition());
+            robot.servo1.setPosition(servoPosition);
+                telemetry.addData("servo", robot.servo1.getPosition());
             // slew the servo, according to the rampUp (direction) variable.
            /*
             if (rampUp) {
@@ -111,7 +114,7 @@ public class ConceptScanServo extends LinearOpMode {
             telemetry.update();
 
             // Set the servo to the new position and pause;
-            servo.setPosition(position);
+            robot.servo1.setPosition(position);
             sleep(CYCLE_MS);
             idle();
         }

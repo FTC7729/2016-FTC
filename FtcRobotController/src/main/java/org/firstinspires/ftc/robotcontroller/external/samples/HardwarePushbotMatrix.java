@@ -67,8 +67,8 @@ public class HardwarePushbotMatrix extends HardwarePushbot
          */
 
         // Initialize Matrix Motor and Servo objects
-        matrixMotorController = (MatrixDcMotorController)ahwMap.dcMotorController.get("matrix controller");
-        matrixServoController = ahwMap.servoController.get("matrix controller");
+        matrixMotorController = (MatrixDcMotorController)ahwMap.dcMotorController.get("Motor Controller");
+        matrixServoController = ahwMap.servoController.get("Servo Controller 1");
 
         // Enable Servos
         matrixServoController.pwmEnable();       // Don't forget to enable Matrix Output
