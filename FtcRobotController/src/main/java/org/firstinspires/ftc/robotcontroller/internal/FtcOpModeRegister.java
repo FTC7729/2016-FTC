@@ -88,7 +88,7 @@ public class FtcOpModeRegister implements OpModeRegister {
 
         manager.register("Vision Telemetry", BasicVisionSample.class);
 
-        manager.register("Camera Vision With Screen", CameraTestVisionOpMode.class);
+        manager.register("Camera Vision With Screen!", CameraTestVisionOpMode.class);
 
         AnnotatedOpModeRegistrar.register(manager);
 

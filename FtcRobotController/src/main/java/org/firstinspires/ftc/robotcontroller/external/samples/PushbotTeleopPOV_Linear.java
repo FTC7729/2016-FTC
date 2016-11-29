@@ -77,7 +77,7 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
         robot.init(hardwareMap);
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "Hello Driver");    //
+        telemetry.addData("Say", "Hello Driver -> I'm in POV_Linear");    //
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
@@ -101,6 +101,9 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
 
             robot.leftMotor.setPower(left);
             robot.rightMotor.setPower(right);
+            //adding back motors
+            robot.leftMotorBack.setPower(left);
+            robot.rightMotorBack.setPower(right);
 
             // Use gamepad left & right Bumpers to open and close the claw
 
