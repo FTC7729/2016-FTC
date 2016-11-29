@@ -42,6 +42,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.ConceptNullOp;
 import org.firstinspires.ftc.robotcontroller.external.samples.ConceptScanServo;
 import org.firstinspires.ftc.robotcontroller.external.samples.PushbotAutoDriveByTime_Linear;
 import org.firstinspires.ftc.robotcontroller.external.samples.PushbotTeleopPOV_Linear;
+import org.firstinspires.ftc.robotcontroller.external.samples.PushbotTeleopPOV_Linear_Auto;
 import org.firstinspires.ftc.robotcontroller.external.samples.PushbotTeleopTank_Iterative;
 import org.firstinspires.ftc.robotcontroller.external.samples.BasicVisionSample;
 /**
@@ -82,6 +83,7 @@ public class FtcOpModeRegister implements OpModeRegister {
     //   manager.register("NullOp", NullOp.class);
 
      //   manager.register("Michael Jackson Moves", PushbotAutoDriveByTime_Linear.class);
+        manager.register("AUTOMODE Bot Config - Move Me ", PushbotTeleopPOV_Linear_Auto.class);
 
         manager.register("TeleOp Bot Config - Move Me ", PushbotTeleopPOV_Linear.class);
 
