@@ -39,6 +39,7 @@ import com.qualcomm.robotcore.eventloop.opmode.AnnotatedOpModeRegistrar;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.CameraTestVisionOpMode;
 import org.firstinspires.ftc.robotcontroller.external.samples.ConceptNullOp;
+import org.firstinspires.ftc.robotcontroller.external.samples.ConceptScanServo;
 import org.firstinspires.ftc.robotcontroller.external.samples.PushbotAutoDriveByTime_Linear;
 import org.firstinspires.ftc.robotcontroller.external.samples.PushbotTeleopPOV_Linear;
 import org.firstinspires.ftc.robotcontroller.external.samples.PushbotTeleopTank_Iterative;
@@ -82,7 +83,9 @@ public class FtcOpModeRegister implements OpModeRegister {
 
      //   manager.register("Michael Jackson Moves", PushbotAutoDriveByTime_Linear.class);
 
-        manager.register("TeleOp Bot Config", PushbotTeleopPOV_Linear.class);
+        manager.register("TeleOp Bot Config - Move Me ", PushbotTeleopPOV_Linear.class);
+
+        manager.register("Servo - Side-Side ", ConceptScanServo.class);
 
         manager.register("TeleOp Tank Drive", PushbotTeleopTank_Iterative.class);
 
