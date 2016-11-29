@@ -63,6 +63,8 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
     HardwarePushbot robot           = new HardwarePushbot();   // Use a Pushbot's hardware
                                                                // could also use HardwarePushbotMatrix class.
     double          clawOffset      = 0;                       // Servo mid position
+    private double scoopUp;
+    private double scoopDown;
 
 
     @Override
@@ -70,6 +72,7 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
         double left;
         double right;
         double max;
+        double scoop;
 
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
@@ -90,6 +93,9 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
             // In this mode the Left stick moves the robot fwd and back, the Right stick turns left and right.
             left  = -gamepad1.left_stick_y + gamepad1.right_stick_x;
             right = -gamepad1.left_stick_y - gamepad1.right_stick_x;
+            scoopUp = -gamepad1.left_stick_x;
+            //scoopDown = gamepad1.left_stick_x;
+
 
             // Normalize the values so neither exceed +/- 1.0
             max = Math.max(Math.abs(left), Math.abs(right));
@@ -104,6 +110,8 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
             //adding back motors
             robot.leftMotorBack.setPower(left);
             robot.rightMotorBack.setPower(right);
+
+            robot.spinMotor.setPower(scoopUp);
 
             // Use gamepad left & right Bumpers to open and close the claw
 
