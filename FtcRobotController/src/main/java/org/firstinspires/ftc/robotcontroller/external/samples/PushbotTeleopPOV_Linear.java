@@ -65,6 +65,10 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
     double          clawOffset      = 0;                       // Servo mid position
     private double scoopUp;
     private double scoopDown;
+    private double servroMe;
+    public final static double SERVO_HOME = 0.2;
+    public final static double SERVO_MIN_RANGE  = 0.20;
+    public final static double SERVO_MAX_RANGE  = 0.90;
 
 
     @Override
@@ -93,8 +97,16 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
             // In this mode the Left stick moves the robot fwd and back, the Right stick turns left and right.
             left  = -gamepad1.left_stick_y + gamepad1.right_stick_x;
             right = -gamepad1.left_stick_y - gamepad1.right_stick_x;
-            scoopUp = -gamepad1.left_stick_x;
+            // we know the left_stick_x works
+            //scoopUp = -gamepad1.left_stick_x;
+            // we know the gamepad1.right_trigger - more detail control works
+            //scoopUp = gamepad1.right_trigger;
+            // we know the gamepad1.left_trigger - more detail control works
+            //scoopUp = gamepad1.left_trigger;
+            scoopUp = -gamepad1.left_trigger;
             //scoopDown = gamepad1.left_stick_x;
+            servroMe = -gamepad1.right_stick_x;
+
 
 
             // Normalize the values so neither exceed +/- 1.0
@@ -113,6 +125,16 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
 
             robot.spinMotor.setPower(scoopUp);
 
+            /* working on Servo - still not working - hw problem?*/
+
+            if (gamepad1.y) {
+                robot.servo1.setPosition(SERVO_HOME);
+            }
+
+            if (gamepad1.a) {
+                robot.servo1.setPosition(SERVO_MAX_RANGE);
+            }
+
             // Use gamepad left & right Bumpers to open and close the claw
 
 
@@ -125,6 +147,8 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
             telemetry.addData("claw",  "Offset = %.2f", clawOffset);
             telemetry.addData("left",  "%.2f", left);
             telemetry.addData("right", "%.2f", right);
+            telemetry.addData("scoopUp", "%.2f", scoopUp);
+            telemetry.addData("servo1", "%.2f", servroMe);
             telemetry.update();
 
             // Pause for metronome tick.  40 mS each cycle = update 25 times a second.
