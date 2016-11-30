@@ -85,7 +85,7 @@ public class FtcOpModeRegister implements OpModeRegister {
      //   manager.register("Michael Jackson Moves", PushbotAutoDriveByTime_Linear.class);
         manager.register("AUTOMODE Bot Config - Move Me ", PushbotTeleopPOV_Linear_Auto.class);
 
-        manager.register("TeleOp Bot Config - Move Me ", PushbotTeleopPOV_Linear.class);
+        manager.register("TeleOp Bot Config - Move Me! ", PushbotTeleopPOV_Linear.class);
 
         manager.register("Servo - Side-Side ", ConceptScanServo.class);
 

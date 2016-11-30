@@ -98,12 +98,12 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
             left  = -gamepad1.left_stick_y + gamepad1.right_stick_x;
             right = -gamepad1.left_stick_y - gamepad1.right_stick_x;
             // we know the left_stick_x works
-            //scoopUp = -gamepad1.left_stick_x;
+            scoopUp = -gamepad1.left_stick_x;
             // we know the gamepad1.right_trigger - more detail control works
             //scoopUp = gamepad1.right_trigger;
             // we know the gamepad1.left_trigger - more detail control works
             //scoopUp = gamepad1.left_trigger;
-            scoopUp = -gamepad1.left_trigger;
+           // scoopUp = -gamepad1.left_trigger;
             //scoopDown = gamepad1.left_stick_x;
             servroMe = -gamepad1.right_stick_x;
 
