@@ -91,9 +91,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     android:layout_height="match_parent"
     android:keepScreenOn="true"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin" >
+ >
 
     <TextView
       android:id="@+id/textNetworkConnectionStatus"
@@ -124,13 +122,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       android:layout_below="@+id/textOpMode"
       android:layout_above="@+id/textGamepad1">
 
-      <LinearLayout
-          android:id="@+id/cameraMonitorViewId"
+      <LinearLayout>
+         <org.opencv.android.JavaCameraView
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          android:orientation="vertical"
-          />
+          android:id="@+id/cameraMonitorViewId"
 
+          />
+      </LinearLayout>
       <!-- When visible, the error message will overlay and thus partially
            obscure part of the camera monitor. We make this trade off so as to
            allow for a bigger camera monitor view in the common case when the

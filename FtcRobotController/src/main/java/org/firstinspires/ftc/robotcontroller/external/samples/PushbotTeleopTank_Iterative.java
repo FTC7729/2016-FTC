@@ -247,18 +247,21 @@ public class PushbotTeleopTank_Iterative extends OpMode{
         robot.rightMotorBack.setPower(BACKWARDS_SPEED);
         robot.leftMotorBack.setPower(FORWARD_SPEED);
 
-        telemetry.addData("right", "%.2f", FORWARD_SPEED, BACKWARDS_SPEED);
+        //telemetry.addData("right", "%.2f", FORWARD_SPEED, BACKWARDS_SPEED);
 
 
     }
 
     public void strafeLeft(){
-        robot.leftMotor.setPower(FORWARD_SPEED);
-        robot.leftMotorBack.setPower(BACKWARDS_SPEED);
-        telemetry.addData("left", "%.2f", FORWARD_SPEED, BACKWARDS_SPEED);
-        robot.rightMotorBack.setPower(FORWARD_SPEED);
-        robot.rightMotor.setPower(BACKWARDS_SPEED);
 
+        robot.rightMotor.setPower(BACKWARDS_SPEED);
+        robot.leftMotor.setPower(FORWARD_SPEED);
+        robot.rightMotorBack.setPower(FORWARD_SPEED);
+        robot.leftMotorBack.setPower(BACKWARDS_SPEED);
+
+
+
+//        telemetry.addData("left", "%.2f", FORWARD_SPEED, BACKWARDS_SPEED);
 
 
 

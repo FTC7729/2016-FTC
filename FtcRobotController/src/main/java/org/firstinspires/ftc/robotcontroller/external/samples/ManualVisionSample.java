@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.robotcontroller.external.samples;
 
+import com.qualcomm.ftcrobotcontroller.R;
+
 import org.lasarobotics.vision.android.Cameras;
 import org.lasarobotics.vision.detection.ColorBlobDetector;
 import org.lasarobotics.vision.ftc.resq.Beacon;
@@ -28,6 +30,8 @@ public class ManualVisionSample extends ManualVisionOpMode {
     private Beacon.BeaconAnalysis colorAnalysis = new Beacon.BeaconAnalysis();
     private ColorBlobDetector detectorRed;
     private ColorBlobDetector detectorBlue;
+
+
 
     @Override
     public void init() {

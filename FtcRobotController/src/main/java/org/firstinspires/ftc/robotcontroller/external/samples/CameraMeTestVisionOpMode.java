@@ -9,6 +9,7 @@ import org.lasarobotics.vision.android.Cameras;
 import org.lasarobotics.vision.ftc.resq.Beacon;
 import org.lasarobotics.vision.image.Drawing;
 import org.lasarobotics.vision.opmode.TestableVisionOpMode;
+import org.lasarobotics.vision.opmode.VisionOpMode;
 import org.lasarobotics.vision.opmode.extensions.CameraControlExtension;
 import org.lasarobotics.vision.util.ScreenOrientation;
 import org.lasarobotics.vision.util.color.Color;
@@ -22,7 +23,8 @@ import org.opencv.core.Size;
  * Vision OpMode run by the Camera Test Activity
  * Use TestableVisionOpModes in testing apps ONLY (but you can easily convert between opmodes just by changingt t
  */
-public class CameraTestVisionOpMode extends TestableVisionOpMode {
+public class CameraMeTestVisionOpMode extends VisionOpMode {
+    private Beacon.BeaconAnalysis colorAnalysis = new Beacon.BeaconAnalysis();
 
     @Override
     public void init() {
@@ -40,7 +42,7 @@ public class CameraTestVisionOpMode extends TestableVisionOpMode {
          * Larger = sometimes more accurate, but also much slower
          * After this method runs, it will set the "width" and "height" of the frame
          **/
-        this.setFrameSize(new Size(900, 900));
+        this.setFrameSize(new Size(200, 200));
 
         /**
          * Enable extensions. Use what you need.
@@ -48,7 +50,7 @@ public class CameraTestVisionOpMode extends TestableVisionOpMode {
          */
         enableExtension(Extensions.BEACON);         //Beacon detection
         enableExtension(Extensions.ROTATION);       //Automatic screen rotation correction
-        enableExtension(Extensions.CAMERA_CONTROL); //Manual camera control
+       // enableExtension(Extensions.CAMERA_CONTROL); //Manual camera control
 
         /**
          * Set the beacon analysis method
@@ -60,6 +62,11 @@ public class CameraTestVisionOpMode extends TestableVisionOpMode {
          * Set color tolerances
          * 0 is default, -1 is minimum and 1 is maximum tolerance
          */
+
+        //change color tolerance depending on what color team we are
+
+
+
         beacon.setColorToleranceRed(0);
         beacon.setColorToleranceBlue(0);
 
@@ -68,7 +75,7 @@ public class CameraTestVisionOpMode extends TestableVisionOpMode {
          * Enable this only if you're running test app - otherwise, you should turn it off
          * (Although it doesn't harm anything if you leave it on, only slows down image processing)
          */
-        beacon.enableDebug();
+      //  beacon.enableDebug();
 
         /**
          * Set the rotation parameters of the screen
@@ -83,7 +90,9 @@ public class CameraTestVisionOpMode extends TestableVisionOpMode {
          */
         rotation.setIsUsingSecondaryCamera(false);
         rotation.disableAutoRotate();
-        rotation.setActivityOrientationFixed(ScreenOrientation.LANDSCAPE);
+        //rotation.setActivityOrientationFixed(ScreenOrientation.LANDSCAPE);
+        rotation.setActivityOrientationFixed(ScreenOrientation.PORTRAIT);
+
         //rotation.setZeroOrientation(ScreenOrientation.LANDSCAPE_REVERSE);
 
         /**
@@ -99,6 +108,10 @@ public class CameraTestVisionOpMode extends TestableVisionOpMode {
     @Override
     public void loop() {
         super.loop();
+        telemetry.addData("Vision FPS", fps.getFPSString());
+        telemetry.addData("Vision Color", colorAnalysis.getColorString());
+        //telemetry.addData("Analysis Confidence", colorAnalysis.getConfidenceString());
+        telemetry.addData("Vision Size", "Width: " + width + " Height: " + height);
     }
 
     @Override

@@ -37,9 +37,12 @@ import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 import com.qualcomm.robotcore.eventloop.opmode.AnnotatedOpModeRegistrar;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.CameraTestVisionOpMode;
+
+import org.firstinspires.ftc.robotcontroller.external.samples.CameraMeTestVisionOpMode;
 import org.firstinspires.ftc.robotcontroller.external.samples.ConceptNullOp;
 import org.firstinspires.ftc.robotcontroller.external.samples.ConceptScanServo;
+import org.firstinspires.ftc.robotcontroller.external.samples.LinearVisionSample;
+import org.firstinspires.ftc.robotcontroller.external.samples.ManualVisionSample;
 import org.firstinspires.ftc.robotcontroller.external.samples.PushbotAutoDriveByTime_Linear;
 import org.firstinspires.ftc.robotcontroller.external.samples.PushbotTeleopPOV_Linear;
 import org.firstinspires.ftc.robotcontroller.external.samples.PushbotTeleopPOV_Linear_Auto;
@@ -83,17 +86,25 @@ public class FtcOpModeRegister implements OpModeRegister {
     //   manager.register("NullOp", NullOp.class);
 
      //   manager.register("Michael Jackson Moves", PushbotAutoDriveByTime_Linear.class);
-        manager.register("AUTOMODE Bot Config - Move Me ", PushbotTeleopPOV_Linear_Auto.class);
+     //   manager.register("AUTOMODE Bot Config - Move Me ", PushbotTeleopPOV_Linear_Auto.class);
 
         manager.register("TeleOp Bot Config - Move Me! ", PushbotTeleopPOV_Linear.class);
 
         manager.register("Servo - Side-Side ", ConceptScanServo.class);
 
         manager.register("TeleOp Tank Drive", PushbotTeleopTank_Iterative.class);
+        manager.register("Camera Work Please?", CameraMeTestVisionOpMode.class);
 
-        manager.register("Vision Telemetry", BasicVisionSample.class);
+        //Linear vision works
+        manager.register("LinearVision??", LinearVisionSample.class);
+        manager.register("ManVision??", ManualVisionSample.class);
 
-        manager.register("Camera Vision With Screen!", CameraTestVisionOpMode.class);
+
+        // manager.register("Vision Telemetry", BasicVisionSample.class);
+
+       // manager.register("V");
+
+        //manager.register("Camera Vision With Screen!", CameraTestVisionOpMode.class);
 
         AnnotatedOpModeRegistrar.register(manager);
 

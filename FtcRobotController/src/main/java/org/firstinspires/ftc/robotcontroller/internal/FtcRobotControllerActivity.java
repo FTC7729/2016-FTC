@@ -40,16 +40,20 @@ import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
+//import android.hardware.camera2.CameraDevice;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -71,6 +75,7 @@ import com.qualcomm.ftccommon.LaunchActivityConstantsList;
 import com.qualcomm.ftccommon.ProgrammingModeController;
 import com.qualcomm.ftccommon.Restarter;
 import org.firstinspires.ftc.ftccommon.external.SoundPlayingRobotMonitor;
+//import org.firstinspires.ftc.robotcontroller.external.samples.CameraMeTestVisionOpMode;
 import com.qualcomm.ftccommon.UpdateUI;
 import com.qualcomm.ftccommon.configuration.EditParameters;
 import com.qualcomm.ftccommon.configuration.FtcLoadFileActivity;
@@ -89,20 +94,42 @@ import com.qualcomm.robotcore.wifi.NetworkConnectionFactory;
 import com.qualcomm.robotcore.wifi.NetworkType;
 import com.qualcomm.robotcore.wifi.WifiDirectAssistant;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.CameraTestVisionOpMode;
+//import org.firstinspires.ftc.robotcontroller.external.samples.CameraTestVisionOpMode;
 import org.firstinspires.ftc.robotcore.internal.AppUtil;
 import org.firstinspires.inspection.RcInspectionActivity;
 import org.lasarobotics.vision.opmode.TestableVisionOpMode;
 import org.lasarobotics.vision.opmode.VisionEnabledActivity;
+
+import org.lasarobotics.vision.android.Cameras;
+import org.lasarobotics.vision.ftc.resq.Beacon;
+import org.lasarobotics.vision.image.Drawing;
+import org.lasarobotics.vision.opmode.VisionOpMode;
+import org.lasarobotics.vision.opmode.extensions.CameraControlExtension;
+import org.lasarobotics.vision.util.ScreenOrientation;
+import org.lasarobotics.vision.util.color.Color;
+import org.lasarobotics.vision.util.color.ColorGRAY;
+import org.lasarobotics.vision.util.color.ColorRGBA;
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.CameraBridgeViewBase;
+import org.opencv.android.JavaCameraView;
+import org.opencv.android.OpenCVLoader;
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Size;
 
 import java.io.File;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 
-public class FtcRobotControllerActivity extends Activity {
+public class FtcRobotControllerActivity extends Activity implements CameraBridgeViewBase.CvCameraViewListener2{
 
   public static final String TAG = "RCActivity";
+  //make an instance of cameraMonitorViewId
+  JavaCameraView cameraMonitorView;
+  Mat nRgba;
+
 
   private static final int REQUEST_CONFIG_WIFI_CHANNEL = 1;
   private static final boolean USE_DEVICE_EMULATION = false;
@@ -138,6 +165,23 @@ public class FtcRobotControllerActivity extends Activity {
 
   protected FtcEventLoop eventLoop;
   protected Queue<UsbDevice> receivedUsbAttachmentNotifications;
+
+  @Override
+  public void onCameraViewStarted(int width, int height) {
+    nRgba = new Mat (height, width, CvType.CV_8SC4);
+  }
+
+  @Override
+  public void onCameraViewStopped() {
+    nRgba.release();
+  }
+
+  @Override
+  public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
+    nRgba = inputFrame.rgba();
+
+    return nRgba;
+  }
 
   protected class RobotRestarter implements Restarter {
 
@@ -206,6 +250,12 @@ public class FtcRobotControllerActivity extends Activity {
     eventLoop = null;
 
     setContentView(R.layout.activity_ftc_controller);
+    //javaCameraView = (JavaCameraView)findViewById(R.id.cameraMonitorViewId);
+    cameraMonitorView = (JavaCameraView)findViewById(R.id.cameraMonitorViewId);
+    cameraMonitorView.setVisibility(SurfaceView.VISIBLE);
+    cameraMonitorView.setCvCameraViewListener(this);
+
+    //initalizeVision(R.id.cameraMonitorViewId);
 
     context = this;
     utility = new Utility(this);
@@ -282,6 +332,7 @@ public class FtcRobotControllerActivity extends Activity {
     super.onStart();
     RobotLog.vv(TAG, "onStart()");
 
+
     // Undo the effects of shutdownRobot() that we might have done in onStop()
     updateUIAndRequestRobotSetup();
 
@@ -301,12 +352,23 @@ public class FtcRobotControllerActivity extends Activity {
     super.onResume();
     RobotLog.vv(TAG, "onResume()");
     readNetworkType(NETWORK_TYPE_FILENAME);
+
+    if(OpenCVLoader.initDebug()){
+      Log.i(TAG, "Opencv Loaded dude");
+
+    }
+    else{
+      Log.i(TAG, "Opencv NOT loaded :( ");
+    }
+
   }
 
   @Override
   public void onPause() {
     super.onPause();
     RobotLog.vv(TAG, "onPause()");
+    if(cameraMonitorView!=null)
+      cameraMonitorView.disableView();
     if (programmingModeController.isActive()) {
       programmingModeController.stopProgrammingMode();
     }
@@ -327,6 +389,8 @@ public class FtcRobotControllerActivity extends Activity {
   public void onDestroy() {
     super.onDestroy();
     RobotLog.vv(TAG, "onDestroy()");
+    if(cameraMonitorView!=null)
+      cameraMonitorView.disableView();
 
     unbindFromService();
     wifiLock.release();
@@ -532,4 +596,11 @@ public class FtcRobotControllerActivity extends Activity {
       });
     }
   }
+
+
+
 }
+
+
+
+

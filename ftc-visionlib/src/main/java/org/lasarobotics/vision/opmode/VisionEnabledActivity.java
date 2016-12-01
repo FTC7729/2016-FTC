@@ -46,7 +46,7 @@ public abstract class VisionEnabledActivity extends Activity implements CameraBr
 
     }
 
-    protected final void initializeVision(int framePreview, TestableVisionOpMode opMode) {
+    protected final void initializeVision(int framePreview) {
         openCVCamera = (CameraBridgeViewBase) findViewById(framePreview);
         openCVCamera.setVisibility(SurfaceView.VISIBLE);
         openCVCamera.setCvCameraViewListener(this);
@@ -56,7 +56,8 @@ public abstract class VisionEnabledActivity extends Activity implements CameraBr
         opMode.sensors = new Sensors();
         opMode.fps = new FPS();
         //FIXME this is the line that causes glitchiness
-        TestableVisionOpMode.openCVCamera = (JavaCameraView) openCVCamera;
+        //TestableVisionOpMode.openCVCamera = (JavaCameraView) openCVCamera;
+        VisionOpMode.openCVCamera = (JavaCameraView) openCVCamera;
     }
 
     @Override
