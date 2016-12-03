@@ -65,6 +65,9 @@ public class PushbotTeleopPOV_Linear_Auto extends LinearOpMode {
     public final static double SERVO_HOME = 0.2;
     public final static double SERVO_MIN_RANGE  = 0.20;
     public final static double SERVO_MAX_RANGE  = 0.90;
+    static final double     FORWARD_SPEED = 0.6;
+    static final double     BACKWARDS_SPEED    = -0.6;
+
 
 
     @Override
@@ -101,7 +104,21 @@ public class PushbotTeleopPOV_Linear_Auto extends LinearOpMode {
 
 
         // Wait for the game to start (driver presses PLAY)
+
+
         waitForStart();
+
+        DriveForwardTime(FORWARD_SPEED, 1000);
+
+
+        DriveRightTime(FORWARD_SPEED, 1000);
+
+        DriveLeftTime(FORWARD_SPEED, 1000);
+
+        DriveLeftTime(FORWARD_SPEED, 1000);
+
+        DriveBackTime(FORWARD_SPEED, 1000);
+
 // setting values and motors
 
         //robot.leftMotor.setPower(1);
@@ -116,23 +133,23 @@ public class PushbotTeleopPOV_Linear_Auto extends LinearOpMode {
         // Can we make variables here?
 
         // go forward?
-        DriveForward(1);
+       // DriveForward(FORWARD_SPEED);
 
         // go back?
-        DriveBack(-1);
+       // DriveBack(BACKWARDS_SPEED);
 
         // go right?
-        TurnMeRight(1);
+       // TurnMeRight(FORWARD_SPEED);
 
 
         //go left?
-        TurnMeLeft(1);
+        //TurnMeLeft(FORWARD_SPEED);
 
         // stopping
         DriveStop();
         
         // combine time and turn together
-        DriveForwardTime(1, 4000);
+       // DriveForwardTime(1, 4000);
 
 
 
@@ -206,6 +223,27 @@ public class PushbotTeleopPOV_Linear_Auto extends LinearOpMode {
     private void DriveForwardTime(double power, long time) throws InterruptedException{
 
         DriveForward(power);
+        Thread.sleep(time);
+        // the thread.sleep could throw an exception -> for later times
+    }
+
+    private void DriveBackTime(double power, long time) throws InterruptedException{
+
+        DriveBack(power);
+        Thread.sleep(time);
+        // the thread.sleep could throw an exception -> for later times
+    }
+
+    private void DriveRightTime(double power, long time) throws InterruptedException{
+
+        TurnMeRight(power);
+        Thread.sleep(time);
+        // the thread.sleep could throw an exception -> for later times
+    }
+
+    private void DriveLeftTime(double power, long time) throws InterruptedException{
+
+        TurnMeLeft(power);
         Thread.sleep(time);
         // the thread.sleep could throw an exception -> for later times
     }

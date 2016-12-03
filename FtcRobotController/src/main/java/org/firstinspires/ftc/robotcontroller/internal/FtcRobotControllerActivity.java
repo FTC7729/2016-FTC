@@ -123,8 +123,8 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 
-public class FtcRobotControllerActivity extends Activity implements CameraBridgeViewBase.CvCameraViewListener2{
-
+//public class FtcRobotControllerActivity extends Activity implements CameraBridgeViewBase.CvCameraViewListener2{
+public class FtcRobotControllerActivity extends Activity{
   public static final String TAG = "RCActivity";
   //make an instance of cameraMonitorViewId
   JavaCameraView cameraMonitorView;
@@ -166,7 +166,7 @@ public class FtcRobotControllerActivity extends Activity implements CameraBridge
   protected FtcEventLoop eventLoop;
   protected Queue<UsbDevice> receivedUsbAttachmentNotifications;
 
-  @Override
+/*  @Override
   public void onCameraViewStarted(int width, int height) {
     nRgba = new Mat (height, width, CvType.CV_8SC4);
   }
@@ -182,7 +182,7 @@ public class FtcRobotControllerActivity extends Activity implements CameraBridge
 
     return nRgba;
   }
-
+*/
   protected class RobotRestarter implements Restarter {
 
     public void requestRestart() {
@@ -248,12 +248,12 @@ public class FtcRobotControllerActivity extends Activity implements CameraBridge
 
     receivedUsbAttachmentNotifications = new ConcurrentLinkedQueue<UsbDevice>();
     eventLoop = null;
-
+    getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     setContentView(R.layout.activity_ftc_controller);
     //javaCameraView = (JavaCameraView)findViewById(R.id.cameraMonitorViewId);
     cameraMonitorView = (JavaCameraView)findViewById(R.id.cameraMonitorViewId);
-    cameraMonitorView.setVisibility(SurfaceView.VISIBLE);
-    cameraMonitorView.setCvCameraViewListener(this);
+    //cameraMonitorView.setVisibility(SurfaceView.VISIBLE);
+    //cameraMonitorView.setCvCameraViewListener(this);
 
     //initalizeVision(R.id.cameraMonitorViewId);
 
@@ -353,13 +353,13 @@ public class FtcRobotControllerActivity extends Activity implements CameraBridge
     RobotLog.vv(TAG, "onResume()");
     readNetworkType(NETWORK_TYPE_FILENAME);
 
-    if(OpenCVLoader.initDebug()){
-      Log.i(TAG, "Opencv Loaded dude");
+   // if(OpenCVLoader.initDebug()){
+   //   Log.i(TAG, "Opencv Loaded dude");
 
-    }
-    else{
-      Log.i(TAG, "Opencv NOT loaded :( ");
-    }
+   // }
+  //  else{
+  //    Log.i(TAG, "Opencv NOT loaded :( ");
+  //  }
 
   }
 
@@ -367,11 +367,11 @@ public class FtcRobotControllerActivity extends Activity implements CameraBridge
   public void onPause() {
     super.onPause();
     RobotLog.vv(TAG, "onPause()");
-    if(cameraMonitorView!=null)
-      cameraMonitorView.disableView();
-    if (programmingModeController.isActive()) {
-      programmingModeController.stopProgrammingMode();
-    }
+   // if(cameraMonitorView!=null)
+  //    cameraMonitorView.disableView();
+  //b  if (programmingModeController.isActive()) {
+  //    programmingModeController.stopProgrammingMode();
+  //  }
   }
 
   @Override
@@ -389,8 +389,8 @@ public class FtcRobotControllerActivity extends Activity implements CameraBridge
   public void onDestroy() {
     super.onDestroy();
     RobotLog.vv(TAG, "onDestroy()");
-    if(cameraMonitorView!=null)
-      cameraMonitorView.disableView();
+ //   if(cameraMonitorView!=null)
+ //     cameraMonitorView.disableView();
 
     unbindFromService();
     wifiLock.release();
