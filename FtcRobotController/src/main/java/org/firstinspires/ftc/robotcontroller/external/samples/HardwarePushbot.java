@@ -40,7 +40,7 @@ public class HardwarePushbot
     public DcMotor  leftMotor   = null;
     public DcMotor  rightMotor  = null;
     public DcMotor  spinMotor    = null;
-
+    public  DcMotor picker = null;
 
     public static final double MID_SERVO       =  0.5 ;
     //public static final double ARM_UP_POWER    =  0.45 ;
@@ -71,6 +71,8 @@ public class HardwarePushbot
         leftMotor   = hwMap.dcMotor.get("lF");
         rightMotor  = hwMap.dcMotor.get("rF");
 
+
+        picker = hwMap.dcMotor.get("picker");
         spinMotor    = hwMap.dcMotor.get("spin");
         leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors

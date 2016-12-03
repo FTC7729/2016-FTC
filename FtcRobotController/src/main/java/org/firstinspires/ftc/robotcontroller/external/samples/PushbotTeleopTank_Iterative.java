@@ -83,6 +83,8 @@ public class PushbotTeleopTank_Iterative extends OpMode{
 
     static final double     FORWARD_SPEED = 0.6;
     static final double     BACKWARDS_SPEED    = -0.6;
+    public double              spinnerSpeed = .10;
+
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -149,6 +151,50 @@ public class PushbotTeleopTank_Iterative extends OpMode{
 
 
         }
+
+        else if (gamepad1.b){
+            // notifies user that launcher will shoot ball
+            telemetry.addData("Robot Status", "Shooting ball !");
+
+
+            for( int i=1;  i<3; i++){
+               // spinnerSpeed = spinnerSpeed
+
+                robot.spinMotor.setPower(spinnerSpeed);
+
+
+
+
+                try {
+                    Thread.sleep(10);
+                }catch (InterruptedException e){
+                    e.printStackTrace();
+                }
+
+
+
+                if (spinnerSpeed == .6){
+
+                    robot.picker.setPower(.3);
+                    try {
+                        Thread.sleep(10);
+                    }catch (InterruptedException e){
+                        e.printStackTrace();
+                    }
+
+                    return;
+                }
+
+            }
+
+
+
+
+
+        }
+
+
+
 
         else{
             // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
@@ -263,7 +309,25 @@ public class PushbotTeleopTank_Iterative extends OpMode{
 
 
     }
+/*
+    public void feedShooter(double power, long time) throws Exception{
 
+        robot.picker.setPower(power);
+
+        try {
+            Thread.sleep(time);
+        }
+        catch (Exception e){
+
+            e.printStackTrace();
+
+
+        }
+
+
+    }
+
+*/
     /*
      * Code to run ONCE after the driver hits STOP
      */

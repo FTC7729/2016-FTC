@@ -155,7 +155,7 @@ public class PushbotTeleopPOV_Linear_Auto extends LinearOpMode {
             //scoopDown = gamepad1.left_stick_x;
             servroMe = -gamepad1.right_stick_x;
 
-
+=
             // Normalize the values so neither exceed +/- 1.0
             max = Math.max(Math.abs(left), Math.abs(right));
             if (max > 1.0) {
