@@ -40,12 +40,14 @@ public class HardwarePushbot
     public DcMotor  leftMotor   = null;
     public DcMotor  rightMotor  = null;
     public DcMotor  spinMotor    = null;
-    public  DcMotor picker = null;
+    //public DcMotor  picker = null;
 
     public static final double MID_SERVO       =  0.5 ;
     //public static final double ARM_UP_POWER    =  0.45 ;
     //public static final double ARM_DOWN_POWER  = -0.45 ;
     public Servo   servo1        = null;
+   // public Servo   servo2        = null;
+   // public Servo   servo3        = null;
 
 
     /* local OpMode members. */
@@ -72,7 +74,7 @@ public class HardwarePushbot
         rightMotor  = hwMap.dcMotor.get("rF");
 
 
-        picker = hwMap.dcMotor.get("picker");
+        //picker = hwMap.dcMotor.get("picker");
         spinMotor    = hwMap.dcMotor.get("spin");
         leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
@@ -96,6 +98,10 @@ public class HardwarePushbot
         // Define and initialize ALL installed servos.
         servo1 = hwMap.servo.get("s1");
         servo1.setPosition(MID_SERVO);
+       // servo2 = hwMap.servo.get("s2");
+       // servo2.setPosition(MID_SERVO);
+      //  servo3 = hwMap.servo.get("s3");
+      //  servo3.setPosition(MID_SERVO);
         //rightClaw = hwMap.servo.get("right_hand");
        // leftClaw.setPosition(MID_SERVO);
        // rightClaw.setPosition(MID_SERVO);
