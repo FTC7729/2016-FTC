@@ -86,8 +86,11 @@ public class PushbotTeleopTank_Iterative extends OpMode{
     final static double CLAW_MAX_RANGE = 0.7;
     static final double     FORWARD_SPEED = 0.6;
     static final double     BACKWARDS_SPEED    = -0.6;
-    public double           spinnerSpeed = 0.10;
-    public double           spinnerSpeedBack = -0.10;
+    public double           spinnerSpeed = 0.20;
+    public double           spinnerSpeedBack = -spinnerSpeed;
+    public double           spinnerSpeedBack2 = -0.40;
+    public double           spinnerSpeedBack3 = -0.60;
+    public double           spinnerSpeedBack4 = -0.80;
     private double          scoopUp;
     // position of the claw servo
     double clawPosition;
@@ -144,12 +147,19 @@ public class PushbotTeleopTank_Iterative extends OpMode{
         double right;
         */
         //
+        /* Set the Gamepad values */
         float left = -gamepad1.left_stick_y;
         float right = -gamepad1.right_stick_y;
 
-        boolean BisPressed = gamepad1.b;
-        boolean XisPressed = gamepad1.x;
-        boolean YisPressed = gamepad1.y;
+        boolean A1isPressed = gamepad1.a;
+        boolean X1isPressed = gamepad1.x;
+        boolean Y1isPressed = gamepad1.y;
+        boolean B1isPressed = gamepad1.b;
+
+        boolean A2isPressed = gamepad2.a;
+        boolean X2isPressed = gamepad2.x;
+        boolean Y2isPressed = gamepad2.y;
+        boolean B2isPressed = gamepad2.b;
 
         final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
         final int    CYCLE_MS    =   50;     // period of each cycle
@@ -188,16 +198,16 @@ public class PushbotTeleopTank_Iterative extends OpMode{
 
 
         }
-        else if (BisPressed) {
+        else if (B1isPressed) {
 
-            spinSet();
+           // spinSet();
 
         }
 
-       else if (XisPressed) {
+       else if (X1isPressed) {
 
             // Keep stepping up until we hit the max value.
-            position += INCREMENT ;
+           // position += INCREMENT ;
             robot.servo1.setDirection(Servo.Direction.FORWARD);
            // if (position >= MAX_POS ) {
            //     position = MAX_POS;
@@ -209,7 +219,7 @@ public class PushbotTeleopTank_Iterative extends OpMode{
 
         }
 
-        else if (YisPressed) {
+        else if (Y1isPressed) {
 
             robot.servo1.setDirection(Servo.Direction.REVERSE);
 
@@ -222,6 +232,30 @@ public class PushbotTeleopTank_Iterative extends OpMode{
             robot.servo1.setPosition(position);
             //   telemetry.addData("Robot Status", "Shooting ball Stop"+ String.format("%.2f", clawPosition));
             //   robot.spinMotor.setPower(0);
+
+        }
+// Figuring out which speed we need to launch the balls to get into Vortex
+        else if (A2isPressed) {
+
+            spinSet();
+
+        }
+
+        else if (X2isPressed) {
+
+            spinSet2();
+
+        }
+
+        else if (Y2isPressed) {
+
+            spinSet3();
+
+        }
+
+        else if (B2isPressed) {
+
+            spinSet4();
 
         }
 //This is from Max to have the robot add the spinner
@@ -302,6 +336,29 @@ public class PushbotTeleopTank_Iterative extends OpMode{
         //clawPosition = Range.clip(clawPosition, CLAW_MIN_RANGE, CLAW_MAX_RANGE);
 
     }
+
+    public void spinSet2(){
+        //telemetry.addData("Robot Status", "Shooting ball "+ String.format("%.2f", spinnerSpeedBack));
+        robot.spinMotor.setPower(spinnerSpeedBack2);
+        //clawPosition -= clawDelta;
+        //clawPosition = Range.clip(clawPosition, CLAW_MIN_RANGE, CLAW_MAX_RANGE);
+
+    }
+    public void spinSet3(){
+        //telemetry.addData("Robot Status", "Shooting ball "+ String.format("%.2f", spinnerSpeedBack));
+        robot.spinMotor.setPower(spinnerSpeedBack3);
+        //clawPosition -= clawDelta;
+        //clawPosition = Range.clip(clawPosition, CLAW_MIN_RANGE, CLAW_MAX_RANGE);
+
+    }
+    public void spinSet4(){
+        //telemetry.addData("Robot Status", "Shooting ball "+ String.format("%.2f", spinnerSpeedBack));
+        robot.spinMotor.setPower(spinnerSpeedBack4);
+        //clawPosition -= clawDelta;
+        //clawPosition = Range.clip(clawPosition, CLAW_MIN_RANGE, CLAW_MAX_RANGE);
+
+    }
+
 
     public void strafeRight(){
 
