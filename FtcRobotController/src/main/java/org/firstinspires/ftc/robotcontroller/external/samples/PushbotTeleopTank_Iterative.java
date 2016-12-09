@@ -116,7 +116,7 @@ public class PushbotTeleopTank_Iterative extends OpMode{
         robot.init(hardwareMap);
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "Hello Driver :D! ");
+        telemetry.addData("Say", "Let's Go C-HAWKS :D! ");
 
         clawPosition = 0.2;
     }
@@ -135,6 +135,8 @@ public class PushbotTeleopTank_Iterative extends OpMode{
      */
     @Override
     public void start() {
+
+        robot.servo1.setPosition(0.0);
     }
 
     /*
@@ -151,6 +153,7 @@ public class PushbotTeleopTank_Iterative extends OpMode{
         float left = -gamepad1.left_stick_y;
         float right = -gamepad1.right_stick_y;
 
+
         boolean A1isPressed = gamepad1.a;
         boolean X1isPressed = gamepad1.x;
         boolean Y1isPressed = gamepad1.y;
@@ -160,6 +163,10 @@ public class PushbotTeleopTank_Iterative extends OpMode{
         boolean X2isPressed = gamepad2.x;
         boolean Y2isPressed = gamepad2.y;
         boolean B2isPressed = gamepad2.b;
+        boolean ServoBeaconUp = gamepad2.dpad_up;
+        boolean ServoBeaconDown = gamepad2.dpad_down;
+
+
 
         final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
         final int    CYCLE_MS    =   50;     // period of each cycle
@@ -198,6 +205,30 @@ public class PushbotTeleopTank_Iterative extends OpMode{
 
 
         }
+        //setting servoUp and down - does the max only not by increments and pausse
+        else if (ServoBeaconUp){
+
+            position += INCREMENT ;
+            robot.servo1.setPosition(position);
+            //if (position >= MAX_POS ) {
+            //       position = MAX_POS;
+            //rampUp = !rampUp;   // Switch ramp direction
+            // }
+            //  robot.servo1.setPosition(position);
+            //  idle();
+        }
+        // this does the same as servoUp goes to same spot - once button is relesed it's dones
+        else if (ServoBeaconDown){
+
+            position -= INCREMENT ;
+            robot.servo1.setPosition(position);
+            //  if (position <= MIN_POS ) {
+            //      position = MIN_POS;
+            //      //rampUp = !rampUp;   // Switch ramp direction
+            //   }
+
+        }
+
         else if (B1isPressed) {
 
            // spinSet();
@@ -208,7 +239,7 @@ public class PushbotTeleopTank_Iterative extends OpMode{
 
             // Keep stepping up until we hit the max value.
            // position += INCREMENT ;
-            robot.servo1.setDirection(Servo.Direction.FORWARD);
+            // robot.servo1.setDirection(Servo.Direction.FORWARD);
            // if (position >= MAX_POS ) {
            //     position = MAX_POS;
                 //rampUp = !rampUp;   // Switch ramp direction
@@ -221,7 +252,7 @@ public class PushbotTeleopTank_Iterative extends OpMode{
 
         else if (Y1isPressed) {
 
-            robot.servo1.setDirection(Servo.Direction.REVERSE);
+            // robot.servo1.setDirection(Servo.Direction.REVERSE);
 
             // Keep stepping up until we hit the max value.
             //position -= INCREMENT ;
@@ -229,7 +260,7 @@ public class PushbotTeleopTank_Iterative extends OpMode{
            //     position = MIN_POS;
                 //rampUp = !rampUp;  // Switch ramp direction
            // }
-            robot.servo1.setPosition(position);
+           // robot.servo1.setPosition(position);
             //   telemetry.addData("Robot Status", "Shooting ball Stop"+ String.format("%.2f", clawPosition));
             //   robot.spinMotor.setPower(0);
 
@@ -258,39 +289,6 @@ public class PushbotTeleopTank_Iterative extends OpMode{
             spinSet4();
 
         }
-//This is from Max to have the robot add the spinner
-        /*
-        else if (gamepad1.b){
-            // notifies user that launcher will shoot ball
-            telemetry.addData("Robot Status", "Shooting ball !");
-
-
-            for( int i=1;  i<3; i++){
-               // spinnerSpeed = spinnerSpeed
-                robot.spinMotor.setPower(spinnerSpeed);
-
-                try {
-                    Thread.sleep(10);
-                }catch (InterruptedException e){
-                    e.printStackTrace();
-                }
-
-                if (spinnerSpeed == 0.6){
-
-                    robot.spinMotor.setPower(0.3);
-                    try {
-                        Thread.sleep(10);
-                    }catch (InterruptedException e){
-                        e.printStackTrace();
-                    }
-
-                    return;
-                }
-
-            }
-
-
-        } */
 
         else{
             // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
@@ -303,7 +301,7 @@ public class PushbotTeleopTank_Iterative extends OpMode{
             //telemetry.addData("Robot Status", "Shooting ball Stop "+ String.format("%.2f", spinnerSpeedBack));
             //If B is not pressed, STOP
             robot.spinMotor.setPower(0);
-            robot.servo1.setPosition(0);
+            robot.servo1.setPosition(position);
 
             //right = Range.clip(right, -1, 1);
             //left = Range.clip(left, -1, 1);
