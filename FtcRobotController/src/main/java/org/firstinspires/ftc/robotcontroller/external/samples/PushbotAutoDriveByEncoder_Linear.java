@@ -66,7 +66,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @Autonomous(name="Pushbot: Auto Drive By Encoder", group="Pushbot")
-@Disabled
+//@Disabled
 public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -80,6 +80,8 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
+    static final double     FORWARD_SPEED           = 0.6;
+    static final double     BACKWARDS_SPEED         = -0.6;
 
     @Override
     public void runOpMode() {
@@ -94,17 +96,30 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
         telemetry.addData("Status", "Resetting Encoders");    //
         telemetry.update();
 
+      //  robot.leftMotor.setPower(left);
+      //  robot.rightMotor.setPower(right);
+      //  robot.leftMotorBack.setPower(left);
+      //  robot.rightMotorBack.setPower(right);
+
         robot.leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.leftMotorBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.rightMotorBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         idle();
 
         robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.leftMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.rightMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Path0",  "Starting at %7d :%7d",
-                          robot.leftMotor.getCurrentPosition(),
-                          robot.rightMotor.getCurrentPosition());
+        telemetry.addData("Path0",  "Starting at %7d :%7d :%7d :%7d",
+                            robot.leftMotor.getCurrentPosition(),
+                            robot.rightMotor.getCurrentPosition(),
+                            robot.leftMotorBack.getCurrentPosition(),
+                            robot.rightMotorBack.getCurrentPosition()
+                        );
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
@@ -112,9 +127,39 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+        // test 1: Drive is too long - we went all the way from starting side to the the wall all the way across
+                // Turning Right went to far, did not go 90 degrees that we expected
+        //encoderDrive(DRIVE_SPEED,  48,  48, 48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        //encoderDrive(TURN_SPEED,   12, -12, 12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+       // encoderDrive(DRIVE_SPEED, -24, -24, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+
+        // test 2: driving forward - it went forward but didnt' reach the big ball
+        //for test 3 make the robot go farther and modify the angle at which the robot turns
+        //encoderDrive(DRIVE_SPEED,  12,  12, 12,  12, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+       // encoderDrive(TURN_SPEED,   10, -10, 10, -10, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+        //encoderDrive(DRIVE_SPEED, -12, -12, -12, -12, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+
+        // test 3: it went forward turned and knocked off the big ball we took out the reversing because we didn't want it to do that and we want to focus on it going forward
+        //for test 4 we will not rotate because we wnt the robot to go on the middle platform
+        //encoderDrive(DRIVE_SPEED,  24,  24, 24,  24, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        //encoderDrive(TURN_SPEED,   8, -8, 8, -8, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+        //encoderDrive(DRIVE_SPEED, -12, -12, -12, -12, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+        //test 4: it turned slightly to the right at the beggining instad of going straight and will look in code to see if it can be fixed and when we have the other robot this problem may not exist
+        //encoderDrive(DRIVE_SPEED,  30, 30, 30, 30, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+       //encoderDrive(TURN_SPEED,   8, -8, 8, -8, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+        //encoderDrive(DRIVE_SPEED, -12, -12, -12, -12, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+
+
+        encoderDrive(DRIVE_SPEED,  30, 30, 30, 30, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(TURN_SPEED,   8, -8, 8, -8, 4.0);   // Turn Right to Position : newLeftTarget,  newRightTarget, newLeftBackTarget, newRightBackTarget
+        encoderDrive(DRIVE_SPEED,  -8, 8, 8, -8, 5.0);  // Strafe Left/Right to get onto the Center Vortex?
+                                                        //       robot.leftMotor.setPower(BACKWARDS_SPEED);
+                                                        //  robot.rightMotor.setPower(FORWARD_SPEED);
+                                                       //    robot.leftMotorBack.setPower(FORWARD_SPEED);
+                                                       // robot.rightMotorBack.setPower(BACKWARDS_SPEED);
+                                                       //
+
+
 
 
         sleep(1000);     // pause for servos to move
@@ -122,6 +167,8 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
         telemetry.addData("Path", "Complete");
         telemetry.update();
     }
+
+
 
     /*
      *  Method to perfmorm a relative move, based on encoder counts.
@@ -132,10 +179,12 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
      *  3) Driver stops the opmode running.
      */
     public void encoderDrive(double speed,
-                             double leftInches, double rightInches,
+                             double leftInches, double rightInches, double leftBackInches, double rightBackInches,
                              double timeoutS) {
         int newLeftTarget;
         int newRightTarget;
+        int newLeftBackTarget;
+        int newRightBackTarget;
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
@@ -143,17 +192,26 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
             // Determine new target position, and pass to motor controller
             newLeftTarget = robot.leftMotor.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
             newRightTarget = robot.rightMotor.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newLeftBackTarget = robot.leftMotorBack.getCurrentPosition() + (int)(leftBackInches * COUNTS_PER_INCH);
+            newRightBackTarget = robot.rightMotorBack.getCurrentPosition() + (int)(rightBackInches * COUNTS_PER_INCH);
             robot.leftMotor.setTargetPosition(newLeftTarget);
             robot.rightMotor.setTargetPosition(newRightTarget);
+            robot.leftMotorBack.setTargetPosition(newLeftBackTarget);
+            robot.rightMotorBack.setTargetPosition(newRightBackTarget);
 
             // Turn On RUN_TO_POSITION
             robot.leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.leftMotorBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.rightMotorBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // reset the timeout time and start motion.
             runtime.reset();
             robot.leftMotor.setPower(Math.abs(speed));
             robot.rightMotor.setPower(Math.abs(speed));
+            robot.leftMotorBack.setPower(Math.abs(speed));
+            robot.rightMotorBack.setPower(Math.abs(speed));
+
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             while (opModeIsActive() &&
@@ -161,20 +219,28 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
                    (robot.leftMotor.isBusy() && robot.rightMotor.isBusy())) {
 
                 // Display it for the driver.
-                telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
-                telemetry.addData("Path2",  "Running at %7d :%7d",
+                telemetry.addData("Path1",  "Going to %7d :%7d :%7d :%7d", newLeftTarget,  newRightTarget, newLeftBackTarget, newRightBackTarget);
+                telemetry.addData("Path2",  "Currently at %7d :%7d :%7d :%7d",
                                             robot.leftMotor.getCurrentPosition(),
-                                            robot.rightMotor.getCurrentPosition());
+                                            robot.rightMotor.getCurrentPosition(),
+                                            robot.leftMotorBack.getCurrentPosition(),
+                                            robot.rightMotorBack.getCurrentPosition()
+                );
                 telemetry.update();
             }
 
             // Stop all motion;
             robot.leftMotor.setPower(0);
             robot.rightMotor.setPower(0);
+            robot.leftMotorBack.setPower(0);
+            robot.rightMotorBack.setPower(0);
 
             // Turn off RUN_TO_POSITION
             robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.leftMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.rightMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
 
 
 
