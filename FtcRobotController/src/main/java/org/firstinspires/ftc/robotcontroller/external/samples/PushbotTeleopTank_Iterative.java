@@ -301,11 +301,18 @@ public class PushbotTeleopTank_Iterative extends OpMode{
 
         }
 
-        else if (X2isPressed) {
+       // else if (X2isPressed) {
+        // Emergency push out ball if not ours (reverse)
 
-           // spinSet2();
+        //    robot.crservo2.setPower(0.5);
+        //    robot.crservo4.setPower(0.5);
+       //     robot.crservo3.setPower(0.5);
+            //     robot.crservo4.setPower(-0.5);
+       //     robot.crservo4.setDirection(DcMotorSimple.Direction.REVERSE);
+      //      robot.crservo3.setDirection(DcMotorSimple.Direction.REVERSE);
+      //      robot.crservo2.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        }
+      //  }
 
         else if (Y2isPressed) {
 
