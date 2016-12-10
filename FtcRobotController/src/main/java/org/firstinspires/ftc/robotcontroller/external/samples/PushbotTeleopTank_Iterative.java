@@ -267,14 +267,14 @@ public class PushbotTeleopTank_Iterative extends OpMode{
 
         }
 
-        else if (Y1isPressed) {
+       // else if (Y1isPressed) {
 
-            robot.crservo2.setPower(-0.5);
-            robot.crservo3.setPower(-0.5);
-            robot.crservo4.setPower(-0.5);
-            robot.crservo2.setDirection(DcMotorSimple.Direction.REVERSE);
-            robot.crservo3.setDirection(DcMotorSimple.Direction.REVERSE);
-            robot.crservo4.setDirection(DcMotorSimple.Direction.REVERSE);
+       //     robot.crservo2.setPower(-0.5);
+       //     robot.crservo3.setPower(-0.5);
+       //     robot.crservo4.setPower(-0.5);
+       //     robot.crservo2.setDirection(DcMotorSimple.Direction.REVERSE);
+       //     robot.crservo3.setDirection(DcMotorSimple.Direction.REVERSE);
+       //     robot.crservo4.setDirection(DcMotorSimple.Direction.REVERSE);
 
             // robot.servo1.setDirection(Servo.Direction.REVERSE);
 
@@ -288,33 +288,52 @@ public class PushbotTeleopTank_Iterative extends OpMode{
             //   telemetry.addData("Robot Status", "Shooting ball Stop"+ String.format("%.2f", clawPosition));
             //   robot.spinMotor.setPower(0);
 
-        }
+       // }
 // Figuring out which speed we need to launch the balls to get into Vortex
         else if (A2isPressed) {
-
-            spinSet();
+    // Launch ball
+            robot.crservo4.setPower(-0.5);
+            robot.crservo3.setPower(-0.5);
+            //     robot.crservo4.setPower(-0.5);
+            robot.crservo4.setDirection(DcMotorSimple.Direction.REVERSE);
+            robot.crservo3.setDirection(DcMotorSimple.Direction.REVERSE);
+           // spinSet4();
 
         }
 
         else if (X2isPressed) {
 
-            spinSet2();
+           // spinSet2();
 
         }
 
         else if (Y2isPressed) {
 
-            spinSet3();
+            //spinSet3();
 
         }
 
         else if (B2isPressed) {
-
-            spinSet4();
+        //launch ball
+            robot.crservo2.setPower(-0.5);
+            robot.crservo3.setPower(-0.5);
+            //     robot.crservo4.setPower(-0.5);
+            robot.crservo2.setDirection(DcMotorSimple.Direction.REVERSE);
+            robot.crservo3.setDirection(DcMotorSimple.Direction.REVERSE);
+            spinSet3();
 
         }
+
        // else if (LeftLoadBall >= 0){
-        // robot.servo2.setPosition(LeftLoadBall);
+      //           robot.crservo4.setPower(LeftLoadBall);
+      //           robot.crservo3.setPower(LeftLoadBall);
+            //     robot.crservo4.setPower(-0.5);
+      //          robot.crservo4.setDirection(DcMotorSimple.Direction.REVERSE);
+     //           robot.crservo3.setDirection(DcMotorSimple.Direction.REVERSE);
+      //          spinSet4();
+            //     robot.crservo4.setDirection(DcMotorSimple.Direction.REVERSE);
+
+            // robot.servo2.setPosition(LeftLoadBall);
         // robot.servo3.setPosition(LeftLoadBall);
        //   }
 
@@ -322,7 +341,9 @@ public class PushbotTeleopTank_Iterative extends OpMode{
         // robot.servo3.setPosition(LeftLoadBall);
         // robot.servo4.setPosition(position4);
 
-       //   }
+            //     robot.crservo4.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        //  }
 
         else{
             // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
@@ -349,6 +370,8 @@ public class PushbotTeleopTank_Iterative extends OpMode{
              // launch servo - port 4
             //crservo4.setPosition(MID_SERVO);
             robot.crservo4.setPower(0);
+
+
 
             //right = Range.clip(right, -1, 1);
             //left = Range.clip(left, -1, 1);
