@@ -263,13 +263,13 @@ public class PushbotTeleopTank_Iterative extends OpMode{
         }
 
 
-        if(gamepad1.dpad_right){
-            strafeRight();
-        }
+       // if(gamepad1.dpad_right){
+      //      strafeRight();
+      //  }
 
-        else if(gamepad1.dpad_left){
-            strafeLeft();
-        }
+      //  else if(gamepad1.dpad_left){
+      //      strafeLeft();
+     //   }
 
         //else{
             // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
@@ -354,7 +354,7 @@ public class PushbotTeleopTank_Iterative extends OpMode{
 
     }
 
-
+    /*
     public void strafeRight(){
 
 
@@ -365,31 +365,32 @@ public class PushbotTeleopTank_Iterative extends OpMode{
         robot.leftMotorBack.setPower(FORWARD_SPEED);
         */
 
-        robot.rightMotor.setPower(STRAFE_SPEED);
-        robot.leftMotor.setPower(-STRAFE_SPEED);
-        robot.rightMotorBack.setPower(-STRAFE_SPEED);
-        robot.leftMotorBack.setPower(STRAFE_SPEED);
-
-        telemetry.addData("strafeRight", "%.2f %.2f", FORWARD_SPEED, BACKWARDS_SPEED);
-
-
-    }
+   //     robot.rightMotor.setPower(STRAFE_SPEED);
+//        robot.leftMotor.setPower(-STRAFE_SPEED);
+  //      robot.rightMotorBack.setPower(-STRAFE_SPEED);
+//
+     //   telemetry.addData("strafeRight", "%.2f %.2f", FORWARD_SPEED, BACKWARDS_SPEED);
 
 
-    public void strafeLeft(){
-
-        robot.rightMotor.setPower(-STRAFE_SPEED);
-        robot.leftMotor.setPower(STRAFE_SPEED);
-        robot.rightMotorBack.setPower(STRAFE_SPEED);
-        robot.leftMotorBack.setPower(-STRAFE_SPEED);
+ //   }
 
 
+   // public void strafeLeft(){
 
-        telemetry.addData("strafeLeft", "%.2f %.2f", FORWARD_SPEED, BACKWARDS_SPEED);
+  //      robot.rightMotor.setPower(-STRAFE_SPEED);
+  //      robot.leftMotor.setPower(STRAFE_SPEED);
+    //    robot.rightMotorBack.setPower(STRAFE_SPEED);
+      //  robot.leftMotorBack.setPower(-STRAFE_SPEED);
 
 
 
-    }
+        //telemetry.addData("strafeLeft", "%.2f %.2f", FORWARD_SPEED, BACKWARDS_SPEED);
+
+
+
+    //}
+    //
+
 /*
     public void feedShooter(double power, long time) throws Exception{
 
@@ -410,13 +411,9 @@ public class PushbotTeleopTank_Iterative extends OpMode{
 
 */
     /*
-     * Code to run ONCE after the driver hits STOP
-     */
-    //Assertion failed: stop() should be called only if start() called before
-    @Override
-    public void stop()   {
-        //slowdown spinner so gears do not desstroyed
-        while (spinnerSpeedBack5 > 0){
+    spin down code o reduec dtress on spinner motor
+    ================================================================
+      while (spinnerSpeedBack5 > 0){
             spinnerSpeedBack5 = spinnerSpeedBack5 - 0.05;
             robot.spinMotor.setPower(spinnerSpeedBack5);
             try {
@@ -430,6 +427,20 @@ public class PushbotTeleopTank_Iterative extends OpMode{
         }
         double stopSpinner = 0;
         robot.spinMotor.setPower(stopSpinner);
+
+
+
+
+    ----------------------------------------------------------------
+    */
+    /*
+     * Code to run ONCE after the driver hits STOP
+     */
+    //Assertion failed: stop() should be called only if start() called before
+    @Override
+    public void stop()   {
+
+
     }
 
 }
