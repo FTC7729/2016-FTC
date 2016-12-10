@@ -36,6 +36,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
@@ -101,6 +102,14 @@ public class PushbotTeleopTank_Iterative extends OpMode{
     public final static double SERVO_HOME = 0.2;
     public final static double SERVO_MIN_RANGE  = 0.20;
     public final static double SERVO_MAX_RANGE  = 0.90;
+    final double INCREMENT2   = 0.5;
+    final double INCREMENT   = 0.01;
+    double position2 = 0.5;
+    double position4 = 0.5;
+    final double MAX_POS     =  1.0;     // Maximum rotational position
+    final double MIN_POS     =  0.0;     // Minimum rotational position
+    double  position = (MAX_POS - MIN_POS) / 2; // Start at halfway position
+
 
 
 
@@ -166,16 +175,20 @@ public class PushbotTeleopTank_Iterative extends OpMode{
         boolean ServoBeaconUp = gamepad2.dpad_up;
         boolean ServoBeaconDown = gamepad2.dpad_down;
 
+        float   LeftLoadBall = gamepad2.left_trigger; // collect ball, first phase, s2 & s3
+        float   RightFireBall = gamepad2.right_trigger; // collect ball, second phase, s3 & s4
 
 
-        final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
+
+
+        final double INCREMENT3   = 0.01;     // amount to slew servo each CYCLE_MS cycle
         final int    CYCLE_MS    =   50;     // period of each cycle
-        final double MAX_POS     =  1.0;     // Maximum rotational position
-        final double MIN_POS     =  0.0;     // Minimum rotational position
+
 
         // Define class members
 
-        double  position = (MAX_POS - MIN_POS) / 2; // Start at halfway position
+
+        //double position2 = -0.5;
         boolean rampUp = true;
 
         /*
@@ -220,13 +233,17 @@ public class PushbotTeleopTank_Iterative extends OpMode{
         // this does the same as servoUp goes to same spot - once button is relesed it's dones
         else if (ServoBeaconDown){
 
-            position -= INCREMENT ;
+            position -= INCREMENT;
             robot.servo1.setPosition(position);
             //  if (position <= MIN_POS ) {
             //      position = MIN_POS;
             //      //rampUp = !rampUp;   // Switch ramp direction
             //   }
 
+        }
+        else if (A1isPressed)
+        {
+            position2 -= INCREMENT2;
         }
 
         else if (B1isPressed) {
@@ -242,7 +259,7 @@ public class PushbotTeleopTank_Iterative extends OpMode{
             // robot.servo1.setDirection(Servo.Direction.FORWARD);
            // if (position >= MAX_POS ) {
            //     position = MAX_POS;
-                //rampUp = !rampUp;   // Switch ramp direction
+                //rampUp = !rampUp;   // Switch ramp directionf
           //  }
          //   robot.servo1.setPosition(position);
          //   telemetry.addData("Robot Status", "Shooting ball Stop"+ String.format("%.2f", clawPosition));
@@ -251,6 +268,13 @@ public class PushbotTeleopTank_Iterative extends OpMode{
         }
 
         else if (Y1isPressed) {
+
+            robot.crservo2.setPower(-0.5);
+            robot.crservo3.setPower(-0.5);
+            robot.crservo4.setPower(-0.5);
+            robot.crservo2.setDirection(DcMotorSimple.Direction.REVERSE);
+            robot.crservo3.setDirection(DcMotorSimple.Direction.REVERSE);
+            robot.crservo4.setDirection(DcMotorSimple.Direction.REVERSE);
 
             // robot.servo1.setDirection(Servo.Direction.REVERSE);
 
@@ -289,6 +313,16 @@ public class PushbotTeleopTank_Iterative extends OpMode{
             spinSet4();
 
         }
+       // else if (LeftLoadBall >= 0){
+        // robot.servo2.setPosition(LeftLoadBall);
+        // robot.servo3.setPosition(LeftLoadBall);
+       //   }
+
+       // else if (RightFireBall >= 0){
+        // robot.servo3.setPosition(LeftLoadBall);
+        // robot.servo4.setPosition(position4);
+
+       //   }
 
         else{
             // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
@@ -302,6 +336,19 @@ public class PushbotTeleopTank_Iterative extends OpMode{
             //If B is not pressed, STOP
             robot.spinMotor.setPower(0);
             robot.servo1.setPosition(position);
+            //robot.servo2.setPosition(position2);
+            //robot.servo3.setPosition(position4); //changed to port 2 on servo
+           // robot.servo4.setPosition(position2);
+
+             //back most servo - port 6
+            //crservo2.setPosition(MID_SERVO);
+            robot.crservo2.setPower(0);
+             // middle servo - port 2
+            robot.crservo3.setPower(0);
+            //crservo3.setPosition(MID_SERVO);
+             // launch servo - port 4
+            //crservo4.setPosition(MID_SERVO);
+            robot.crservo4.setPower(0);
 
             //right = Range.clip(right, -1, 1);
             //left = Range.clip(left, -1, 1);

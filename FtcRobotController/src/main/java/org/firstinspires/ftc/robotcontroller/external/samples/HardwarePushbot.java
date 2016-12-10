@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.robotcontroller.external.samples;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -46,8 +47,13 @@ public class HardwarePushbot
     //public static final double ARM_UP_POWER    =  0.45 ;
     //public static final double ARM_DOWN_POWER  = -0.45 ;
     public Servo   servo1        = null;
-    public Servo   servo2        = null;
-    public Servo   servo3        = null;
+   // public Servo   servo2        = null;
+   // public Servo   servo3        = null;
+   // public Servo   servo4        = null;
+        public CRServo crservo2      = null;
+        public CRServo crservo3      = null;
+        public CRServo crservo4       = null;
+
 
 
     /* local OpMode members. */
@@ -96,12 +102,26 @@ public class HardwarePushbot
         spinMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Define and initialize ALL installed servos.
-        servo1 = hwMap.servo.get("s1");
+
+        servo1 = hwMap.servo.get("s1"); //beacon arm - port 3
         servo1.setPosition(MID_SERVO);
-       servo2 = hwMap.servo.get("s2");
-       servo2.setPosition(MID_SERVO);
-      servo3 = hwMap.servo.get("s3");
-      servo3.setPosition(MID_SERVO);
+       // servo2 = hwMap.servo.get("s4"); //back most servo - port 6
+       // servo2.setPosition(MID_SERVO);
+      //  servo3 = hwMap.servo.get("s3"); // middle servo - port 2
+      //  servo3.setPosition(MID_SERVO);
+      //  servo4 = hwMap.servo.get("s2"); // launch servo - port 4
+      //  servo4.setPosition(MID_SERVO);
+
+        crservo2 = hwMap.crservo.get("s4"); //back most servo - port 6
+        //crservo2.setPosition(MID_SERVO);
+        crservo2.setPower(0);
+        crservo3 = hwMap.crservo.get("s3"); // middle servo - port 2
+        crservo3.setPower(0);
+        //crservo3.setPosition(MID_SERVO);
+        crservo4 = hwMap.crservo.get("s2"); // launch servo - port 4
+        //crservo4.setPosition(MID_SERVO);
+        crservo4.setPower(0);
+
         //rightClaw = hwMap.servo.get("right_hand");
        // leftClaw.setPosition(MID_SERVO);
        // rightClaw.setPosition(MID_SERVO);
