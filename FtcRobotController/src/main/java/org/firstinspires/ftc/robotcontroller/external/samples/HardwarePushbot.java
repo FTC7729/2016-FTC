@@ -104,7 +104,8 @@ public class HardwarePushbot
         // Define and initialize ALL installed servos.
 
         servo1 = hwMap.servo.get("s1"); //beacon arm - port 3
-        servo1.setPosition(MID_SERVO);
+        servo1.setPosition(0);
+        //servo1.setPosition(MID_SERVO);
        // servo2 = hwMap.servo.get("s4"); //back most servo - port 6
        // servo2.setPosition(MID_SERVO);
       //  servo3 = hwMap.servo.get("s3"); // middle servo - port 2
