@@ -87,6 +87,7 @@ public class PushbotTeleopTank_Iterative extends OpMode{
     final static double CLAW_MAX_RANGE = 0.7;
     static final double     FORWARD_SPEED = 0.6;
     static final double     BACKWARDS_SPEED    = -0.6;
+    public final double     STRAFE_SPEED = 0.4;
     public double           spinnerSpeed = 0.20;
     public double           spinnerSpeedBack = spinnerSpeed;
     public double           spinnerSpeedBack2 = 0.40;
@@ -262,6 +263,13 @@ public class PushbotTeleopTank_Iterative extends OpMode{
         }
 
 
+        if(gamepad1.dpad_right){
+            strafeRight();
+        }
+
+        else if(gamepad1.dpad_left){
+            strafeLeft();
+        }
 
         //else{
             // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
@@ -357,12 +365,12 @@ public class PushbotTeleopTank_Iterative extends OpMode{
         robot.leftMotorBack.setPower(FORWARD_SPEED);
         */
 
-        robot.rightMotor.setPower(FORWARD_SPEED);
-        robot.leftMotor.setPower(BACKWARDS_SPEED);
-        robot.rightMotorBack.setPower(BACKWARDS_SPEED);
-        robot.leftMotorBack.setPower(FORWARD_SPEED);
+        robot.rightMotor.setPower(STRAFE_SPEED);
+        robot.leftMotor.setPower(-STRAFE_SPEED);
+        robot.rightMotorBack.setPower(-STRAFE_SPEED);
+        robot.leftMotorBack.setPower(STRAFE_SPEED);
 
-        telemetry.addData("strafeRight", "%.2f", "%.2f", FORWARD_SPEED, BACKWARDS_SPEED);
+        telemetry.addData("strafeRight", "%.2f %.2f", FORWARD_SPEED, BACKWARDS_SPEED);
 
 
     }
@@ -370,14 +378,14 @@ public class PushbotTeleopTank_Iterative extends OpMode{
 
     public void strafeLeft(){
 
-        robot.rightMotor.setPower(BACKWARDS_SPEED);
-        robot.leftMotor.setPower(FORWARD_SPEED);
-        robot.rightMotorBack.setPower(FORWARD_SPEED);
-        robot.leftMotorBack.setPower(BACKWARDS_SPEED);
+        robot.rightMotor.setPower(-STRAFE_SPEED);
+        robot.leftMotor.setPower(STRAFE_SPEED);
+        robot.rightMotorBack.setPower(STRAFE_SPEED);
+        robot.leftMotorBack.setPower(-STRAFE_SPEED);
 
 
 
-        telemetry.addData("strafeLeft", "%.2f", "%.2f", FORWARD_SPEED, BACKWARDS_SPEED);
+        telemetry.addData("strafeLeft", "%.2f %.2f", FORWARD_SPEED, BACKWARDS_SPEED);
 
 
 
