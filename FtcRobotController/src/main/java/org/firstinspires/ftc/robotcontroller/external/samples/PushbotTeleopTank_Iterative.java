@@ -87,10 +87,10 @@ public class PushbotTeleopTank_Iterative extends OpMode{
     static final double     FORWARD_SPEED = 0.6;
     static final double     BACKWARDS_SPEED    = -0.6;
     public double           spinnerSpeed = 0.20;
-    public double           spinnerSpeedBack = -spinnerSpeed;
-    public double           spinnerSpeedBack2 = -0.40;
-    public double           spinnerSpeedBack3 = -0.60;
-    public double           spinnerSpeedBack4 = -0.80;
+    public double           spinnerSpeedBack = spinnerSpeed;
+    public double           spinnerSpeedBack2 = 0.40;
+    public double           spinnerSpeedBack3 = 0.60;
+    public double           spinnerSpeedBack4 = 0.80; //moving forward
     private double          scoopUp;
     // position of the claw servo
     double clawPosition;
@@ -175,7 +175,7 @@ public class PushbotTeleopTank_Iterative extends OpMode{
 
         // Define class members
 
-        double  position = MIN_POS; //= (MAX_POS - MIN_POS) / 2; // Start at halfway position
+        double  position = (MAX_POS - MIN_POS) / 2; // Start at halfway position
         boolean rampUp = true;
 
         /*
@@ -192,21 +192,21 @@ public class PushbotTeleopTank_Iterative extends OpMode{
                 //scoopUp = -gamepad1.left_stick_x;
                 //robot.spinMotor.setPower(scoopUp);
 
-        if (gamepad1.dpad_right){
+     //   if (gamepad1.dpad_right){
 
-            strafeRight();
-
-
-        }
-
-       else if (gamepad1.dpad_left){
-
-            strafeLeft();
+      //      strafeRight();
 
 
-        }
+      //  }
+
+      // else if (gamepad1.dpad_left){
+
+      //      strafeLeft();
+
+
+      //  }
         //setting servoUp and down - does the max only not by increments and pausse
-        else if (ServoBeaconUp){
+        if (ServoBeaconUp){
 
             position += INCREMENT ;
             robot.servo1.setPosition(position);
@@ -360,46 +360,7 @@ public class PushbotTeleopTank_Iterative extends OpMode{
 
     public void strafeRight(){
 
-            /*
-            rf: +1
-            lf: -1
-            rb: -1
-            lb: +1
 
-            rf: x
-            lf: -x
-            rb: -x
-            lb: x
-             ---- > together we have
-                rf: y+x
-                lf: y-x
-                rb: y-x
-                lb: y+x
-
-            ----- > how to do diagonals, turns
-            rf: -1
-            lf: +1
-            rb: -1
-            lb: +1
-
-                That's Z axis
-                rf: -z
-                lf: +z
-                rb: -z
-                lb: +z
-            --->>>> How put x+y+z together
-                    rf: y+x-z
-                    lf: y-x+z
-                    rb: y-x-z
-                    lb: y+x+z
-
-             */
-        /*
-            frontright.setPower(scale(y+x-z));
-            frontleft.setPower(scale(y-x+z));
-            backright.setPower(scale(y-x-z));
-            backleft.setPower(scale(y+x+z));
-         */
         /*
         robot.rightMotor.setPower(FORWARD_SPEED);
         robot.leftMotor.setPower(BACKWARDS_SPEED);
