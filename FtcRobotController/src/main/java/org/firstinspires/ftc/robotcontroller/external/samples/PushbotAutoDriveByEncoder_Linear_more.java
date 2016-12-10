@@ -152,11 +152,11 @@ public class PushbotAutoDriveByEncoder_Linear_more extends LinearOpMode {
 
         //     robot.crservo4.setPower(-0.5);
 
-        launchBall( -0.5, 0.6, 5.0); //servo speed, spiinner speed, timeout
+        launchBall( -1.0, 0.8, 5.0); //servo speed, spiinner speed, timeout
 
-        encoderDrive(DRIVE_SPEED,  30, 30, 30, 30, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoderDrive(TURN_SPEED,   8, -8, 8, -8, 4.0);   // Turn Right to Position : newLeftTarget,  newRightTarget, newLeftBackTarget, newRightBackTarget
-        encoderDrive(DRIVE_SPEED,  -8, 8, 8, -8, 5.0);  // Strafe Left/Right to get onto the Center Vortex?
+        //encoderDrive(DRIVE_SPEED,  30, 30, 30, 30, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+       // encoderDrive(TURN_SPEED,   8, -8, 8, -8, 4.0);   // Turn Right to Position : newLeftTarget,  newRightTarget, newLeftBackTarget, newRightBackTarget
+       // encoderDrive(DRIVE_SPEED,  -8, 8, 8, -8, 5.0);  // Strafe Left/Right to get onto the Center Vortex?
                                                         //       robot.leftMotor.setPower(BACKWARDS_SPEED);
                                                         //  robot.rightMotor.setPower(FORWARD_SPEED);
                                                        //    robot.leftMotorBack.setPower(FORWARD_SPEED);
