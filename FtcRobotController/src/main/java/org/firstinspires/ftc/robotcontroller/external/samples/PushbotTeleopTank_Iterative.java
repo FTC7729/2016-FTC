@@ -36,40 +36,17 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
-import org.lasarobotics.vision.android.Cameras;
-import org.lasarobotics.vision.ftc.resq.Beacon;
-import org.lasarobotics.vision.image.Drawing;
-import org.lasarobotics.vision.opmode.TestableVisionOpMode;
-import org.lasarobotics.vision.opmode.extensions.CameraControlExtension;
-import org.lasarobotics.vision.util.ScreenOrientation;
-import org.lasarobotics.vision.util.color.Color;
-import org.lasarobotics.vision.util.color.ColorGRAY;
-import org.lasarobotics.vision.util.color.ColorRGBA;
-import org.opencv.core.Mat;
-import org.opencv.core.Point;
-import org.opencv.core.Size;
 
-import static android.R.attr.scaleX;
-import static android.R.attr.x;
-import static android.R.attr.y;
-import static com.qualcomm.robotcore.util.Range.scale;
 
 /**
- * This file provides basic Telop driving for a Pushbot robot.
- * The code is structured as an Iterative OpMode
- *
- * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
- * All device access is managed through the HardwarePushbot class.
- *
- * This particular OpMode executes a basic Tank Drive Teleop for a PushBot
- * It raises and lowers the claw using the Gampad Y and A buttons respectively.
- * It also opens and closes the claws slowly using the left and right Bumper buttons.
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
+ make
+ shit
+ drive
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
@@ -79,26 +56,30 @@ public class PushbotTeleopTank_Iterative extends OpMode{
 
     /* Declare OpMode members. */
     HardwarePushbot robot       = new HardwarePushbot(); // use the class created to define a Pushbot's hardware
-    // could also use HardwarePushbotMatrix class.
-  // double          clawOffset  = 0.0 ;                  // Servo mid position
-   // final double    CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
+    final boolean FALSE = false;
+    final boolean TRUE = true;
 
-    final static double CLAW_MIN_RANGE = 0.20;
-    final static double CLAW_MAX_RANGE = 0.7;
+
+    boolean isReverse = FALSE;
+    boolean  isStrafing = FALSE;
+
+    private static final double SHOOTER_SPEED = 0.40;
+
+
+
     static final double     FORWARD_SPEED = 0.6;
     static final double     BACKWARDS_SPEED    = -0.6;
-    public final double     STRAFE_SPEED = 0.4;
-    public double           spinnerSpeed = 0.20;
-    public double           spinnerSpeedBack = spinnerSpeed;
-    public double           spinnerSpeedBack2 = 0.40;
-    public double           spinnerSpeedBack3 = 0.60; //The speed
-    public double           spinnerSpeedBack4 = 0.80; //moving forward
+
+
+
     public double           spinnerSpeedBack5 = 0.40;
-    private double          scoopUp;
-    // position of the claw servod5
-    double clawPosition;
-    // amount to change the claw servo position by
-    double clawDelta = 0.1;
+
+    boolean yBttnLstLoop = FALSE;
+    boolean bBttnLstLoop = FALSE;
+
+
+
+
 
     //double servroMe;
     public final static double SERVO_HOME = 0.2;
@@ -130,7 +111,13 @@ public class PushbotTeleopTank_Iterative extends OpMode{
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Let's Go C-HAWKS :D! ");
 
-        clawPosition = 0.2;
+        robot.leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.leftMotorBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.rightMotorBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.spinMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
     }
 
     /*
@@ -158,22 +145,18 @@ public class PushbotTeleopTank_Iterative extends OpMode{
     public void loop() {
         /*
         double left;
-        double right;
+        double rightY;
         */
         //
         /* Set the Gamepad values */
-        float left = -gamepad1.left_stick_y;
-        float right = -gamepad1.right_stick_y;
+        float leftY = -gamepad1.left_stick_y;
+        float rightY = -gamepad1.right_stick_y;
+        float rightX = -gamepad1.right_stick_x;
 
 
-        boolean A1isPressed = gamepad1.a;
-        boolean X1isPressed = gamepad1.x;
-        boolean Y1isPressed = gamepad1.y;
-        boolean B1isPressed = gamepad1.b;
 
         boolean A2isPressed = gamepad2.a;
-        boolean X2isPressed = gamepad2.x;
-        boolean Y2isPressed = gamepad2.y;
+
         boolean B2isPressed = gamepad2.b;
         boolean ServoBeaconUp = gamepad2.dpad_up;
         boolean ServoBeaconDown = gamepad2.dpad_down;
@@ -183,9 +166,58 @@ public class PushbotTeleopTank_Iterative extends OpMode{
 
 
 
+        // Use B button to toggle direction of robot
+        if (gamepad1.b){
+            if (!bBttnLstLoop){
+                bBttnLstLoop = TRUE;
+                isReverse = !isReverse;
+            }
+        } else {
+            bBttnLstLoop = FALSE;
+        }
 
-        final double INCREMENT3   = 0.01;     // amount to slew servo each CYCLE_MS cycle
-        final int    CYCLE_MS    =   50;     // period of each cycle
+        // Use Y button to toggle strafe mode of robot
+        if (gamepad1.y){
+            if (!yBttnLstLoop){
+                yBttnLstLoop = TRUE;
+                isStrafing = !isStrafing;
+                if (isStrafing) {
+                    robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    robot.leftMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    robot.rightMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                } else {
+                    robot.leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    robot.rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    robot.leftMotorBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    robot.rightMotorBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                }
+            }
+        } else {
+            yBttnLstLoop = FALSE;
+        }
+
+        if(isStrafing){
+
+        }
+        else {
+            // revese the controls if we are in reverse mode
+            if (isReverse){
+                leftY = -leftY;
+                rightY = -rightY;
+                float temp = leftY;
+                leftY = rightY;
+                rightY = temp;
+            }
+
+
+            robot.leftMotorBack.setPower(leftY);
+            robot.leftMotor.setPower(leftY);
+            robot.rightMotor.setPower(rightY);
+            robot.rightMotorBack.setPower(rightY);
+
+        }
+
 
 
         // Define class members
@@ -243,116 +275,23 @@ public class PushbotTeleopTank_Iterative extends OpMode{
 
             position += INCREMENT ;
             robot.servo1.setPosition(position);
-            //if (position >= MAX_POS ) {
-            //       position = MAX_POS;
-            //rampUp = !rampUp;   // Switch ramp direction
-            // }
-            //  robot.servo1.setPosition(position);
-            //  idle();
+
         }
         // this does the same as servoUp goes to same spot - once button is relesed it's dones
         else if (ServoBeaconDown){
 
             position -= INCREMENT;
             robot.servo1.setPosition(position);
-            //  if (position <= MIN_POS ) {
-            //      position = MIN_POS;
-            //      //rampUp = !rampUp;   // Switch ramp direction
-            //   }
+
 
         }
 
 
-       // if(gamepad1.dpad_right){
-      //      strafeRight();
-      //  }
 
-      //  else if(gamepad1.dpad_left){
-      //      strafeLeft();
-     //   }
-
-        //else{
-            // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-            // This turns the robot around with the left joystick
-
-            robot.leftMotor.setPower(left*direction);
-            robot.rightMotor.setPower(right*direction);
-            robot.leftMotorBack.setPower(left*direction);
-            robot.rightMotorBack.setPower(right*direction);
-            //telemetry.addData("Robot Status", "Shooting ball Stop "+ String.format("%.2f", spinnerSpeedBack));
-            //If B is not pressed, STOP
-           // robot.spinMotor.setPower(0);
-            //robot.spinMotor.setPower(spinnerSpeedBack5);
-           // robot.servo1.setPosition(position);
-            //robot.servo2.setPosition(position2);
-            //robot.servo3.setPosition(position4); //changed to port 2 on servo
-           // robot.servo4.setPosition(position2);
-
-             //back most servo - port 6
-            //crservo2.setPosition(MID_SERVO);
-         //   robot.crservo2.setPower(0);
-             // middle servo - port 2
-         //   robot.crservo3.setPower(0);
-            //crservo3.setPosition(MID_SERVO);
-             // launch servo - port 4
-            //crservo4.setPosition(MID_SERVO);
-        //    robot.crservo4.setPower(0);
-
-
-
-            //right = Range.clip(right, -1, 1);
-            //left = Range.clip(left, -1, 1);
-
-        //}
-
-
-//hold down for a few seconds it goes wild - fix strafing
-
-
-        // Use gamepad left & right Bumpers to open and close the claw
-
-
-        // Move both servos to new position.  Assume servos are mirror image of each other.
-
-        // robot.leftClaw.setPosition(robot.MID_SERVO + clawOffset);
-        //  robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset);
-
-        // Use gamepad buttons to move the arm up (Y) and down (A)
-
-
-        // Send telemetry message to signify robot running;
 
     }
 
-    public void spinSet(){
-        //telemetry.addData("Robot Status", "Shooting ball "+ String.format("%.2f", spinnerSpeedBack));
-        robot.spinMotor.setPower(spinnerSpeedBack);
-        //clawPosition -= clawDelta;
-        //clawPosition = Range.clip(clawPosition, CLAW_MIN_RANGE, CLAW_MAX_RANGE);
 
-    }
-
-    public void spinSet2(){
-        //telemetry.addData("Robot Status", "Shooting ball "+ String.format("%.2f", spinnerSpeedBack));
-        robot.spinMotor.setPower(spinnerSpeedBack2);
-        //clawPosition -= clawDelta;
-        //clawPosition = Range.clip(clawPosition, CLAW_MIN_RANGE, CLAW_MAX_RANGE);
-
-    }
-    public void spinSet3(){
-        //telemetry.addData("Robot Status", "Shooting ball "+ String.format("%.2f", spinnerSpeedBack));
-        robot.spinMotor.setPower(spinnerSpeedBack3);
-        //clawPosition -= clawDelta;
-        //clawPosition = Range.clip(clawPosition, CLAW_MIN_RANGE, CLAW_MAX_RANGE);
-
-    }
-    public void spinSet4(){
-        //telemetry.addData("Robot Status", "Shooting ball "+ String.format("%.2f", spinnerSpeedBack));
-        robot.spinMotor.setPower(spinnerSpeedBack4);
-        //clawPosition -= clawDelta;
-        //clawPosition = Range.clip(clawPosition, CLAW_MIN_RANGE, CLAW_MAX_RANGE);
-
-    }
 
     /*
     public void strafeRight(){
@@ -391,25 +330,7 @@ public class PushbotTeleopTank_Iterative extends OpMode{
     //}
     //
 
-/*
-    public void feedShooter(double power, long time) throws Exception{
 
-        robot.picker.setPower(power);
-
-        try {
-            Thread.sleep(time);
-        }
-        catch (Exception e){
-
-            e.printStackTrace();
-
-
-        }
-
-
-    }
-
-*/
     /*
     spin down code o reduec dtress on spinner motor
     ================================================================
