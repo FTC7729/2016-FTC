@@ -58,37 +58,13 @@ public class PushbotTeleopTank_Iterative extends OpMode{
     HardwarePushbot robot       = new HardwarePushbot(); // use the class created to define a Pushbot's hardware
     final boolean FALSE = false;
     final boolean TRUE = true;
-
-
     boolean isReverse = FALSE;
     boolean  isStrafing = FALSE;
-
-    private static final double SHOOTER_SPEED = 0.40;
-
-
-
-    static final double     FORWARD_SPEED = 0.6;
-    static final double     BACKWARDS_SPEED    = -0.6;
-
-
-
+    private static final double EXPO = 1.3;
     public double           spinnerSpeedBack5 = 0.40;
-
     boolean yBttnLstLoop = FALSE;
     boolean bBttnLstLoop = FALSE;
-
-
-
-
-
-    //double servroMe;
-    public final static double SERVO_HOME = 0.2;
-    public final static double SERVO_MIN_RANGE  = 0.20;
-    public final static double SERVO_MAX_RANGE  = 0.90;
-    final double INCREMENT2   = 0.5;
     final double INCREMENT   = 0.01;
-    double position2 = 0.5;
-    double position4 = 0.5;
     final double MAX_POS     =  1.0;     // Maximum rotational position
     final double MIN_POS     =  0.0;     // Minimum rotational position
     double  position = (MAX_POS - MIN_POS) / 2; // Start at halfway position
@@ -149,11 +125,8 @@ public class PushbotTeleopTank_Iterative extends OpMode{
         */
         //
         /* Set the Gamepad values */
-        float leftY = -gamepad1.left_stick_y;
-        float rightY = -gamepad1.right_stick_y;
-        float rightX = -gamepad1.right_stick_x;
-
-
+        float leftY = (float) -Math.pow(gamepad1.left_stick_y, EXPO);
+        float rightY = (float) -Math.pow(gamepad1.right_stick_y, EXPO);
 
         boolean A2isPressed = gamepad2.a;
 

@@ -1,0 +1,19 @@
++Autonomous Plan+
+
+-shoot ball into vortex
+-Park
+-Re add strafe mode
+-
+
+
+
+
+Tele op plan
+
+collector buttons
+ button for front 2 and button for all 3
+ experiment for slightly different values for middle servo
+delete all excess code and constants
+add in whole holonomic code
+
+adding control exponentiation
