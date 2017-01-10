@@ -88,20 +88,16 @@ public class FtcOpModeRegister implements OpModeRegister {
 
      //   manager.register("Michael Jackson Moves", PushbotAutoDriveByTime_Linear.class);
         // AUTO LIST
-        manager.register("AUTOMODE Bot Config - Move Me ", PushbotTeleopPOV_Linear_Auto.class);
-        manager.register("AUTOMODE Encoders ", PushbotAutoDriveByEncoder_Linear.class);
+       // manager.register("AUTOMODE Bot Config - Move Me ", PushbotTeleopPOV_Linear_Auto.class);
+        manager.register("Autonomous CAT  ", PushbotAutoDriveByEncoder_Linear.class);
 
         // TeleOp List
-        manager.register("TeleOp: Linear Move ", PushbotTeleopPOV_Linear.class);
-
-        manager.register("Servo - Side-Side ", ConceptScanServo.class);
 
         manager.register("TeleOp Tank Drive", PushbotTeleopTank_Iterative.class);
-        manager.register("Camera Work Please?", CameraMeTestVisionOpMode.class);
+
 
         //Linear vision works
-        manager.register("LinearVision??", LinearVisionSample.class);
-        manager.register("ManVision??", ManualVisionSample.class);
+
 
 
         // manager.register("Vision Telemetry", BasicVisionSample.class);
