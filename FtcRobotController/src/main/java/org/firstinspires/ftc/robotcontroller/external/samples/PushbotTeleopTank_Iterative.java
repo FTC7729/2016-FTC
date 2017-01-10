@@ -42,36 +42,32 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 
-
 /**
- make
- shit
- drive
+ * make
+ * shit
+ * drive
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Pushbot: Teleop Tank", group="Pushbot")
+@TeleOp(name = "Pushbot: Teleop Tank", group = "Pushbot")
 @Disabled
-public class PushbotTeleopTank_Iterative extends OpMode{
+public class PushbotTeleopTank_Iterative extends OpMode {
 
     /* Declare OpMode members. */
-    HardwarePushbot robot       = new HardwarePushbot(); // use the class created to define a Pushbot's hardware
+    HardwarePushbot robot = new HardwarePushbot(); // use the class created to define a Pushbot's hardware
     final boolean FALSE = false;
     final boolean TRUE = true;
     boolean isReverse = FALSE;
-    boolean  isStrafing = FALSE;
+    boolean isStrafing = FALSE;
     private static final double EXPO = 1.3;
-    public double           spinnerSpeedBack5 = 0.40;
+    public double spinnerSpeedBack5 = 0.40;
     boolean yBttnLstLoop = FALSE;
     boolean bBttnLstLoop = FALSE;
-    final double INCREMENT   = 0.01;
-    final double MAX_POS     =  1.0;     // Maximum rotational position
-    final double MIN_POS     =  0.0;     // Minimum rotational position
-    double  position = (MAX_POS - MIN_POS) / 2; // Start at halfway position
+    final double INCREMENT = 0.01;
+    final double MAX_POS = 1.0;     // Maximum rotational position
+    final double MIN_POS = 0.0;     // Minimum rotational position
+    double position = (MAX_POS - MIN_POS) / 2; // Start at halfway position
     public int direction = 1;
-
-
-
 
 
     /*
@@ -134,14 +130,13 @@ public class PushbotTeleopTank_Iterative extends OpMode{
         boolean ServoBeaconUp = gamepad2.dpad_up;
         boolean ServoBeaconDown = gamepad2.dpad_down;
 
-        float   LeftLoadBall = gamepad2.left_trigger; // collect ball, first phase, s2 & s3
-        float   RightFireBall = gamepad2.right_trigger; // collect ball, second phase, s3 & s4
-
+        float LeftLoadBall = gamepad2.left_trigger; // collect ball, first phase, s2 & s3
+        float RightFireBall = gamepad2.right_trigger; // collect ball, second phase, s3 & s4
 
 
         // Use B button to toggle direction of robot
-        if (gamepad1.b){
-            if (!bBttnLstLoop){
+        if (gamepad1.b) {
+            if (!bBttnLstLoop) {
                 bBttnLstLoop = TRUE;
                 isReverse = !isReverse;
             }
@@ -150,8 +145,8 @@ public class PushbotTeleopTank_Iterative extends OpMode{
         }
 
         // Use Y button to toggle strafe mode of robot
-        if (gamepad1.y){
-            if (!yBttnLstLoop){
+        if (gamepad1.y) {
+            if (!yBttnLstLoop) {
                 yBttnLstLoop = TRUE;
                 isStrafing = !isStrafing;
                 if (isStrafing) {
@@ -170,12 +165,11 @@ public class PushbotTeleopTank_Iterative extends OpMode{
             yBttnLstLoop = FALSE;
         }
 
-        if(isStrafing){
+        if (isStrafing) {
 
-        }
-        else {
+        } else {
             // revese the controls if we are in reverse mode
-            if (isReverse){
+            if (isReverse) {
                 leftY = -leftY;
                 rightY = -rightY;
                 float temp = leftY;
@@ -192,12 +186,7 @@ public class PushbotTeleopTank_Iterative extends OpMode{
         }
 
 
-
         // Define class members
-
-
-        //double position2 = -0.5;
-        boolean rampUp = true;
 
 
         //setting servoUp and down - does the max only not by increments and pausse
@@ -205,53 +194,51 @@ public class PushbotTeleopTank_Iterative extends OpMode{
         //we want the spinner to constantly be moing for the whole opmode
         robot.spinMotor.setPower(spinnerSpeedBack5);
 
-        if(gamepad1.start){
+        if (gamepad1.start) {
             direction = -direction;
         }
 
         if (B2isPressed) {
-            //collector ball
+
             robot.crservo2.setPower(-0.5);
             robot.crservo3.setPower(-0.5);
-            //     robot.crservo4.setPower(-0.5);
+
             robot.crservo2.setDirection(DcMotorSimple.Direction.REVERSE);
             robot.crservo3.setDirection(DcMotorSimple.Direction.REVERSE);
-            // spinSet3();
+
 
         }
 
         if (A2isPressed) {
-            // Launch ball
+            // Launch ball and move all 3 servos
+
+            robot.crservo2.setPower(-0.5);
             robot.crservo4.setPower(-0.5);
             robot.crservo3.setPower(-0.5);
-            //     robot.crservo4.setPower(-0.5);
+
+            robot.crservo2.setDirection(DcMotorSimple.Direction.REVERSE);
             robot.crservo4.setDirection(DcMotorSimple.Direction.REVERSE);
             robot.crservo3.setDirection(DcMotorSimple.Direction.REVERSE);
             // spinSet4();
 
         }
 
-        if(!B2isPressed && !A2isPressed)
-        {
-            //back most servo - port 6
-            //crservo2.seStPosition(MID_SERVO);
+        if (!B2isPressed && !A2isPressed) {
+
             robot.crservo2.setPower(0);
-            // middle servo - port 2
             robot.crservo3.setPower(0);
-            //crservo3.setPosition(MID_SERVO);
-            // launch servo - port 4
-            //crservo4.setPosition(MID_SERVO);
+
             robot.crservo4.setPower(0);
         }
 
-        if (ServoBeaconUp){
+        if (ServoBeaconUp) {
 
-            position += INCREMENT ;
+            position += INCREMENT;
             robot.servo1.setPosition(position);
 
         }
         // this does the same as servoUp goes to same spot - once button is relesed it's dones
-        else if (ServoBeaconDown){
+        else if (ServoBeaconDown) {
 
             position -= INCREMENT;
             robot.servo1.setPosition(position);
@@ -260,79 +247,11 @@ public class PushbotTeleopTank_Iterative extends OpMode{
         }
 
 
-
-
     }
 
 
-
-    /*
-    public void strafeRight(){
-
-
-        /*
-        robot.rightMotor.setPower(FORWARD_SPEED);
-        robot.leftMotor.setPower(BACKWARDS_SPEED);
-        robot.rightMotorBack.setPower(BACKWARDS_SPEED);
-        robot.leftMotorBack.setPower(FORWARD_SPEED);
-        */
-
-   //     robot.rightMotor.setPower(STRAFE_SPEED);
-//        robot.leftMotor.setPower(-STRAFE_SPEED);
-  //      robot.rightMotorBack.setPower(-STRAFE_SPEED);
-//
-     //   telemetry.addData("strafeRight", "%.2f %.2f", FORWARD_SPEED, BACKWARDS_SPEED);
-
-
- //   }
-
-
-   // public void strafeLeft(){
-
-  //      robot.rightMotor.setPower(-STRAFE_SPEED);
-  //      robot.leftMotor.setPower(STRAFE_SPEED);
-    //    robot.rightMotorBack.setPower(STRAFE_SPEED);
-      //  robot.leftMotorBack.setPower(-STRAFE_SPEED);
-
-
-
-        //telemetry.addData("strafeLeft", "%.2f %.2f", FORWARD_SPEED, BACKWARDS_SPEED);
-
-
-
-    //}
-    //
-
-
-    /*
-    spin down code o reduec dtress on spinner motor
-    ================================================================
-      while (spinnerSpeedBack5 > 0){
-            spinnerSpeedBack5 = spinnerSpeedBack5 - 0.05;
-            robot.spinMotor.setPower(spinnerSpeedBack5);
-            try {
-                Thread.sleep(1000);
-
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
-
-        }
-        double stopSpinner = 0;
-        robot.spinMotor.setPower(stopSpinner);
-
-
-
-
-    ----------------------------------------------------------------
-    */
-    /*
-     * Code to run ONCE after the driver hits STOP
-     */
-    //Assertion failed: stop() should be called only if start() called before
     @Override
-    public void stop()   {
+    public void stop() {
 
 
     }
