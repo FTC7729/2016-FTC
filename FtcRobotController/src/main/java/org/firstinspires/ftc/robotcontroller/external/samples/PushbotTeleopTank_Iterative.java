@@ -35,12 +35,8 @@ package org.firstinspires.ftc.robotcontroller.external.samples;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.Range;
-
 
 
 /**
@@ -59,18 +55,20 @@ public class PushbotTeleopTank_Iterative extends OpMode{
     final boolean FALSE = false;
     final boolean TRUE = true;
     boolean isReverse = FALSE;
-    boolean  isStrafing = FALSE;
+    boolean isStrafingRight = FALSE;
+    boolean isStrafingLeft = FALSE;
     private static final double EXPO = 1.3;
-    public double           spinnerSpeedBack5 = 0.40;
+    public double spinnerSpeedBack5 = 0.40;
     boolean yBttnLstLoop = FALSE;
     boolean bBttnLstLoop = FALSE;
+    boolean xBttnLstLoop = FALSE;
     final double INCREMENT   = 0.01;
-    final double MAX_POS     =  1.0;     // Maximum rotational position
-    final double MIN_POS     =  0.0;     // Minimum rotational position
-    double  position = (MAX_POS - MIN_POS) / 2; // Start at halfway position
+    final double MAX_POS     =  1.0;
+    final double MIN_POS     =  0.0;
+    double  position = (MAX_POS - MIN_POS) / 2;
     public int direction = 1;
 
-
+    public final double STRAFE_SPEED = .6;
 
 
 
@@ -119,11 +117,7 @@ public class PushbotTeleopTank_Iterative extends OpMode{
      */
     @Override
     public void loop() {
-        /*
-        double left;
-        double rightY;
-        */
-        //
+
         /* Set the Gamepad values */
         float leftY = (float) -Math.pow(gamepad1.left_stick_y, EXPO);
         float rightY = (float) -Math.pow(gamepad1.right_stick_y, EXPO);
@@ -134,32 +128,40 @@ public class PushbotTeleopTank_Iterative extends OpMode{
         boolean ServoBeaconUp = gamepad2.dpad_up;
         boolean ServoBeaconDown = gamepad2.dpad_down;
 
-        float   LeftLoadBall = gamepad2.left_trigger; // collect ball, first phase, s2 & s3
-        float   RightFireBall = gamepad2.right_trigger; // collect ball, second phase, s3 & s4
-
 
 
         // Use B button to toggle direction of robot
-        if (gamepad1.b){
-            if (!bBttnLstLoop){
-                bBttnLstLoop = TRUE;
-                isReverse = !isReverse;
-            }
-        } else {
-            bBttnLstLoop = FALSE;
-        }
-
-        // Use Y button to toggle strafe mode of robot
         if (gamepad1.y){
             if (!yBttnLstLoop){
                 yBttnLstLoop = TRUE;
-                isStrafing = !isStrafing;
-                if (isStrafing) {
+                isReverse = !isReverse;
+            }
+        } else {
+            yBttnLstLoop = FALSE;
+        }
+
+        // Use Y button to toggle strafe mode of robot
+        if (gamepad1.b){
+            if (!bBttnLstLoop){
+                bBttnLstLoop = TRUE;
+                isStrafingRight = !isStrafingRight;
+                if (isStrafingLeft) {
+                    isStrafingLeft = false;
+                }
+                if (isStrafingRight) {
+                    robot.leftMotor.setPower(0);
+                    robot.rightMotor.setPower(0);
+                    robot.leftMotorBack.setPower(0);
+                    robot.rightMotorBack.setPower(0);
                     robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                     robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                     robot.leftMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                     robot.rightMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 } else {
+                    robot.leftMotor.setPower(0);
+                    robot.rightMotor.setPower(0);
+                    robot.leftMotorBack.setPower(0);
+                    robot.rightMotorBack.setPower(0);
                     robot.leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                     robot.rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                     robot.leftMotorBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -167,11 +169,44 @@ public class PushbotTeleopTank_Iterative extends OpMode{
                 }
             }
         } else {
-            yBttnLstLoop = FALSE;
+            bBttnLstLoop = FALSE;
         }
 
-        if(isStrafing){
+        if (gamepad1.x){
+            if (!xBttnLstLoop){
+                xBttnLstLoop = TRUE;
+                isStrafingLeft = !isStrafingLeft;
+                if (isStrafingRight) {
+                    isStrafingRight = false;
+                }
+                if (isStrafingLeft) {
+                    robot.leftMotor.setPower(0);
+                    robot.rightMotor.setPower(0);
+                    robot.leftMotorBack.setPower(0);
+                    robot.rightMotorBack.setPower(0);
+                    robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    robot.leftMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    robot.rightMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                } else {
+                    robot.leftMotor.setPower(0);
+                    robot.rightMotor.setPower(0);
+                    robot.leftMotorBack.setPower(0);
+                    robot.rightMotorBack.setPower(0);
+                    robot.leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    robot.rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    robot.leftMotorBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    robot.rightMotorBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                }
+            }
+        } else {
+            xBttnLstLoop = FALSE;
+        }
 
+        if(isStrafingRight){
+            strafeRight();
+        } else if (isStrafingLeft) {
+            strafeLeft();
         }
         else {
             // revese the controls if we are in reverse mode
@@ -191,29 +226,16 @@ public class PushbotTeleopTank_Iterative extends OpMode{
 
         }
 
-
-
-        // Define class members
-
-
-        //double position2 = -0.5;
-        boolean rampUp = true;
-
-
         //setting servoUp and down - does the max only not by increments and pausse
 
         //we want the spinner to constantly be moing for the whole opmode
         robot.spinMotor.setPower(spinnerSpeedBack5);
 
-        if(gamepad1.start){
-            direction = -direction;
-        }
-
         if (B2isPressed) {
             //collector ball
             robot.crservo2.setPower(-0.5);
             robot.crservo3.setPower(-0.5);
-            //     robot.crservo4.setPower(-0.5);
+
             robot.crservo2.setDirection(DcMotorSimple.Direction.REVERSE);
             robot.crservo3.setDirection(DcMotorSimple.Direction.REVERSE);
             // spinSet3();
@@ -224,7 +246,7 @@ public class PushbotTeleopTank_Iterative extends OpMode{
             // Launch ball
             robot.crservo4.setPower(-0.5);
             robot.crservo3.setPower(-0.5);
-            //     robot.crservo4.setPower(-0.5);
+
             robot.crservo4.setDirection(DcMotorSimple.Direction.REVERSE);
             robot.crservo3.setDirection(DcMotorSimple.Direction.REVERSE);
             // spinSet4();
@@ -233,14 +255,8 @@ public class PushbotTeleopTank_Iterative extends OpMode{
 
         if(!B2isPressed && !A2isPressed)
         {
-            //back most servo - port 6
-            //crservo2.seStPosition(MID_SERVO);
             robot.crservo2.setPower(0);
-            // middle servo - port 2
             robot.crservo3.setPower(0);
-            //crservo3.setPosition(MID_SERVO);
-            // launch servo - port 4
-            //crservo4.setPosition(MID_SERVO);
             robot.crservo4.setPower(0);
         }
 
@@ -258,75 +274,35 @@ public class PushbotTeleopTank_Iterative extends OpMode{
 
 
         }
-
-
-
-
+        
     }
 
 
 
-    /*
+
     public void strafeRight(){
 
+        robot.rightMotor.setPower(STRAFE_SPEED);
+        robot.leftMotor.setPower(-STRAFE_SPEED);
+        robot.rightMotorBack.setPower(-STRAFE_SPEED);
+        robot.leftMotorBack.setPower(STRAFE_SPEED);
 
-        /*
-        robot.rightMotor.setPower(FORWARD_SPEED);
-        robot.leftMotor.setPower(BACKWARDS_SPEED);
-        robot.rightMotorBack.setPower(BACKWARDS_SPEED);
-        robot.leftMotorBack.setPower(FORWARD_SPEED);
-        */
+        telemetry.addData("strafeRight", "%.2f %.2f", STRAFE_SPEED, STRAFE_SPEED);
 
-   //     robot.rightMotor.setPower(STRAFE_SPEED);
-//        robot.leftMotor.setPower(-STRAFE_SPEED);
-  //      robot.rightMotorBack.setPower(-STRAFE_SPEED);
-//
-     //   telemetry.addData("strafeRight", "%.2f %.2f", FORWARD_SPEED, BACKWARDS_SPEED);
+    }
 
 
- //   }
+    public void strafeLeft(){
 
+        robot.rightMotor.setPower(-STRAFE_SPEED);
+        robot.leftMotor.setPower(STRAFE_SPEED);
+        robot.rightMotorBack.setPower(STRAFE_SPEED);
+        robot.leftMotorBack.setPower(-STRAFE_SPEED);
 
-   // public void strafeLeft(){
+        telemetry.addData("strafeLeft", "%.2f %.2f", STRAFE_SPEED, STRAFE_SPEED);
 
-  //      robot.rightMotor.setPower(-STRAFE_SPEED);
-  //      robot.leftMotor.setPower(STRAFE_SPEED);
-    //    robot.rightMotorBack.setPower(STRAFE_SPEED);
-      //  robot.leftMotorBack.setPower(-STRAFE_SPEED);
+    }
 
-
-
-        //telemetry.addData("strafeLeft", "%.2f %.2f", FORWARD_SPEED, BACKWARDS_SPEED);
-
-
-
-    //}
-    //
-
-
-    /*
-    spin down code o reduec dtress on spinner motor
-    ================================================================
-      while (spinnerSpeedBack5 > 0){
-            spinnerSpeedBack5 = spinnerSpeedBack5 - 0.05;
-            robot.spinMotor.setPower(spinnerSpeedBack5);
-            try {
-                Thread.sleep(1000);
-
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
-
-        }
-        double stopSpinner = 0;
-        robot.spinMotor.setPower(stopSpinner);
-
-
-
-
-    ----------------------------------------------------------------
-    */
     /*
      * Code to run ONCE after the driver hits STOP
      */
