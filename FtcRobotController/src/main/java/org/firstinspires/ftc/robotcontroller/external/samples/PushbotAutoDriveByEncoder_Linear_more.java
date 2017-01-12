@@ -125,6 +125,15 @@ public class PushbotAutoDriveByEncoder_Linear_more extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
+        robot.spinMotor.setPower(0.1);
+        sleep(100);
+        robot.spinMotor.setPower(0.2);
+        sleep(100);
+        robot.spinMotor.setPower(0.3);
+        sleep(100);
+        robot.spinMotor.setPower(0.4);
+        sleep(100);
+
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         // test 1: Drive is too long - we went all the way from starting side to the the wall all the way across
@@ -181,18 +190,24 @@ public class PushbotAutoDriveByEncoder_Linear_more extends LinearOpMode {
 
          runtime.reset();
          robot.crservo2.setPower(Math.abs(speedServo));
-         robot.crservo3.setPower(Math.abs(speedServo));
+         robot.crservo3.setPower(Math.abs(speedServo - .05));
 
          while (opModeIsActive() &&
                  (runtime.seconds() < timeoutS)) {
              robot.crservo2.setPower(speedServo);
              robot.crservo3.setPower(speedServo);
+             robot.crservo4.setPower(speedServo);
              robot.spinMotor.setPower(speedSpinner);
-
+             try {
+                 Thread.sleep(2000);
+             } catch (InterruptedException e) {
+                 e.printStackTrace();
+             }
          }
-         robot.spinMotor.setPower(0);
+         robot.spinMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
          robot.crservo2.setPower(0);
-         robot.crservo3.setPower(0);
+         robot.crservo3.setPower(-.05);
+         robot.crservo4.setPower(0);
 
      }
  }

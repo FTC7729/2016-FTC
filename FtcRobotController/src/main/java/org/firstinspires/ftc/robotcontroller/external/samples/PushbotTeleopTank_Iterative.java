@@ -37,6 +37,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.util.Range;
 
 /**
  * make
@@ -118,8 +119,16 @@ public class PushbotTeleopTank_Iterative extends OpMode {
     public void loop() {
 
         /* Set the Gamepad values */
-        float leftY = (float) -Math.pow(gamepad1.left_stick_y, EXPO);
+        /*float leftY = (float) -Math.pow(gamepad1.left_stick_y, EXPO);
         float rightY = (float) -Math.pow(gamepad1.right_stick_y, EXPO);
+        telemetry.addData("strafeRight", "RightPow: %.2f" + " , Left: " + "%.2f", leftY, rightY);
+
+        leftY = Range.clip(leftY, -1, 1);
+        rightY = Range.clip(rightY, -1, 1);*/
+
+        float leftY = -gamepad1.left_stick_y;
+        float rightY = -gamepad1.right_stick_y;
+        telemetry.addData("strafeRight", "RightPow: %.2f" + " , Left: " + "%.2f", leftY, rightY);
 
         boolean A2isPressed = gamepad2.a;
 
@@ -216,6 +225,7 @@ public class PushbotTeleopTank_Iterative extends OpMode {
             }
 
 
+            telemetry.addData("strafeRight", "RightPow: %.2f" + " , Left: " + "%.2f", leftY, rightY);
             robot.leftMotorBack.setPower(leftY);
             robot.leftMotor.setPower(leftY);
             robot.rightMotor.setPower(rightY);
@@ -231,9 +241,11 @@ public class PushbotTeleopTank_Iterative extends OpMode {
 
             robot.crservo2.setPower(-0.5);
             robot.crservo3.setPower(-0.5);
+            robot.crservo4.setPower(-0.5);
 
             robot.crservo2.setDirection(DcMotorSimple.Direction.REVERSE);
             robot.crservo3.setDirection(DcMotorSimple.Direction.REVERSE);
+            robot.crservo4.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
         }
@@ -241,12 +253,11 @@ public class PushbotTeleopTank_Iterative extends OpMode {
         if (A2isPressed) {
             // Launch ball and move all 3 servos
 
-            robot.crservo2.setPower(-0.5);
             robot.crservo4.setPower(-0.5);
             robot.crservo3.setPower(-0.5);
 
-            robot.crservo4.setDirection(DcMotorSimple.Direction.REVERSE);
             robot.crservo3.setDirection(DcMotorSimple.Direction.REVERSE);
+            robot.crservo4.setDirection(DcMotorSimple.Direction.REVERSE);
             // spinSet4();
 
         }
@@ -304,6 +315,7 @@ public class PushbotTeleopTank_Iterative extends OpMode {
     @Override
     public void stop() {
 
+        robot.spinMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
     }
 

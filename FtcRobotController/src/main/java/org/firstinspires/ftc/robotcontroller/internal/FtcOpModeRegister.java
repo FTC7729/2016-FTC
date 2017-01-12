@@ -44,6 +44,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.ConceptScanServo;
 import org.firstinspires.ftc.robotcontroller.external.samples.LinearVisionSample;
 import org.firstinspires.ftc.robotcontroller.external.samples.ManualVisionSample;
 import org.firstinspires.ftc.robotcontroller.external.samples.PushbotAutoDriveByEncoder_Linear;
+import org.firstinspires.ftc.robotcontroller.external.samples.PushbotAutoDriveByEncoder_Linear_more;
 import org.firstinspires.ftc.robotcontroller.external.samples.PushbotAutoDriveByTime_Linear;
 import org.firstinspires.ftc.robotcontroller.external.samples.PushbotTeleopPOV_Linear;
 import org.firstinspires.ftc.robotcontroller.external.samples.PushbotTeleopPOV_Linear_Auto;
@@ -89,7 +90,7 @@ public class FtcOpModeRegister implements OpModeRegister {
      //   manager.register("Michael Jackson Moves", PushbotAutoDriveByTime_Linear.class);
         // AUTO LIST
        // manager.register("AUTOMODE Bot Config - Move Me ", PushbotTeleopPOV_Linear_Auto.class);
-        manager.register("Autonomous CAT  ", PushbotAutoDriveByEncoder_Linear.class);
+        manager.register("Autonomous CAT  ", PushbotAutoDriveByEncoder_Linear_more.class);
 
         // TeleOp List
 
