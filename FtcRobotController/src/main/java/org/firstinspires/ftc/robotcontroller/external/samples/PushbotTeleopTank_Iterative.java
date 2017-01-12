@@ -38,29 +38,30 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-
 /**
- make
- shit
- drive
+ * make
+ * shit
+ * drive
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Pushbot: Teleop Tank", group="Pushbot")
+@TeleOp(name = "Pushbot: Teleop Tank", group = "Pushbot")
 @Disabled
-public class PushbotTeleopTank_Iterative extends OpMode{
+public class PushbotTeleopTank_Iterative extends OpMode {
 
     /* Declare OpMode members. */
-    HardwarePushbot robot       = new HardwarePushbot(); // use the class created to define a Pushbot's hardware
+    HardwarePushbot robot = new HardwarePushbot(); // use the class created to define a Pushbot's hardware
     final boolean FALSE = false;
     final boolean TRUE = true;
     boolean isReverse = FALSE;
+
     boolean isStrafingRight = FALSE;
     boolean isStrafingLeft = FALSE;
     private static final double EXPO = 1.3;
     public double spinnerSpeedBack5 = 0.40;
     boolean yBttnLstLoop = FALSE;
     boolean bBttnLstLoop = FALSE;
+  
     boolean xBttnLstLoop = FALSE;
     final double INCREMENT   = 0.01;
     final double MAX_POS     =  1.0;
@@ -69,8 +70,6 @@ public class PushbotTeleopTank_Iterative extends OpMode{
     public int direction = 1;
 
     public final double STRAFE_SPEED = .6;
-
-
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -127,8 +126,6 @@ public class PushbotTeleopTank_Iterative extends OpMode{
         boolean B2isPressed = gamepad2.b;
         boolean ServoBeaconUp = gamepad2.dpad_up;
         boolean ServoBeaconDown = gamepad2.dpad_down;
-
-
 
         // Use B button to toggle direction of robot
         if (gamepad1.y){
@@ -210,7 +207,7 @@ public class PushbotTeleopTank_Iterative extends OpMode{
         }
         else {
             // revese the controls if we are in reverse mode
-            if (isReverse){
+            if (isReverse) {
                 leftY = -leftY;
                 rightY = -rightY;
                 float temp = leftY;
@@ -225,25 +222,26 @@ public class PushbotTeleopTank_Iterative extends OpMode{
             robot.rightMotorBack.setPower(rightY);
 
         }
-
         //setting servoUp and down - does the max only not by increments and pausse
 
         //we want the spinner to constantly be moing for the whole opmode
         robot.spinMotor.setPower(spinnerSpeedBack5);
-
+       
         if (B2isPressed) {
-            //collector ball
+
             robot.crservo2.setPower(-0.5);
             robot.crservo3.setPower(-0.5);
 
             robot.crservo2.setDirection(DcMotorSimple.Direction.REVERSE);
             robot.crservo3.setDirection(DcMotorSimple.Direction.REVERSE);
-            // spinSet3();
+
 
         }
 
         if (A2isPressed) {
-            // Launch ball
+            // Launch ball and move all 3 servos
+
+            robot.crservo2.setPower(-0.5);
             robot.crservo4.setPower(-0.5);
             robot.crservo3.setPower(-0.5);
 
@@ -260,14 +258,14 @@ public class PushbotTeleopTank_Iterative extends OpMode{
             robot.crservo4.setPower(0);
         }
 
-        if (ServoBeaconUp){
+        if (ServoBeaconUp) {
 
-            position += INCREMENT ;
+            position += INCREMENT;
             robot.servo1.setPosition(position);
 
         }
         // this does the same as servoUp goes to same spot - once button is relesed it's dones
-        else if (ServoBeaconDown){
+        else if (ServoBeaconDown) {
 
             position -= INCREMENT;
             robot.servo1.setPosition(position);
@@ -302,13 +300,9 @@ public class PushbotTeleopTank_Iterative extends OpMode{
         telemetry.addData("strafeLeft", "%.2f %.2f", STRAFE_SPEED, STRAFE_SPEED);
 
     }
-
-    /*
-     * Code to run ONCE after the driver hits STOP
-     */
-    //Assertion failed: stop() should be called only if start() called before
+  
     @Override
-    public void stop()   {
+    public void stop() {
 
 
     }

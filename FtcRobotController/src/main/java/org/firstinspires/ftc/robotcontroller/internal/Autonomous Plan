@@ -11,9 +11,15 @@
 Tele op plan
 
 collector buttons
- button for front 2 and button for all 3
- experiment for slightly different values for middle servo
-delete all excess code and constants
-add in whole holonomic code
 
+
+ ?experiment for slightly different values for middle servo
+
+?add in whole holonomic code
+
+
+
+completed----
 adding control exponentiation
+==delete all excess code and constants
+button for front 2 and button for all 3
