@@ -60,6 +60,7 @@ public class PushbotTeleopTank_Iterative extends OpMode {
     boolean isStrafingLeft = FALSE;
     private static final double EXPO = 1.3;
     public double spinnerSpeedBack5 = 0.40;
+	public double   servospeed = -1.0;
     boolean yBttnLstLoop = FALSE;
     boolean bBttnLstLoop = FALSE;
   
@@ -71,6 +72,8 @@ public class PushbotTeleopTank_Iterative extends OpMode {
     public int direction = 1;
 
     public final double STRAFE_SPEED = .6;
+	
+	boolean SleepingRoommate = true;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -109,7 +112,14 @@ public class PushbotTeleopTank_Iterative extends OpMode {
     @Override
     public void start() {
 
-        robot.servo1.setPosition(0.0);
+        //robot.spinMotor.setPower(0.0);
+        if (SleepingRoommate) {
+            //turn off noisy spinner for testing purposes
+            robot.spinMotor.setPower(0);
+        } else
+        {
+            robot.spinMotor.setPower(spinnerSpeedBack5);
+        }
     }
 
     /*
@@ -128,7 +138,7 @@ public class PushbotTeleopTank_Iterative extends OpMode {
 
         float leftY = -gamepad1.left_stick_y;
         float rightY = -gamepad1.right_stick_y;
-        telemetry.addData("strafeRight", "RightPow: %.2f" + " , Left: " + "%.2f", leftY, rightY);
+        //telemetry.addData("strafeRight", "RightPow: %.2f" + " , Left: " + "%.2f", leftY, rightY);
 
         boolean A2isPressed = gamepad2.a;
 
@@ -225,7 +235,7 @@ public class PushbotTeleopTank_Iterative extends OpMode {
             }
 
 
-            telemetry.addData("strafeRight", "RightPow: %.2f" + " , Left: " + "%.2f", leftY, rightY);
+            //telemetry.addData("strafeRight", "RightPow: %.2f" + " , Left: " + "%.2f", leftY, rightY);
             robot.leftMotorBack.setPower(leftY);
             robot.leftMotor.setPower(leftY);
             robot.rightMotor.setPower(rightY);
@@ -235,13 +245,13 @@ public class PushbotTeleopTank_Iterative extends OpMode {
         //setting servoUp and down - does the max only not by increments and pausse
 
         //we want the spinner to constantly be moing for the whole opmode
-        robot.spinMotor.setPower(spinnerSpeedBack5);
+        //robot.spinMotor.setPower(spinnerSpeedBack5);
        
         if (B2isPressed) {
-
-            robot.crservo2.setPower(-0.5);
-            robot.crservo3.setPower(-0.5);
-            robot.crservo4.setPower(-0.5);
+			//collector ball
+            robot.crservo2.setPower(servospeed);
+            robot.crservo3.setPower(servospeed);
+            robot.crservo4.setPower(servospeed);
 
             robot.crservo2.setDirection(DcMotorSimple.Direction.REVERSE);
             robot.crservo3.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -253,19 +263,22 @@ public class PushbotTeleopTank_Iterative extends OpMode {
         if (A2isPressed) {
             // Launch ball and move all 3 servos
 
-            robot.crservo4.setPower(-0.5);
-            robot.crservo3.setPower(-0.5);
+            robot.crservo4.setPower(servospeed);
+            robot.crservo3.setPower(servospeed);
 
-            robot.crservo3.setDirection(DcMotorSimple.Direction.REVERSE);
             robot.crservo4.setDirection(DcMotorSimple.Direction.REVERSE);
+            robot.crservo3.setDirection(DcMotorSimple.Direction.REVERSE);
             // spinSet4();
 
         }
 
         if(!B2isPressed && !A2isPressed)
         {
+			//back most servo - port 6
             robot.crservo2.setPower(0);
+			// middle servo - port 2
             robot.crservo3.setPower(0);
+			// launch servo - port 4
             robot.crservo4.setPower(0);
         }
 
@@ -296,7 +309,7 @@ public class PushbotTeleopTank_Iterative extends OpMode {
         robot.rightMotorBack.setPower(-STRAFE_SPEED);
         robot.leftMotorBack.setPower(STRAFE_SPEED);
 
-        telemetry.addData("strafeRight", "%.2f %.2f", STRAFE_SPEED, STRAFE_SPEED);
+        //telemetry.addData("strafeRight", "%.2f %.2f", STRAFE_SPEED, STRAFE_SPEED);
 
     }
 
@@ -308,7 +321,7 @@ public class PushbotTeleopTank_Iterative extends OpMode {
         robot.rightMotorBack.setPower(STRAFE_SPEED);
         robot.leftMotorBack.setPower(-STRAFE_SPEED);
 
-        telemetry.addData("strafeLeft", "%.2f %.2f", STRAFE_SPEED, STRAFE_SPEED);
+       // telemetry.addData("strafeLeft", "%.2f %.2f", STRAFE_SPEED, STRAFE_SPEED);
 
     }
   
