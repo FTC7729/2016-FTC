@@ -125,14 +125,15 @@ public class PushbotAutoDriveByEncoder_Linear_more extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
+        //change this value
         robot.spinMotor.setPower(0.1);
-        sleep(100);
+        sleep(250);
         robot.spinMotor.setPower(0.2);
-        sleep(100);
+        sleep(250);
         robot.spinMotor.setPower(0.3);
-        sleep(100);
+        sleep(250);
         robot.spinMotor.setPower(0.4);
-        sleep(100);
+        sleep(250);
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
@@ -174,8 +175,7 @@ public class PushbotAutoDriveByEncoder_Linear_more extends LinearOpMode {
 
 
 
-
-        sleep(1000);     // pause for servos to move
+        // pause for servos to move
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
@@ -185,20 +185,32 @@ public class PushbotAutoDriveByEncoder_Linear_more extends LinearOpMode {
 
      robot.crservo2.setDirection(DcMotorSimple.Direction.REVERSE);
      robot.crservo3.setDirection(DcMotorSimple.Direction.REVERSE);
+     robot.crservo4.setDirection(DcMotorSimple.Direction.REVERSE);
 
      if (opModeIsActive()) {
 
          runtime.reset();
-         robot.crservo2.setPower(Math.abs(speedServo));
-         robot.crservo3.setPower(Math.abs(speedServo - .05));
+
+         robot.spinMotor.setPower(speedSpinner);
+
+         try {
+             sleep(1300);
+         } catch (Exception e) {
+             e.printStackTrace();
+         }
 
          while (opModeIsActive() &&
                  (runtime.seconds() < timeoutS)) {
              robot.crservo2.setPower(speedServo);
              robot.crservo3.setPower(speedServo);
              robot.crservo4.setPower(speedServo);
-             robot.spinMotor.setPower(speedSpinner);
+
+             robot.crservo4.setDirection(DcMotorSimple.Direction.REVERSE);
              try {
+                 sleep(1500);
+                 robot.crservo2.setPower(0);
+                 robot.crservo3.setPower(-.05);
+                 robot.crservo4.setPower(0);
                  Thread.sleep(2000);
              } catch (InterruptedException e) {
                  e.printStackTrace();

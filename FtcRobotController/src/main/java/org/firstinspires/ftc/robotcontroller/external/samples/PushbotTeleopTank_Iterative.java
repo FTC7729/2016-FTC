@@ -39,6 +39,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 
+import static java.lang.Thread.sleep;
+
 /**
  * make
  * shit
@@ -59,7 +61,7 @@ public class PushbotTeleopTank_Iterative extends OpMode {
     boolean isStrafingRight = FALSE;
     boolean isStrafingLeft = FALSE;
     private static final double EXPO = 1.3;
-    public double spinnerSpeedBack5 = 0.40;
+    public double spinnerSpeedBack5 = 0.38;
 	public double   servospeed = -1.0;
     boolean yBttnLstLoop = FALSE;
     boolean bBttnLstLoop = FALSE;
@@ -73,7 +75,7 @@ public class PushbotTeleopTank_Iterative extends OpMode {
 
     public final double STRAFE_SPEED = .6;
 	
-	boolean SleepingRoommate = true;
+	boolean SleepingRoommate = false;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -118,7 +120,25 @@ public class PushbotTeleopTank_Iterative extends OpMode {
             robot.spinMotor.setPower(0);
         } else
         {
-            robot.spinMotor.setPower(spinnerSpeedBack5);
+            double increment = spinnerSpeedBack5 / 4;
+            double speed = 0;
+            speed += increment;
+            try {
+                robot.spinMotor.setPower(speed);
+                speed += increment;
+                sleep(250);
+                robot.spinMotor.setPower(speed);
+                speed += increment;
+                sleep(250);
+                robot.spinMotor.setPower(speed);
+                speed += increment;
+                sleep(250);
+                robot.spinMotor.setPower(speed);
+                sleep(250);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            ///robot.spinMotor.setPower(spinnerSpeedBack5);
         }
     }
 
