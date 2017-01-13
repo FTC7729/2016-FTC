@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import chawks.hardware.DutchessConfiguration;
+import chawks.hardware.Dutchess;
 
 @Autonomous(name = "Shoot from corner", group = "Pushbot")
 public class ShootFromCorner extends LinearOpMode {
@@ -21,7 +21,7 @@ public class ShootFromCorner extends LinearOpMode {
     static final double FORWARD_SPEED = 0.6;
     static final double BACKWARDS_SPEED = -0.6;
     /* Declare OpMode members. */
-    DutchessConfiguration robot = new DutchessConfiguration();   // Use a Pushbot's hardware
+    Dutchess robot = new Dutchess();   // Use a Pushbot's hardware
     private ElapsedTime runtime = new ElapsedTime();
 
     @Override

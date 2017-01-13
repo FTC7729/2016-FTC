@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 
-import chawks.hardware.DutchessConfiguration;
+import chawks.hardware.Dutchess;
 
 import static java.lang.Thread.sleep;
 
@@ -18,20 +18,132 @@ public class DriveMode extends OpMode {
     private final double MIN_POS = 0.5;
     private double position = (MAX_POS - MIN_POS) / 2;
 
+    /**
+     * Maximum speed of motor
+     **/
     public static final double MAX_SPIN_MOTOR_SPEED = 0.38;
-    public static final double MAX_SPIN_MOTOR_SPEED_DELTA = MAX_SPIN_MOTOR_SPEED / 4;
 
-    public double servospeed = -1.0;
-    public int direction = 1;
+    /**
+     * Maximum amount we are willing to change motor speed at-a-time
+     **/
+    public static final double MAX_SPIN_MOTOR_POWER_DELTA = MAX_SPIN_MOTOR_SPEED / 4;
 
-    DutchessConfiguration robot = new DutchessConfiguration(); // use the class created to define a Pushbot's hardware
-    boolean isReverse;
-    boolean isStrafingRight;
-    boolean isStrafingLeft;
-    boolean wasPad1ButtonY;
-    boolean bBttnLstLoop;
-    boolean xBttnLstLoop;
-    boolean SleepingRoommate;
+    /**
+     * Servo speed for shooting
+     */
+    public static final double SERVO_SPEED = -1.0;
+
+    /**
+     * Robot hardware configuration
+     */
+    private Dutchess robot = new Dutchess();
+
+    public static enum DrivingDirection {
+        FORWARD, REVERSE;
+    }
+
+    /**
+     * Driving direction
+     **/
+    private DrivingDirection drivingDirection = DrivingDirection.FORWARD;
+
+    /**
+     * Spin motor thread
+     **/
+    private Thread spinMotorThread;
+
+    /**
+     * Spin motor controller
+     */
+    private SpinMotorController spinMotorController;
+
+
+    public class SpinMotorController implements Runnable {
+        /**
+         * True if spin motor should be disabled
+         **/
+        boolean disabled;
+
+        /**
+         * Target spin motor speed. This background thread will continously work to reach
+         * this speed, at a safe pace.
+         */
+        private double targetPower;
+
+        public SpinMotorController(boolean disabled, double power) {
+            this.disabled = disabled;
+            setTargetPower(power);
+        }
+
+        public void setTargetPower(double power) {
+            this.targetPower = disabled ? 0 : clipSpinMotorPower(power);
+        }
+
+        public void disable() {
+            telemetry.addData("spinMotor", "currentPower:%s", robot.spinMotor.getPower());
+            setTargetPower(0);
+            this.disabled = true;
+        }
+
+        private double clipSpinMotorPower(double power) {
+            if (power < 0) {
+                return 0;
+            } else if (power > MAX_SPIN_MOTOR_SPEED) {
+                return MAX_SPIN_MOTOR_SPEED;
+            } else {
+                return power;
+            }
+        }
+
+        public void run() {
+            telemetry.addData("spinMotor", "started");
+            try {
+                managePower();
+            } finally {
+                telemetry.addData("spinMotor", "stopped");
+            }
+        }
+
+        private void managePower() {
+            while (true) {
+                // make sure spin motor is going expected direction
+                DcMotorSimple.Direction direction = robot.spinMotor.getDirection();
+                if (direction != DcMotorSimple.Direction.FORWARD) {
+                    telemetry.addData("spinMotor", "directionWas:%s", direction.name());
+                    robot.spinMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+                }
+
+                // we can burn the motors if we change the speed too quickly
+                final double currentPower = clipSpinMotorPower(robot.spinMotor.getPower());
+
+                // figure out what new power settings can be for this iteration
+                final double newPower;
+                double delta = targetPower - currentPower;
+                if (delta > 0) {
+                    newPower = clipSpinMotorPower(currentPower + Math.min(delta, MAX_SPIN_MOTOR_POWER_DELTA));
+                } else {
+                    newPower = clipSpinMotorPower(currentPower - Math.min(-delta, MAX_SPIN_MOTOR_POWER_DELTA));
+                }
+
+                telemetry.addData("spinMotor", "from:%.2f, to:%.2f", currentPower, newPower);
+
+                robot.spinMotor.setPower(newPower);
+                if (newPower <= 0.0 && disabled) {
+                    // exit thread when disabled and target power reached
+                    return;
+                }
+
+                try {
+                    // give motor time to adjust
+                    sleep(500);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    return;
+                }
+            }
+        }
+    }
+
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -45,6 +157,11 @@ public class DriveMode extends OpMode {
 
         setWheelsToRunWithoutEncoder();
         robot.spinMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        boolean sleepingRoommate = false;
+        spinMotorController = new SpinMotorController(sleepingRoommate, 0);
+        spinMotorThread = new Thread(spinMotorController);
+        spinMotorThread.start();
     }
 
     /*
@@ -59,108 +176,102 @@ public class DriveMode extends OpMode {
      */
     @Override
     public void start() {
-        setSpinMotorSpeed(MAX_SPIN_MOTOR_SPEED);
+        spinMotorController.setTargetPower(MAX_SPIN_MOTOR_SPEED);
+        robot.s3.setPower(-0.15);
     }
 
-    private double limitSpinSpeed(double speed) {
-        if (SleepingRoommate) {
-            return 0;
-        }
-        if (speed < 0) {
-            return 0;
-        } else if (speed > MAX_SPIN_MOTOR_SPEED) {
-            return MAX_SPIN_MOTOR_SPEED;
-        } else {
-            return speed;
-        }
-    }
-
-    private void setSpinMotorSpeed(final double targetSpeed) {
-        // make sure motor speed is not out of range
-        final double speed = limitSpinSpeed(targetSpeed);
-
-        // we can burn the motors if we change the speed too quickly
-        double currentSpeed = limitSpinSpeed(robot.spinMotor.getPower());
-        double totalDelta = speed - currentSpeed;
-
-        // let's figure out how many steps it would take to change speed gradually
-        int steps = Math.max(1, (int) Math.abs(totalDelta / MAX_SPIN_MOTOR_SPEED_DELTA));
-        double increment = totalDelta / steps;
-        telemetry.addData("setSpinMotorSpeed", "from:%.2f, to:%.2f, steps:%d, increment:%.2f", currentSpeed, speed, steps, increment);
-
-        for (int i = 0; i < steps; i++) {
-            currentSpeed += increment;
-            robot.spinMotor.setPower(limitSpinSpeed(currentSpeed));
-            try {
-                // give motor time to adjust
-                sleep(250);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                return;
-            }
-        }
-    }
 
     /*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
     @Override
     public void loop() {
+        handleGamePad1();
+        handleGamePad2();
+    }
+
+    /**
+     * Handle all Game Pad 1 controller input
+     */
+    private void handleGamePad1() {
         // TODO: would be nice to use exponential scaling of the Y value so that as you move stick further,
-        // the motor spins faster / more quickly.
-        float pad1LeftY = Range.clip(-gamepad1.left_stick_y, -1, 1);
-        float pad1RightY = Range.clip(-gamepad1.right_stick_y, -1, 1);
-        boolean isPad1ButtonY = gamepad1.y;
+        float leftStickY = Range.clip(-gamepad1.left_stick_y, -1, 1);
+        float rightStickY = Range.clip(-gamepad1.right_stick_y, -1, 1);
+        final boolean isButtonX = gamepad1.x;
+        final boolean isButtonY = gamepad1.y;
+        telemetry.addData("pad1", "left:%.2f, right:%.2f, dir:%s", leftStickY, rightStickY, drivingDirection.name());
 
-        boolean isPad2ButtonA = gamepad2.a;
-        boolean isPad2ButtonB = gamepad2.b;
-        boolean isPad2DirectionUp = gamepad2.dpad_up;
-        boolean isPad2DirectionDown = gamepad2.dpad_down;
-
-        // press Y button to toggle drive direction
-        if (false && isPad1ButtonY) {
-            if (!wasPad1ButtonY) {
-                isReverse = !isReverse;
-            }
-        }
-        wasPad1ButtonY = isPad1ButtonY;
-
-        if (isReverse) {
-            // TODO: this logic needs to be reviewed with live testing (Andrew/Joe)
-            float temp = -pad1LeftY;
-            pad1LeftY = -pad1RightY;
-            pad1RightY = temp;
+        if (gamepad1.left_bumper) {
+            spinMotorController.setTargetPower(0);
+        } else if (gamepad1.right_bumper) {
+            spinMotorController.setTargetPower(MAX_SPIN_MOTOR_SPEED);
         }
 
-        //telemetry.addData("strafeRight", "RightPow: %.2f" + " , Left: " + "%.2f", leftY, rightY);
-        robot.lb.setPower(pad1LeftY);
-        robot.lf.setPower(pad1LeftY);
-        robot.rf.setPower(pad1RightY);
-        robot.rb.setPower(pad1RightY);
+        // switch driving directions
+        if (isButtonX) {
+            drivingDirection = DrivingDirection.FORWARD;
+        } else if (isButtonY) {
+            drivingDirection = DrivingDirection.REVERSE;
+        }
 
-        // ---------------------------------------------------------------------------------
-        // All of this code is related to Pad 2 handling, which is working fine
+        final float leftPower;
+        final float rightPower;
+        switch (drivingDirection) {
+            case FORWARD:
+            default:
+                leftPower = leftStickY;
+                rightPower = rightStickY;
+                break;
+            case REVERSE:
+                leftPower = -rightStickY;
+                rightPower = -leftStickY;
+                break;
+        }
 
-        if (isPad2ButtonB) {
+        telemetry.addData("drive", "left:%.2f, right:%.2f", leftPower, rightPower);
+        robot.lb.setPower(leftPower);
+        robot.lf.setPower(leftPower);
+        robot.rf.setPower(rightPower);
+        robot.rb.setPower(rightPower);
+    }
+
+    /**
+     * Handle all Game Pad 2 controller input
+     */
+    private void handleGamePad2() {
+        boolean isButtonA = gamepad2.a;
+        boolean isButtonB = gamepad2.b;
+        boolean isDirectionUp = gamepad2.dpad_up;
+        boolean isDirectionDown = gamepad2.dpad_down;
+        telemetry.addData("pad2", "a:%s, b:%s, up:%s, down:%s, lb:%s, rb%s",
+                isButtonA, isButtonB, isDirectionUp, isDirectionDown, gamepad2.left_bumper, gamepad2.right_bumper);
+
+        if (gamepad2.left_bumper) {
+            spinMotorController.setTargetPower(0);
+        } else if (gamepad2.right_bumper) {
+            spinMotorController.setTargetPower(MAX_SPIN_MOTOR_SPEED);
+        }
+
+        if (isButtonB) {
             //collector ball
-            robot.s4.setPower(servospeed);
-            robot.s3.setPower(servospeed);
-            robot.s2.setPower(servospeed);
+            robot.s4.setPower(SERVO_SPEED);
+            robot.s3.setPower(SERVO_SPEED);
+            robot.s2.setPower(SERVO_SPEED);
 
             robot.s4.setDirection(DcMotorSimple.Direction.REVERSE);
             robot.s3.setDirection(DcMotorSimple.Direction.REVERSE);
             robot.s2.setDirection(DcMotorSimple.Direction.REVERSE);
         }
 
-        if (isPad2ButtonA) {
+        if (isButtonA) {
             // Launch ball and move all 3 servos
-            robot.s2.setPower(servospeed);
-            robot.s3.setPower(servospeed);
+            robot.s2.setPower(SERVO_SPEED);
+            robot.s3.setPower(SERVO_SPEED);
             robot.s2.setDirection(DcMotorSimple.Direction.REVERSE);
             robot.s3.setDirection(DcMotorSimple.Direction.REVERSE);
         }
 
-        if (!isPad2ButtonB && !isPad2ButtonA) {
+        if (!isButtonB && !isButtonA) {
             //back most servo - port 6
             robot.s4.setPower(0);
             // middle servo - port 2
@@ -169,10 +280,10 @@ public class DriveMode extends OpMode {
             robot.s2.setPower(0);
         }
 
-        if (isPad2DirectionUp) {
+        if (isDirectionUp) {
             position += INCREMENT;
             robot.s1.setPosition(position);
-        } else if (isPad2DirectionDown) {
+        } else if (isDirectionDown) {
             // this does the same as servoUp goes to same spot - once button is relesed it's dones
             position -= INCREMENT;
             robot.s1.setPosition(position);
@@ -202,6 +313,6 @@ public class DriveMode extends OpMode {
 
     @Override
     public void stop() {
-        robot.spinMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        spinMotorController.disable();
     }
 }
