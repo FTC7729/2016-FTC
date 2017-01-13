@@ -1,11 +1,18 @@
 import java.util.regex.Pattern
 
+plugins {
+	id 'eclipse'
+}
+
 //
 // build.gradle in FtcRobotController
 //
 apply plugin: 'com.android.library'
 
 android {
+    lintOptions {
+        abortOnError false
+    }
 
     defaultConfig {
         minSdkVersion 19
