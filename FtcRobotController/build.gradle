@@ -33,4 +33,8 @@ repositories {
     }
 }
 
+dependencies {
+    compile group: 'com.google.guava', name: 'guava', version: '20.0'
+}
+
 apply from: 'build.release.gradle'
