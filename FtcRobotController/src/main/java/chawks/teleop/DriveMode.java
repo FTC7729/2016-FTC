@@ -201,12 +201,6 @@ public class DriveMode extends OpMode {
         final boolean isButtonY = gamepad1.y;
         telemetry.addData("pad1", "left:%.2f, right:%.2f, dir:%s", leftStickY, rightStickY, drivingDirection.name());
 
-        if (gamepad1.left_bumper) {
-            spinMotorController.setTargetPower(0);
-        } else if (gamepad1.right_bumper) {
-            spinMotorController.setTargetPower(MAX_SPIN_MOTOR_SPEED);
-        }
-
         // switch driving directions
         if (isButtonX) {
             drivingDirection = DrivingDirection.FORWARD;
@@ -228,7 +222,6 @@ public class DriveMode extends OpMode {
                 break;
         }
 
-        telemetry.addData("drive", "left:%.2f, right:%.2f", leftPower, rightPower);
         robot.lb.setPower(leftPower);
         robot.lf.setPower(leftPower);
         robot.rf.setPower(rightPower);
