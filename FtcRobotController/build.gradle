@@ -1,11 +1,18 @@
 import java.util.regex.Pattern
 
+plugins {
+	id 'eclipse'
+}
+
 //
 // build.gradle in FtcRobotController
 //
 apply plugin: 'com.android.library'
 
 android {
+    lintOptions {
+        abortOnError false
+    }
 
     defaultConfig {
         minSdkVersion 19
@@ -24,6 +31,10 @@ repositories {
     flatDir {
         dirs '../libs'
     }
+}
+
+dependencies {
+    compile group: 'com.google.guava', name: 'guava', version: '20.0'
 }
 
 apply from: 'build.release.gradle'
