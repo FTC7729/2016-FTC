@@ -10,7 +10,7 @@ import chawks.hardware.Dutchess;
 
 import static java.lang.Thread.sleep;
 
-@TeleOp(name = "Comp: Teleop Tank", group = "Pushbot")
+//@TeleOp(name = "Comp: Teleop Tank", group = "Pushbot")
 public class DriveMode extends OpMode {
     private final double INCREMENT = 0.01;
 

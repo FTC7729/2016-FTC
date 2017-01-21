@@ -76,7 +76,7 @@ public class Dutchess {
         setWheelsToRunUsingEncoder();
 
         s1 = hardwareMap.servo.get("s1"); //beacon arm - port 3
-        s1.setPosition(0.3);
+        s1.setPosition(1.0);
 
         s4 = hardwareMap.crservo.get("s4"); //back most servo - port 6
         s3 = hardwareMap.crservo.get("s3"); // middle servo - port 2
