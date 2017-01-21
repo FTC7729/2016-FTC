@@ -18,7 +18,7 @@ abstract class AbstractTeleOp extends OpMode {
     /**
      * Maximum speed of motor
      **/
-    public static final double MAX_SPIN_MOTOR_SPEED = 0.15;
+    public static final double MAX_SPIN_MOTOR_SPEED = 0.19;
 
     /**
      * Maximum amount we are willing to change motor speed at-a-time
