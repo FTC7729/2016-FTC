@@ -10,8 +10,8 @@ import chawks.hardware.Dutchess;
 
 import static java.lang.Thread.sleep;
 
-@TeleOp(name = "Comp: Teleop Tank", group = "Pushbot")
-public class DriveMode extends OpMode {
+@TeleOp(name = "Comp: Teleop Mecanum", group = "Pushbot")
+public class DriveModeMecanum extends OpMode {
     private final double INCREMENT = 0.01;
 
     private final double MAX_POS = 1.0;
@@ -194,12 +194,9 @@ public class DriveMode extends OpMode {
      * Handle all Game Pad 1 controller input
      */
     private void handleGamePad1() {
-        // TODO: would be nice to use exponential scaling of the Y value so that as you move stick further,
-        float leftStickY = Range.clip(-gamepad1.left_stick_y, -1, 1);
-        float rightStickY = Range.clip(-gamepad1.right_stick_y, -1, 1);
+        // TODO: would be nice to use exponential scaling of the Y value so that as you move stick further
         final boolean isButtonX = gamepad1.x;
         final boolean isButtonY = gamepad1.y;
-        telemetry.addData("pad1", "left:%.2f, right:%.2f, dir:%s", leftStickY, rightStickY, drivingDirection.name());
 
         // switch driving directions
         if (isButtonX) {
@@ -207,25 +204,42 @@ public class DriveMode extends OpMode {
         } else if (isButtonY) {
             drivingDirection = DrivingDirection.REVERSE;
         }
-
+        int directionControl = -1;
         final float leftPower;
         final float rightPower;
         switch (drivingDirection) {
             case FORWARD:
             default:
-                leftPower = leftStickY;
-                rightPower = rightStickY;
+                directionControl = -1;
                 break;
             case REVERSE:
-                leftPower = -rightStickY;
-                rightPower = -leftStickY;
+                directionControl = 1;
                 break;
         }
 
-        robot.lb.setPower(leftPower);
-        robot.lf.setPower(leftPower);
-        robot.rf.setPower(rightPower);
-        robot.rb.setPower(rightPower);
+        float forward = directionControl * gamepad1.left_stick_y; // push joystick1 forward to go forward
+        float right = -directionControl * gamepad1.left_stick_x; // push joystick1 to the right to strafe right
+        float clockwise = -directionControl * gamepad1.right_stick_x; // push joystick2 to the right to rotate clockwise
+        telemetry.addData("pad1", "forward:%.2f, right:%.2f, dir:%s", forward, right, drivingDirection.name());
+
+        final float K = 0.5F; //TODO: DO NOT EXCEED 1
+        clockwise = K*clockwise;
+
+        float lf_pow = forward + clockwise + right;
+        float rf_pow = forward - clockwise - right;
+        float lb_pow = forward + clockwise - right;
+        float rb_pow = forward - clockwise + right;
+
+        float max = Math.abs(lf_pow);
+        if (Math.abs(rf_pow)>max) max = Math.abs(rf_pow);
+        if (Math.abs(lb_pow)>max) max = Math.abs(lb_pow);
+        if (Math.abs(rb_pow)>max) max = Math.abs(rb_pow);
+        if (max>1) {lf_pow/=max; rf_pow/=max; lb_pow/=max; rb_pow/=max;}
+
+        robot.lb.setPower(lb_pow);
+        robot.rb.setPower(rb_pow);
+        robot.rf.setPower(rf_pow);
+        robot.lf.setPower(lf_pow);
     }
 
     /**

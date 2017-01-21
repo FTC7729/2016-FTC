@@ -57,7 +57,7 @@ public class ShootFromCorner extends LinearOpMode {
         robot.spinMotor.setPower(0.3);
         sleep(250);
 
-        robot.spinMotor.setPower(0.4);
+        robot.spinMotor.setPower(0.36);
         sleep(250);
 
         launchBall(-1.0, 0.8, 5.0); //servo speed, spiinner speed, timeout
