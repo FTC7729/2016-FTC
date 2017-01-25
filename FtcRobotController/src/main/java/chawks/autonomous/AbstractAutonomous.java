@@ -66,6 +66,9 @@ public abstract class AbstractAutonomous extends LinearOpMode {
 
         runMovement();
 
+        colorLook();
+
+
         // pause for servos to move
         telemetry.addData("Path", "Complete");
         telemetry.update();
@@ -255,4 +258,5 @@ public abstract class AbstractAutonomous extends LinearOpMode {
     }
 
     public abstract void runMovement();
+    public abstract void colorLook();
 }
