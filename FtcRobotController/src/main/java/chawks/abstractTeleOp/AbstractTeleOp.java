@@ -18,7 +18,8 @@ abstract class AbstractTeleOp extends OpMode {
     /**
      * Maximum speed of motor
      **/
-    public static final double MAX_SPIN_MOTOR_SPEED = 0.19;
+//    public static final double MAX_SPIN_MOTOR_SPEED = 0.19;
+    public static final double MAX_SPIN_MOTOR_SPEED = 0.10;
 
     /**
      * Maximum amount we are willing to change motor speed at-a-time
@@ -173,7 +174,10 @@ abstract class AbstractTeleOp extends OpMode {
      */
     @Override
     public void start() {
-        spinMotorController.setTargetPower(MAX_SPIN_MOTOR_SPEED);
+       // spinMotorController.setTargetPower(MAX_SPIN_MOTOR_SPEED);
+        // Don't start up Spin Motor until we press bumper
+        spinMotorController.setTargetPower(0);
+
         robot.s3.setPower(0.15);
     }
 

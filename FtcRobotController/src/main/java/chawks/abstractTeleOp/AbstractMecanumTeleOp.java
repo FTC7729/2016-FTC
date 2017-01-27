@@ -3,7 +3,7 @@ package chawks.abstractTeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@TeleOp(name = "TEST: Teleop Mecanum", group = "Pushbot")
+@TeleOp(name = "PICK ME: Teleop Mecanum", group = "Pushbot")
 public class AbstractMecanumTeleOp extends AbstractTeleOp {
 
     @Override

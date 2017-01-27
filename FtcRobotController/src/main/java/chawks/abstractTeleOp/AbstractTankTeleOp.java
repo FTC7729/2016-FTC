@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp(name = "TEST: Teleop Tank", group = "Pushbot")
+//@TeleOp(name = "TEST: Teleop Tank", group = "Pushbot")
 public class AbstractTankTeleOp extends AbstractTeleOp {
 
     public float STRAFE_SPEED = 0.6F;
