@@ -16,7 +16,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Created by jacqu on 1/26/2017.
  */
 
-@Autonomous(name="CameraLook", group="Pushbot")
+//@Autonomous(name="CameraLook", group="Pushbot")
 public class ColorBeacon extends LinearVisionOpMode{
 
 

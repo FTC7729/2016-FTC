@@ -14,7 +14,7 @@ import static org.lasarobotics.vision.opmode.VisionOpMode.beacon;
  * Created by joseph on 1/21/17.
  */
 
-@Autonomous(name = "move to beacon", group = "Pushbot")
+//@Autonomous(name = "move to beacon", group = "Pushbot")
 public class AbstractShootAndMoveAuto extends AbstractAutonomous {
 
     private final Dutchess robot = new Dutchess();

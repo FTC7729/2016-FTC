@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import chawks.hardware.Dutchess;
 
-@Autonomous(name = "Shoot from corner", group = "Pushbot")
+//@Autonomous(name = "Shoot from corner", group = "Pushbot")
 public class ShootFromCorner extends LinearOpMode {
     /**
      * Robot configuration
