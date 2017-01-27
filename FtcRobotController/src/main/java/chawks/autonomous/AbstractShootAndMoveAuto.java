@@ -33,17 +33,9 @@ public class AbstractShootAndMoveAuto extends AbstractAutonomous {
 
     }
 
-    public void colorLook(){
-    if (beacon.getAnalysis().isRightBlue()){
 
-        robot.s1.setPosition(Servo.MAX_POSITION);
 
-    }
-    else if (beacon.getAnalysis().isLeftBlue()){
-        robot.s1.setPosition(Servo.MIN_POSITION);
-    }
 
-    }
 
 
 }

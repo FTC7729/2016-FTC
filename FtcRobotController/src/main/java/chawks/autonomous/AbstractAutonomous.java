@@ -4,9 +4,17 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.lasarobotics.vision.android.Cameras;
+
+
+
+
 import chawks.hardware.Dutchess;
+
+import static org.lasarobotics.vision.opmode.VisionOpMode.beacon;
 
 public abstract class AbstractAutonomous extends LinearOpMode {
     /**
@@ -25,6 +33,7 @@ public abstract class AbstractAutonomous extends LinearOpMode {
     @Override
     public void runOpMode() {
         robot.init(hardwareMap);
+       // this.setCamera(Cameras.PRIMARY);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Resetting Encoders");    //
@@ -66,7 +75,7 @@ public abstract class AbstractAutonomous extends LinearOpMode {
 
         runMovement();
 
-        colorLook();
+        //colorLook();
 
 
         // pause for servos to move
@@ -257,6 +266,39 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         }
     }
 
+    public void colorLook() {
+
+        while (opModeIsActive()) {
+            if (beacon.getAnalysis().isBeaconFound()) {
+
+
+
+                if (beacon.getAnalysis().isRightBlue()) {
+
+                    robot.s1.setPosition(Servo.MAX_POSITION);
+
+                } else if (beacon.getAnalysis().isLeftBlue()) {
+                    robot.s1.setPosition(Servo.MIN_POSITION);
+                }
+
+            } else {
+
+                encoderDrive(.6, -2.0, 1.0);
+
+            }
+
+
+            telemetry.addData("Beacon Confidence: ", beacon.getAnalysis().getConfidence());
+        }
+
+
+    }
+
+
     public abstract void runMovement();
-    public abstract void colorLook();
+
+
+   //public abstract void colorLook();
+
+
 }
