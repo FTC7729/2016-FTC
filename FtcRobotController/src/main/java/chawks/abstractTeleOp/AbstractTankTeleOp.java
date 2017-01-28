@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 
-//@TeleOp(name = "TEST: Teleop Tank", group = "Pushbot")
+@TeleOp(name = "PICK ME: Udvar-Hazy ()", group = "Pushbot")
 public class AbstractTankTeleOp extends AbstractTeleOp {
 
     public float STRAFE_SPEED = 0.6F;
@@ -100,7 +100,8 @@ public class AbstractTankTeleOp extends AbstractTeleOp {
         if (gamepad2.left_bumper) {
             spinMotorController.setTargetPower(0);
         } else if (gamepad2.right_bumper) {
-            spinMotorController.setTargetPower(MAX_SPIN_MOTOR_SPEED);
+           spinMotorController.setTargetPower(MAX_SPIN_MOTOR_SPEED);
+           //spinMotorController.setTargetPower(0.1);
         }
 
         if (isButtonB) {
