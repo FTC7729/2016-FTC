@@ -3,7 +3,7 @@ package chawks.abstractTeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@TeleOp(name = "PICK ME: Teleop Mecanum", group = "Pushbot")
+@TeleOp(name = "PICK ME: Udvar-Hazy (Teleop Mecanum)", group = "Pushbot")
 public class AbstractMecanumTeleOp extends AbstractTeleOp {
 
     @Override
@@ -18,25 +18,29 @@ public class AbstractMecanumTeleOp extends AbstractTeleOp {
         } else if (isButtonY) {
             drivingDirection = DrivingDirection.REVERSE;
         }
-        int directionControl = -1;
+        //changing speed
+//        int directionControl = -1;
+        double directionControl = -0.5;
         final float leftPower;
         final float rightPower;
         switch (drivingDirection) {
             case FORWARD:
             default:
-                directionControl = -1;
+                directionControl = -0.5;
                 break;
             case REVERSE:
-                directionControl = 1;
+                directionControl = 0.5;
                 break;
         }
 
-        float forward = directionControl * gamepad1.left_stick_y; // push joystick1 forward to go forward
-        float right = -directionControl * gamepad1.left_stick_x; // push joystick1 to the right to strafe right
-        float clockwise = -directionControl * gamepad1.right_stick_x; // push joystick2 to the right to rotate clockwise
+        float forward = (float) (directionControl * gamepad1.left_stick_y); // push joystick1 forward to go forward
+        float right = (float) (-directionControl * gamepad1.left_stick_x); // push joystick1 to the right to strafe right
+        float clockwise = (float) (-directionControl * gamepad1.right_stick_x); // push joystick2 to the right to rotate clockwise
         telemetry.addData("pad1", "forward:%.2f, right:%.2f, dir:%s", forward, right, drivingDirection.name());
 
-        final float K = 0.5F; //TODO: DO NOT EXCEED 1
+        //final float K = 0.5F;
+        // TODO: DO NOT EXCEED 1
+        final float K = 0.2F;
         clockwise = K*clockwise;
 
         float lf_pow = forward + clockwise + right;
