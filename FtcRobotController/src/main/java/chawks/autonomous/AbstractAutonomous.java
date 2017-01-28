@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+
 import org.lasarobotics.vision.android.Cameras;
 
 
@@ -27,6 +28,7 @@ public abstract class AbstractAutonomous extends LinearOpMode {
     static final double     COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI);
 
     private final Dutchess robot = new Dutchess();
+
 
     private ElapsedTime elapsedTime = new ElapsedTime();
 
@@ -62,6 +64,12 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
+
+        ColorBeacon();
+
+
+
+
         robot.spinMotor.setPower(0.1);
         sleep(250);
 
@@ -74,6 +82,7 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         launchBall(-1.0, 0.8, 5.0); //servo speed, spinner speed, timeout
 
         runMovement();
+
 
         //colorLook();
 
@@ -266,6 +275,8 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         }
     }
 
+
+
     public void colorLook() {
 
         while (opModeIsActive()) {
@@ -298,7 +309,7 @@ public abstract class AbstractAutonomous extends LinearOpMode {
     public abstract void runMovement();
 
 
-   //public abstract void colorLook();
+    public abstract void ColorBeacon();
 
 
 }
