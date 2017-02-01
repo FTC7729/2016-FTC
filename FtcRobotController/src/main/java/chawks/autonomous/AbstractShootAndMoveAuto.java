@@ -10,7 +10,7 @@ import chawks.hardware.Dutchess;
 
 import static org.lasarobotics.vision.opmode.VisionOpMode.beacon;
 
-/**
+/*
  * Created by joseph on 1/21/17.
  */
 
@@ -30,12 +30,6 @@ import static org.lasarobotics.vision.opmode.VisionOpMode.beacon;
         //encoderDrive(double speed, double feetDistance, double timeoutS)
         encoderDrive(.6, 1.0, 1.3); // switched to 1 ft so robot can get a good look at the beacon
 
-
     }
-
-
-
-
-
 
 }

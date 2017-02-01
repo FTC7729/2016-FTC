@@ -165,8 +165,6 @@ public abstract class LinearVisionOpMode extends VisionOpMode {
         }
     }
 
-    public abstract void runOpmode() throws InterruptedException;
-
     private static class Threader implements Runnable {
         private final LinearVisionOpMode opModeReference;
         private RuntimeException lastError = null;

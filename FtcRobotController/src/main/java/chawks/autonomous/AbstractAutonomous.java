@@ -64,12 +64,6 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-
-        ColorBeacon();
-
-
-
-
         robot.spinMotor.setPower(0.1);
         sleep(250);
 
@@ -276,40 +270,6 @@ public abstract class AbstractAutonomous extends LinearOpMode {
     }
 
 
-
-    public void colorLook() {
-
-        while (opModeIsActive()) {
-            if (beacon.getAnalysis().isBeaconFound()) {
-
-
-
-                if (beacon.getAnalysis().isRightBlue()) {
-
-                    robot.s1.setPosition(Servo.MAX_POSITION);
-
-                } else if (beacon.getAnalysis().isLeftBlue()) {
-                    robot.s1.setPosition(Servo.MIN_POSITION);
-                }
-
-            } else {
-
-                encoderDrive(.6, -2.0, 1.0);
-
-            }
-
-
-            telemetry.addData("Beacon Confidence: ", beacon.getAnalysis().getConfidence());
-        }
-
-
-    }
-
-
     public abstract void runMovement();
-
-
-    public abstract void ColorBeacon();
-
 
 }
