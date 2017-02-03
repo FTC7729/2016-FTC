@@ -26,17 +26,18 @@ abstract public class ColorBeacon extends LinearVisionOpMode{
     @Override
     public void runOpMode() throws InterruptedException {
 
-        cameraInit();
+
         //Wait for the match to begin
         waitForStart();
 
+        cameraInit();
         //Main loop
         //Camera frames and OpenCV analysis will be delivered to this method as quickly as possible
         //This loop will exit once the opmode is closed
         while (opModeIsActive()) {
             //Log a few things
             telemetry.addData("Beacon Color", beacon.getAnalysis().getColorString());
-           // telemetry.addData("Beacon Center", beacon.getAnalysis().getLocationString());
+            // telemetry.addData("Beacon Center", beacon.getAnalysis().getLocationString());
             telemetry.addData("Beacon Confidence", beacon.getAnalysis().getConfidenceString());
            // telemetry.addData("Beacon Buttons", beacon.getAnalysis().getButtonString());
            // telemetry.addData("Screen Rotation", rotation.getScreenOrientationActual());
