@@ -36,7 +36,7 @@ abstract class AbstractTeleOp extends OpMode {
     public Dutchess robot = new Dutchess();
 
     public enum DrivingDirection {
-        FORWARD, REVERSE;
+        FORWARD, REVERSE
     }
 
     /**

@@ -29,7 +29,6 @@ public abstract class AbstractAutonomous extends LinearOpMode {
 
     private final Dutchess robot = new Dutchess();
 
-
     private ElapsedTime elapsedTime = new ElapsedTime();
 
     @Override
@@ -64,6 +63,26 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
+        initMovement();
+
+        shoot();
+
+        runMovement();
+
+
+        //colorLook();
+
+
+        // pause for servos to move
+        telemetry.addData("Path", "Complete");
+        telemetry.update();
+    }
+
+    public void initMovement() {
+
+    }
+
+    public void shoot() {
         robot.spinMotor.setPower(0.1);
         sleep(250);
 
@@ -75,15 +94,6 @@ public abstract class AbstractAutonomous extends LinearOpMode {
 
         launchBall(-1.0, 0.8, 5.0); //servo speed, spinner speed, timeout
 
-        runMovement();
-
-
-        //colorLook();
-
-
-        // pause for servos to move
-        telemetry.addData("Path", "Complete");
-        telemetry.update();
     }
 
     public void launchBall(double speedServo, double speedSpinner, double timeoutS) {
@@ -198,11 +208,7 @@ public abstract class AbstractAutonomous extends LinearOpMode {
             return false;
         } else if (robot.lf.getCurrentPosition() <= robot.lf.getTargetPosition()) {
             return false;
-        } else if (robot.rf.getCurrentPosition() <= robot.rf.getTargetPosition()) {
-            return false;
-        } else {
-            return true;
-        }
+        } else return robot.rf.getCurrentPosition() > robot.rf.getTargetPosition();
     }
 
     public void encoderDriveDirect(double speed, double leftFeet, double rightFeet, double leftBackFeet, double rightBackFeet, double timeoutS) {
