@@ -20,6 +20,8 @@ public class AbstractTankTeleOp extends AbstractTeleOp {
 
         final boolean isDPADLeft = gamepad1.dpad_left;
         final boolean isDPADRight = gamepad1.dpad_right;
+        final boolean isDPADUp = gamepad1.dpad_up;
+        final boolean isDPADDown = gamepad1.dpad_down;
 
         // switch driving directions
         if (isButtonX) {
@@ -66,6 +68,10 @@ public class AbstractTankTeleOp extends AbstractTeleOp {
             robot.lb.setPower(-tempLeft);
             robot.rb.setPower(-tempRight);
             return;
+        } else if (isDPADUp) {
+            spinMotorController.incrementUpSpinner();
+        } else if (isDPADDown) {
+            spinMotorController.incrementDownSpinner(); 
         }
 
         final float leftPower;

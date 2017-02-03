@@ -18,7 +18,7 @@ abstract class AbstractTeleOp extends OpMode {
     /**
      * Maximum speed of motor
      **/
-    public static final double MAX_SPIN_MOTOR_SPEED = 0.19;
+    public static final double MAX_SPIN_MOTOR_SPEED = 0.03; // lowered from .19 to .1 because ball was shooting to high
 
     /**
      * Maximum amount we are willing to change motor speed at-a-time
@@ -101,6 +101,14 @@ abstract class AbstractTeleOp extends OpMode {
             }
         }
 
+        public void incrementUpSpinner() {
+            targetPower += .01;
+        }
+
+        public void incrementDownSpinner() {
+            targetPower -= .01;
+        }
+
         private void managePower() {
             while (true) {
                 // make sure spin motor is going expected direction
@@ -133,6 +141,7 @@ abstract class AbstractTeleOp extends OpMode {
                 try {
                     // give motor time to adjust
                     sleep(500);
+                    telemetry.addData("Spinner Speed: %.2f", robot.spinMotor.getPower());
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     return;
