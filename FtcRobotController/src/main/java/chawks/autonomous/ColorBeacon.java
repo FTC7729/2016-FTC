@@ -3,40 +3,93 @@ package chawks.autonomous;
 
 import org.lasarobotics.vision.android.Cameras;
 import org.lasarobotics.vision.ftc.resq.Beacon;
+import org.lasarobotics.vision.ftc.resq.Beacon.BeaconAnalysis;
 import org.lasarobotics.vision.opmode.LinearVisionOpMode;
 import org.lasarobotics.vision.opmode.extensions.CameraControlExtension;
 import org.lasarobotics.vision.util.ScreenOrientation;
-import org.opencv.core.Mat;
 import org.opencv.core.Size;
 
+import chawks.autonomous.StrafeController.StrafeDirection;
 import chawks.hardware.Dutchess;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 /**
  * Created by jacqu on 1/26/2017.
  */
 
-//@Autonomous(name="CameraLook", group="Pushbot")
+@Autonomous(name="Camera(WeAreAlwaysWatching)", group="Pushbot")
 public class ColorBeacon extends LinearVisionOpMode {
 
-    private final int WIDTH = 150;
-    private final int HEIGHT = WIDTH / 12 * 9;
-    private final int SCALE = 6;
-    private final Size SIZE = new Size(WIDTH * SCALE, HEIGHT * SCALE);
-
-    public float STRAFE_SPEED = 0.6F;
+    private final int CAMERA_WIDTH = 900;
+    private final int CAMERA_HEIGHT = CAMERA_WIDTH / 12 * 9;
+    private final Size CAMERA_SIZE = new Size(CAMERA_WIDTH, CAMERA_HEIGHT);
 
     public Dutchess robot = new Dutchess();
+
+    private Thread strafeThread;
+    private StrafeController strafeController;
 
     @Override
     public void runOpMode() throws InterruptedException {
 
+        initializeVision();
+
+        /** wait for op-mode start */
+        waitForStart();
+
+        /** main loop */
+        strafeController = new StrafeController(robot, 0.2f);
+        strafeThread = new Thread(strafeController);
+        strafeThread.start();
+        strafeIntoPosition();
+        telemetry.addLine(strafeController.toString());
+        strafeController.stop();
+    }
+
+    /**
+     * Returns true when robot has been strafed into position.
+     *
+     * @return true if robot is in position
+     */
+    private boolean strafeIntoPosition() {
+        for (; ; ) {
+            if (!opModeIsActive()) {
+                return false;
+            }
+            telemetry.clear();
+
+            // let's take a look at the beacon
+            BeaconAnalysis beaconAnalysis = beacon.getAnalysis();
+            telemetry.addLine(beaconAnalysis.toString());
+            telemetry.addLine(strafeController.toString());
+
+            // make adjustments based upon what we see
+            double confidence = beaconAnalysis.getConfidence();
+            if (confidence > .65) {
+                boolean isRightBlue = beaconAnalysis.isRightBlue();
+                boolean isLeftRed = beaconAnalysis.isLeftRed();
+
+                if (isRightBlue && isLeftRed) {
+                    strafeController.setDirection(StrafeDirection.LEFT);
+                } else if (!isRightBlue && !isLeftRed) {
+                    strafeController.setDirection(StrafeDirection.RIGHT);
+                } else {
+                    strafeController.setDirection(StrafeDirection.STANDSTILL);
+                }
+            } else {
+                strafeController.setDirection(StrafeDirection.STANDSTILL);
+            }
+        }
+    }
+
+    private void initializeVision() throws InterruptedException {
         waitForVisionStart();
 
         /** Set Camera : PRIMARY == FRONT_FACING : SECONDARY == SELFIE_CAM */
         this.setCamera(Cameras.PRIMARY);
 
         /** Set Frame Size : LARGER == MORE_ACCURATE/SLOWER : SMALLER = LESS_ACCURATE/FASTER */
-        this.setFrameSize(SIZE);
+        this.setFrameSize(CAMERA_SIZE);
 
         /** Enable extensions below */
         enableExtensions();
@@ -49,11 +102,11 @@ public class ColorBeacon extends LinearVisionOpMode {
          * 0 is default, -1 is minimum and 1 is maximum tolerance
          * USE THIS PIC TO UNDERSTAND TOLERANCE  http://sensing.konicaminolta.us/images/blogImages/defining-color-tolerances.png
          */
-        beacon.setColorToleranceRed(1);
-        beacon.setColorToleranceBlue(-1);
+        beacon.setColorToleranceRed(0);
+        beacon.setColorToleranceBlue(0);
 
         /** Set to true if you are using a secondary camera : not front facing */
-        rotation.setIsUsingSecondaryCamera(false);
+        rotation.setIsUsingSecondaryCamera(true);
 
         /** this is global auto rotate : disable for normal uses */
         rotation.disableAutoRotate();
@@ -64,40 +117,9 @@ public class ColorBeacon extends LinearVisionOpMode {
         /** set camera conditions */
         cameraControl.setColorTemperature(CameraControlExtension.ColorTemperature.AUTO);
         cameraControl.setAutoExposureCompensation();
-
-        /** wait for start */
-        waitForStart();
-
-        /** main loop */
-        while (opModeIsActive()) {
-            Mat rgba = getFrameRgba();
-            if (rgba.get(0, 0)[0] < rgba.get(1, 0)[0]) {
-                // TODO: RED IS ON THE LEFT
-                float tempLeft;
-                float tempRight;
-                tempLeft = -STRAFE_SPEED;
-                tempRight = STRAFE_SPEED;
-                robot.lf.setPower(tempLeft);
-                robot.rf.setPower(tempRight);
-                robot.lb.setPower(-tempLeft);
-                robot.rb.setPower(-tempRight);
-            } else if (rgba.get(0, 0)[0] > rgba.get(1, 0)[0]) {
-                // TODO: RED IS ON THE RIGHT
-                float tempLeft;
-                float tempRight;
-                tempLeft = STRAFE_SPEED;
-                tempRight = -STRAFE_SPEED;
-                robot.lf.setPower(tempLeft);
-                robot.rf.setPower(tempRight);
-                robot.lb.setPower(-tempLeft);
-                robot.rb.setPower(-tempRight);
-            }
-        }
-
     }
 
     public void enableExtensions() {
-
         /** Enable Extension : beacon detection */
         enableExtension(Extensions.BEACON);
 
@@ -106,8 +128,6 @@ public class ColorBeacon extends LinearVisionOpMode {
 
         /** Enable Extension : manual camera control */
         enableExtension(Extensions.CAMERA_CONTROL);
-
     }
-
 }
 
