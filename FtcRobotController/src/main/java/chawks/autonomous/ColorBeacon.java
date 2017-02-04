@@ -1,10 +1,6 @@
 package chawks.autonomous;
 
 
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
 import org.lasarobotics.vision.android.Cameras;
 import org.lasarobotics.vision.ftc.resq.Beacon;
 import org.lasarobotics.vision.opmode.LinearVisionOpMode;
@@ -26,6 +22,10 @@ public class ColorBeacon extends LinearVisionOpMode {
     private final int HEIGHT = WIDTH / 12 * 9;
     private final int SCALE = 6;
     private final Size SIZE = new Size(WIDTH * SCALE, HEIGHT * SCALE);
+
+    public float STRAFE_SPEED = 0.6F;
+
+    public Dutchess robot = new Dutchess();
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -71,10 +71,26 @@ public class ColorBeacon extends LinearVisionOpMode {
         /** main loop */
         while (opModeIsActive()) {
             Mat rgba = getFrameRgba();
-            if (rgba.get(0,0)[0] < rgba.get(1,0)[0]) {
+            if (rgba.get(0, 0)[0] < rgba.get(1, 0)[0]) {
                 // TODO: RED IS ON THE LEFT
-            } else if (rgba.get(0,0)[0] > rgba.get(1,0)[0]) {
+                float tempLeft;
+                float tempRight;
+                tempLeft = -STRAFE_SPEED;
+                tempRight = STRAFE_SPEED;
+                robot.lf.setPower(tempLeft);
+                robot.rf.setPower(tempRight);
+                robot.lb.setPower(-tempLeft);
+                robot.rb.setPower(-tempRight);
+            } else if (rgba.get(0, 0)[0] > rgba.get(1, 0)[0]) {
                 // TODO: RED IS ON THE RIGHT
+                float tempLeft;
+                float tempRight;
+                tempLeft = STRAFE_SPEED;
+                tempRight = -STRAFE_SPEED;
+                robot.lf.setPower(tempLeft);
+                robot.rf.setPower(tempRight);
+                robot.lb.setPower(-tempLeft);
+                robot.rb.setPower(-tempRight);
             }
         }
 
