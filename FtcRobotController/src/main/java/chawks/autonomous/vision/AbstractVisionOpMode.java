@@ -1,7 +1,5 @@
-package chawks.autonomous;
+package chawks.autonomous.vision;
 
-
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.lasarobotics.vision.android.Cameras;
 import org.lasarobotics.vision.ftc.resq.Beacon;
@@ -11,44 +9,65 @@ import org.lasarobotics.vision.opmode.extensions.CameraControlExtension;
 import org.lasarobotics.vision.util.ScreenOrientation;
 import org.opencv.core.Size;
 
-import chawks.autonomous.StrafeController.StrafeDirection;
+import chawks.hardware.MovementController;
 import chawks.hardware.Dutchess;
 
-/**
- * Created by jacqu on 1/26/2017.
- */
-
-@Autonomous(name = "Camera(WeAreAlwaysWatching)", group = "Pushbot")
-public class ColorBeacon extends LinearVisionOpMode {
+public abstract class AbstractVisionOpMode extends LinearVisionOpMode {
 
     private final int CAMERA_WIDTH = 900;
     private final int CAMERA_HEIGHT = CAMERA_WIDTH / 12 * 9;
     private final Size CAMERA_SIZE = new Size(CAMERA_WIDTH, CAMERA_HEIGHT);
-    public Dutchess robot = new Dutchess();
 
     /**
-     * If true : we do extra logging to telemetry
+     * This is our robot
      */
-    private boolean debug = false;
+    private final Dutchess robot;
 
-    private Thread strafeThread;
-    private StrafeController strafeController;
+    /**
+     * Default speed/power applied to wheels
+     */
+    private final float wheelPower;
+
+    /**
+     * Manages movement of the robot
+     */
+    private MovementController movementController;
+
+    /**
+     * Movement controller runs as a background thread
+     */
+    private Thread movementThread;
+
+    /**
+     * If true, we do extra logging to telemetry
+     */
+    private boolean debug;
+
+    public AbstractVisionOpMode(Dutchess robot, float wheelPower) {
+        this.robot = robot;
+        this.wheelPower = wheelPower;
+    }
 
     @Override
     public void runOpMode() throws InterruptedException {
-
         initializeVision();
 
-        /** wait for op-mode start */
+        // wait for op-mode start
         waitForStart();
 
-        /** main loop */
-        strafeController = new StrafeController(robot, 0.5f);
-        strafeThread = new Thread(strafeController);
-        strafeThread.start();
+        // create movement controller
+        movementController = new MovementController(robot, telemetry);
+        movementController.setWheelPower(wheelPower);
+
+        // movement processed in background
+        movementThread = new Thread(movementController);
+        movementThread.start();
+
+        // main loop
         strafeIntoPosition();
-        telemetry.addLine(strafeController.toString());
-        strafeController.stop();
+
+        // stop movement
+        movementController.stop();
     }
 
     /**
@@ -71,7 +90,7 @@ public class ColorBeacon extends LinearVisionOpMode {
             // let's take a look at the beacon
             BeaconAnalysis beaconAnalysis = beacon.getAnalysis();
             telemetry.addLine(beaconAnalysis.toString());
-            telemetry.addLine(strafeController.toString());
+            telemetry.addLine(movementController.toString());
 
             // track best we've seen
             numMeasurements++;
@@ -99,12 +118,17 @@ public class ColorBeacon extends LinearVisionOpMode {
                 }
 
                 if (isRightBlue) {
-                    strafeController.setDirection(StrafeDirection.LEFT);
+                    // move one inch
+                    movementController.strafeLeft(1.0d);
                 } else {
-                    strafeController.setDirection(StrafeDirection.RIGHT);
+                    // move on inch
+                    movementController.strafeRight(1.0d);
                 }
             } else {
-                strafeController.setDirection(StrafeDirection.STANDSTILL);
+                // TODO: not sure if we should stop here; maybe we backup, or change direction,
+                // or keep going in last direction, until we have some confidence; need to do
+                // some thinking and testing about this
+                movementController.stopMoving();
             }
         }
     }
@@ -135,7 +159,7 @@ public class ColorBeacon extends LinearVisionOpMode {
         /** Set to true if you are using a secondary camera : not front facing */
         rotation.setIsUsingSecondaryCamera(false);
 
-        /** this is global auto rotate : disable for normal uses */
+        /** this is global auto rotate : stop for normal uses */
         rotation.disableAutoRotate();
 
         /** force phone into orientation or to autorotate */

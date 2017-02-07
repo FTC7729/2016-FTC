@@ -75,7 +75,7 @@ public class BasicVisionSample extends VisionOpMode {
          * First, tell the extension whether you are using a secondary camera
          * (or in some devices, a front-facing camera that reverses some colors).
          *
-         * It's a good idea to disable global auto rotate in Android settings. You can do this
+         * It's a good idea to stop global auto rotate in Android settings. You can do this
          * by calling disableAutoRotate() or enableAutoRotate().
          *
          * It's also a good idea to force the phone into a specific orientation (or auto rotate) by

@@ -1,21 +1,16 @@
-package chawks.autonomous;
+package chawks.autonomous.deadreckoning;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.Servo;
-
-import org.lasarobotics.vision.ftc.resq.Beacon;
 
 import chawks.hardware.Dutchess;
-
-import static org.lasarobotics.vision.opmode.VisionOpMode.beacon;
 
 /*
  * Created by joseph on 1/21/17.
  */
 
 @Autonomous(name = "move to beacon", group = "Pushbot")
- abstract class ShootAndMoveAuto extends AbstractAutonomous {
+ abstract class ShootAndMoveAuto extends AbstractDeadReckoningOpMode {
 
     private final Dutchess robot = new Dutchess();
 

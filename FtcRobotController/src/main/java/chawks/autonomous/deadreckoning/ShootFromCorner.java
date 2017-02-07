@@ -1,15 +1,9 @@
-package chawks.autonomous;
+package chawks.autonomous.deadreckoning;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import chawks.hardware.Dutchess;
 
 @Autonomous(name = "Shoot from corner", group = "Pushbot")
-public class ShootFromCorner extends AbstractAutonomous {
+public class ShootFromCorner extends AbstractDeadReckoningOpMode {
     //encoderDrive(double speed, double feetDistance, double timeoutS)
     //encoderDriveDirect(double speed, double leftFeet, double rightFeet, double leftBackFeet, double rightBackFeet, double timeoutS)
 
