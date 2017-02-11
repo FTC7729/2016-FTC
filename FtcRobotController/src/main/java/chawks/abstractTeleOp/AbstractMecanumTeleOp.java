@@ -4,10 +4,10 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 //@TeleOp(name = "TEST: Teleop Mecanum", group = "Pushbot")
-public class AbstractMecanumTeleOp extends AbstractTeleOp {
+public abstract class AbstractMecanumTeleOp extends AbstractTeleOp {
 
-    @Override
-    public void handleGamePad1() {
+  //  @Override
+ /*   public void handleGamePad1() {
         // TODO: would be nice to use exponential scaling of the Y value so that as you move stick further
         final boolean isButtonX = gamepad1.x;
         final boolean isButtonY = gamepad1.y;
@@ -108,4 +108,5 @@ public class AbstractMecanumTeleOp extends AbstractTeleOp {
             robot.s1.setPosition(position);
         }
     }
+    */
 }

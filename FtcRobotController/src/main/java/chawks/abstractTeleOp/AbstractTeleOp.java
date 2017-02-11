@@ -9,62 +9,44 @@ import chawks.hardware.Dutchess;
 import static java.lang.Thread.sleep;
 
 abstract class AbstractTeleOp extends OpMode {
-    public final double INCREMENT = 0.01;
+
+ /*   public final double INCREMENT = 0.01;
 
     public final double MAX_POS = 1.0;
     public final double MIN_POS = 0.5;
     public double position = (MAX_POS - MIN_POS) / 2;
 
-    /**
-     * Maximum speed of motor
-     **/
+
     public static final double MAX_SPIN_MOTOR_SPEED = 0.03; // lowered from .19 to .1 because ball was shooting to high
 
-    /**
-     * Maximum amount we are willing to change motor speed at-a-time
-     **/
+
     public static final double MAX_SPIN_MOTOR_POWER_DELTA = MAX_SPIN_MOTOR_SPEED / 4;
 
-    /**
-     * Servo speed for shooting
-     */
+
     public static final double SERVO_SPEED = -1.0;
 
-    /**
-     * Robot hardware configuration
-     */
+
     public Dutchess robot = new Dutchess();
 
     public enum DrivingDirection {
         FORWARD, REVERSE;
     }
 
-    /**
-     * Driving direction
-     **/
+
     public DrivingDirection drivingDirection = DrivingDirection.FORWARD;
 
-    /**
-     * Spin motor thread
-     **/
+
     private Thread spinMotorThread;
 
-    /**
-     * Spin motor controller
-     */
+
     public SpinMotorController spinMotorController;
 
 
     public class SpinMotorController implements Runnable {
-        /**
-         * True if spin motor should be disabled
-         **/
+
         boolean disabled;
 
-        /**
-         * Target spin motor speed. This background thread will continously work to reach
-         * this speed, at a safe pace.
-         */
+
         private double targetPower;
 
         public SpinMotorController(boolean disabled, double power) {
@@ -151,9 +133,7 @@ abstract class AbstractTeleOp extends OpMode {
     }
 
 
-    /*
-     * Code to run ONCE when the driver hits INIT
-     */
+
     @Override
     public void init() {
         robot.init(hardwareMap);
@@ -170,16 +150,11 @@ abstract class AbstractTeleOp extends OpMode {
         spinMotorThread.start();
     }
 
-    /*
-     * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
-     */
+
     @Override
     public void init_loop() {
     }
 
-    /*
-     * Code to run ONCE when the driver hits PLAY
-     */
     @Override
     public void start() {
         spinMotorController.setTargetPower(MAX_SPIN_MOTOR_SPEED);
@@ -187,25 +162,17 @@ abstract class AbstractTeleOp extends OpMode {
     }
 
 
-    /*
-     * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
-     */
+
     @Override
     public void loop() {
         handleGamePad1();
         handleGamePad2();
     }
 
-    /**
-     * Handle all Game Pad 1 controller input
-     * When creating a new Tele-Op user must extend this class then add in custom gamepad1 code
-     */
+
     public abstract void handleGamePad1();
 
-    /**
-     * Handle all Game Pad 2 controller input
-     * When creating a new Tele-Op user must extend this class then add in custom gamepad2 code
-     */
+
     public abstract void handleGamePad2();
 
     private void setWheelsToRunWithoutEncoder() {
@@ -234,4 +201,6 @@ abstract class AbstractTeleOp extends OpMode {
     public void stop() {
         spinMotorController.disable();
     }
+
+    */
 }

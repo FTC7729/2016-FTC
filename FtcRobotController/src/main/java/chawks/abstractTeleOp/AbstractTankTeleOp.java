@@ -5,12 +5,12 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name = "TEST: Teleop Tank", group = "Pushbot")
-public class AbstractTankTeleOp extends AbstractTeleOp {
+public abstract class AbstractTankTeleOp extends AbstractTeleOp {
 
     public float STRAFE_SPEED = 0.6F;
 
-    @Override
-    public void handleGamePad1() {
+ //   @Override
+ /*   public void handleGamePad1() {
         // TODO: would be nice to use exponential scaling of the Y value so that as you move stick further,
         float leftStickY = Range.clip(-gamepad1.left_stick_y, -1, 1);
         float rightStickY = Range.clip(-gamepad1.right_stick_y, -1, 1);
@@ -146,5 +146,6 @@ public class AbstractTankTeleOp extends AbstractTeleOp {
             robot.s1.setPosition(position);
         }
     }
+    */
 
 }
