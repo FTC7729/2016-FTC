@@ -18,7 +18,7 @@ public class WheelConfiguration {
     /**
      * Number of encoder counts per motor revolution.
      */
-    private final double countsPerMotorRev;
+    private final int countsPerMotorRev;
 
     /**
      * When using gearing, the distance traveled can be scaled by this amount.
@@ -38,7 +38,7 @@ public class WheelConfiguration {
 
     private final double radiusRightBack;
 
-    public WheelConfiguration(double countsPerMotorRev, double driveGearReduction, double wheelDiameterInches,
+    public WheelConfiguration(int countsPerMotorRev, double driveGearReduction, double wheelDiameterInches,
                               double radiusLeftFront, double radiusRightFront, double radiusLeftBack, double radiusRightBack) {
         // sanity checks
         Preconditions.checkArgument(countsPerMotorRev > 0, "countsPerMotorRev must be >0");
@@ -78,7 +78,7 @@ public class WheelConfiguration {
         return radiusRightBack;
     }
 
-    public double getCountsPerMotorRev() {
+    public int getCountsPerMotorRev() {
         return countsPerMotorRev;
     }
 

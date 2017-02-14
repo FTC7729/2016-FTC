@@ -21,7 +21,7 @@ public class TestMovementControllerTeleOp extends AbstractTeleOpMode {
     /**
      * Distance that we want to move robot
      */
-    private double distance;
+    private double distance = 1.0d;
 
     /**
      * Last time that a button was pressed
@@ -48,9 +48,15 @@ public class TestMovementControllerTeleOp extends AbstractTeleOpMode {
     public void handleGamePad1(Gamepad gamepad) {
         long now = System.currentTimeMillis();
         if (gamepad.x) {
-            movementController.strafeLeft(distance);
+            if (now > lastDpad + 1000) {
+                movementController.strafeLeft(distance);
+                lastDpad = now;
+            }
         } else if (gamepad.y) {
-            movementController.strafeRight(distance);
+            if (now > lastDpad + 1000) {
+                movementController.strafeRight(distance);
+                lastDpad = now;
+            }
         } else if (gamepad.a) {
             movementController.turn(90);
         } else if (gamepad.b) {
@@ -65,6 +71,8 @@ public class TestMovementControllerTeleOp extends AbstractTeleOpMode {
                 distance = Range.clip(distance - 0.05, 0, 3);
                 lastDpad = now;
             }
+        } else if(gamepad.dpad_left || gamepad.dpad_right)  {
+            movementController.stopMoving();
         }
         telemetry.addData("teleop", "distance:%.2f", distance);
     }

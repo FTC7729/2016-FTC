@@ -55,6 +55,7 @@ public class ArmController {
         this.robot = robot;
         this.telemetry = telemetry;
         this.position = (maxPosition - minPosition) / 2;
+        setPosition(this.position);
     }
 
     public double getArmSpeed() {

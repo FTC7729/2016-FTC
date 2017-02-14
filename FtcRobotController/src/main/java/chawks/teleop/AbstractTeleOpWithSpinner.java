@@ -36,7 +36,7 @@ public abstract class AbstractTeleOpWithSpinner extends AbstractTeleOpMode {
         this.armController = new ArmController(robot,telemetry);
 
         // shooting
-        boolean sleepingRoommate = true;
+        boolean sleepingRoommate = false;
         this.shootingController = new ShootingController(robot, telemetry, sleepingRoommate, 0);
         this.shootingThread = new Thread(shootingController);
         shootingThread.start();

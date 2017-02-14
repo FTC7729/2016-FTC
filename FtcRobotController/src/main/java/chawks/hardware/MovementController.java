@@ -3,6 +3,7 @@ package chawks.hardware;
 import com.google.common.base.Preconditions;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -31,6 +32,11 @@ public class MovementController implements Runnable {
     private boolean stopped;
 
     /**
+     * If true, we have initiated a move
+     */
+    private boolean moving;
+
+    /**
      * Driving direction
      **/
     private DrivingDirection drivingDirection = DrivingDirection.FORWARD;
@@ -40,15 +46,10 @@ public class MovementController implements Runnable {
      */
     private long stopTime;
 
-    /**
-     * Last time we output wheel information to telemetry
-     */
-    private long lastWheelLogTime;
-
     public MovementController(Dutchess robot, Telemetry telemetry) {
         this.robot = robot;
         this.telemetry = telemetry;
-        setWheelPower(0.2d); // default
+        setWheelPower(1d); // default
     }
 
     public double getWheelPower() {
@@ -60,29 +61,26 @@ public class MovementController implements Runnable {
         Preconditions.checkState(this.wheelPower > 0, "wheelPower must be positive value greater than 0");
     }
 
-    public boolean isWheelsInPosition() {
-        return isWheelsInPosition(false);
-    }
-
-    private boolean isWheelsInPosition(boolean debug) {
-        long now = System.currentTimeMillis();
+    private boolean isWheelsInPosition() {
+        boolean inPosition = true;
         for (DcMotor wheel : robot.getWheels()) {
             if (wheel.isBusy()) {
-                if (debug && telemetry != null && now > lastWheelLogTime + 100) {
-                    telemetry.addData(robot.getNameOfWheel(wheel), "%7d to %7d", wheel.getCurrentPosition(), wheel.getTargetPosition());
-                    lastWheelLogTime = now;
-                }
-                return false;
+                telemetry.addData(robot.getNameOfWheel(wheel), "%7d to %7d", wheel.getCurrentPosition(), wheel.getTargetPosition());
+                inPosition = false;
             }
         }
-        return true;
+        telemetry.update();
+        return inPosition;
     }
 
     public void run() {
+        robot.setWheelsToRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.setWheelsToRunMode(DcMotor.RunMode.RUN_TO_POSITION);
         while (!stopped) {
-            while (!isWheelsInPosition(true)) {
-               // stopMoving();
+            if (moving) {
+                if(isWheelsInPosition()) {
+                    stopMoving();
+                }
             }
         }
         robot.stopAllWheels();
@@ -101,6 +99,8 @@ public class MovementController implements Runnable {
     }
 
     public void stopMoving() {
+        moving = false;
+        telemetry.addLine("stopped moving!");
         robot.stopAllWheels();
     }
 
@@ -183,13 +183,16 @@ public class MovementController implements Runnable {
      * @param rightBackDistanceInches  distance to move right-back wheel, in inches (may be negative!)
      */
     private void move(double leftFrontDistanceInches, double rightFrontDistanceInches, double leftBackDistanceInches, double rightBackDistanceInches) {
-        if(stopped) {
+        if (stopped) {
             // ignore any attempt to move once stopped
             return;
         }
 
         // convert the distance that we want to travel into encoder "counts"
         final double countsPerInch = robot.getWheelConfiguration().getCountsPerInch();
+
+        robot.setPowerAllWheels(0);
+        robot.setWheelsToRunMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // tell the encoder that we want it move it's "counter" reaches the given target, after which, if our wheel configuration
         // is correct, the robot will have travelled the specified distance
@@ -198,16 +201,17 @@ public class MovementController implements Runnable {
         final int leftBackTarget = robot.lb.getCurrentPosition() + (int) (leftBackDistanceInches * countsPerInch);
         final int rightBackTarget = robot.rb.getCurrentPosition() + (int) (rightBackDistanceInches * countsPerInch);
 
+        RobotLog.i("move: %.2f, %.2f, %.2f, %.2f", leftFrontDistanceInches, rightFrontDistanceInches, leftBackDistanceInches, rightBackDistanceInches);
+        RobotLog.i("from: %d, %d, %d, %d", robot.lf.getCurrentPosition(), robot.rf.getCurrentPosition(), robot.lb.getCurrentPosition(), robot.rb.getCurrentPosition());
+        RobotLog.i("to:   %d, %d, %d, %d", leftTarget, rightTarget, leftBackTarget, rightBackTarget);
+
+        // tell robot wheels where to go
+        moving = true;
         robot.lf.setTargetPosition(leftTarget);
         robot.rf.setTargetPosition(rightTarget);
         robot.lb.setTargetPosition(leftBackTarget);
         robot.rb.setTargetPosition(rightBackTarget);
-
-        // the direction
-        robot.lf.setPower(wheelPower);
-        robot.rf.setPower(wheelPower);
-        robot.lb.setPower(wheelPower);
-        robot.rb.setPower(wheelPower);
+        robot.setPowerAllWheels(wheelPower);
     }
 
     @Override
