@@ -24,6 +24,8 @@ public class TankTeleOp extends AbstractTeleOpWithSpinner {
 
         final boolean isDPADLeft = gamepad.dpad_left;
         final boolean isDPADRight = gamepad.dpad_right;
+        final boolean isDPADUp = gamepad1.dpad_up;
+        final boolean isDPADDown = gamepad1.dpad_down;
 
         // switch driving directions
         if (isButtonX) {
@@ -72,6 +74,11 @@ public class TankTeleOp extends AbstractTeleOpWithSpinner {
             robot.lb.setPower(-leftPower);
             robot.rb.setPower(-rightPower);
             return;
+
+        } else if (isDPADUp) {
+            shootingController.incrementUpSpinner();
+        } else if (isDPADDown) {
+            shootingController.incrementDownSpinner();
         }
 
         // the moment we take our finger off the DPAD, we are using the left and right stick values

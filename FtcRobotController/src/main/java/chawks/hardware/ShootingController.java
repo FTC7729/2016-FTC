@@ -6,8 +6,6 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-import chawks.hardware.Dutchess;
-
 import static java.lang.Thread.sleep;
 
 /**
@@ -17,7 +15,7 @@ public class ShootingController implements Runnable {
     /**
      * Maximum speed of motor
      **/
-    public static final double MAX_SPIN_MOTOR_SPEED = 0.19;
+    public static final double MAX_SPIN_MOTOR_SPEED = 0.1;
 
     /**
      * Maximum amount we are willing to change motor speed at-a-time
@@ -85,6 +83,14 @@ public class ShootingController implements Runnable {
         } finally {
             telemetry.addData("spin", "stopped");
         }
+    }
+
+    public void incrementUpSpinner() {
+        targetPower += .01;
+    }
+
+    public void incrementDownSpinner() {
+        targetPower -= .01;
     }
 
     /**
