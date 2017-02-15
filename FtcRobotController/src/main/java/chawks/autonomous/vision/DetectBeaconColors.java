@@ -1,6 +1,8 @@
 package chawks.autonomous.vision;
 
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+
 import org.lasarobotics.vision.android.Cameras;
 import org.lasarobotics.vision.ftc.resq.Beacon;
 import org.lasarobotics.vision.ftc.resq.Beacon.BeaconAnalysis;
@@ -12,6 +14,7 @@ import org.opencv.core.Size;
 import chawks.hardware.Dutchess;
 import chawks.hardware.MovementController;
 
+@Autonomous(name = "DetectColorStandstill")
 public class DetectBeaconColors extends LinearVisionOpMode {
 
     private final int CAMERA_WIDTH = 900;
@@ -24,13 +27,10 @@ public class DetectBeaconColors extends LinearVisionOpMode {
 
         // wait for op-mode start
         waitForStart();
+
+        checkColors();
     }
 
-    /**
-     * Returns true when robot has been strafed into position.
-     *
-     * @return true if robot is in position
-     */
     private boolean checkColors() {
         double maxConfidence = 0.0;
         double sumConfidence = 0.0;
@@ -77,6 +77,7 @@ public class DetectBeaconColors extends LinearVisionOpMode {
             } else {
                 // TODO: Unknown what to do when not moving
             }
+            telemetry.addLine("Beacon Red and Blue: (" + beaconAnalysis.getColorString() + ")");
         }
     }
 
