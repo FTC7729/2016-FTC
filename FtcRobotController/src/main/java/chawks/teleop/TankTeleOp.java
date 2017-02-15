@@ -109,6 +109,14 @@ public class TankTeleOp extends AbstractTeleOpWithSpinner {
         boolean isButtonB = gamepad.b;
         boolean isDirectionUp = gamepad.dpad_up;
         boolean isDirectionDown = gamepad.dpad_down;
+        final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
+
+        final double MAX_POS     =  1.0;     // Maximum rotational position
+        final double MIN_POS     =  0.0;     // Minimum rotational position
+
+        // Define class members
+
+        double  position = MIN_POS; //= (MAX_POS - MIN_POS) / 2; // Start at halfway position
         telemetry.addData("pad2", "a:%s, b:%s, up:%s, down:%s, lb:%s, rb%s",
                 isButtonA, isButtonB, isDirectionUp, isDirectionDown, gamepad.left_bumper, gamepad.right_bumper);
 
@@ -149,9 +157,13 @@ public class TankTeleOp extends AbstractTeleOpWithSpinner {
         }
 
         if (isDirectionUp) {
-            armController.adjustPosition(armController.getIncrement());
+            position += INCREMENT ;
+            armController.setPosition(position);
+          //  armController.adjustPosition(armController.getIncrement());
         } else if (isDirectionDown) {
-            armController.adjustPosition(-armController.getIncrement());
+            position -= INCREMENT ;
+            armController.setPosition(position);
+          //armController.adjustPosition(-armController.getIncrement());
         }
     }
 
