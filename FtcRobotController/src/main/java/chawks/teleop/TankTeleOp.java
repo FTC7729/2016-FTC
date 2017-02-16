@@ -11,7 +11,7 @@ import chawks.hardware.ShootingController;
 @TeleOp(name = "Tank", group = "TeleOp")
 public class TankTeleOp extends AbstractTeleOpWithSpinner {
 
-    public float STRAFE_SPEED = 0.6F;
+    public float STRAFE_SPEED = 1.0F; //setting to a higher speed
 
     @Override
     public void handleGamePad1(Gamepad gamepad) {
@@ -158,11 +158,13 @@ public class TankTeleOp extends AbstractTeleOpWithSpinner {
 
         if (isDirectionUp) {
             position += INCREMENT ;
-            armController.setPosition(position);
+            robot.arm.setPosition(position);
+           // armController.setPosition(position);
           //  armController.adjustPosition(armController.getIncrement());
         } else if (isDirectionDown) {
             position -= INCREMENT ;
-            armController.setPosition(position);
+            robot.arm.setPosition(position);
+            //armController.setPosition(position);
           //armController.adjustPosition(-armController.getIncrement());
         }
     }

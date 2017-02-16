@@ -15,7 +15,7 @@ public class ShootingController implements Runnable {
     /**
      * Maximum speed of motor
      **/
-    public static final double MAX_SPIN_MOTOR_SPEED = 0.1;
+    public static final double MAX_SPIN_MOTOR_SPEED = 0.7;
 
     /**
      * Maximum amount we are willing to change motor speed at-a-time

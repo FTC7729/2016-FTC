@@ -55,7 +55,7 @@ public class ArmController {
         this.robot = robot;
         this.telemetry = telemetry;
         this.position = (maxPosition - minPosition) / 2;
-        setPosition(this.position);
+       // setPosition(this.position);
     }
 
     public double getArmSpeed() {
@@ -78,14 +78,14 @@ public class ArmController {
         return position;
     }
 
-    public void setPosition(double position) {
+   /* public void setPosition(double position) {
         this.position = Range.clip(position, minPosition, maxPosition);
         robot.arm.setPosition(this.position);
-    }
+    }*/
 
-    public void adjustPosition(double deltaPosition) {
-        setPosition(getPosition() + deltaPosition);
-    }
+  //  public void adjustPosition(double deltaPosition) {
+   //     setPosition(getPosition() + deltaPosition);
+  //  }
 
     public double getMaxPosition() {
         return maxPosition;
