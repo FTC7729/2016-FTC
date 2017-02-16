@@ -70,6 +70,10 @@ public class SpinnerEncoderTest extends OpMode {
     }
 
     enum State {
-        ResetState, SetEncoderPower, WaitForTime, SlowMotor, Done
+        ResetState,
+        SetEncoderPower,
+        WaitForTime,
+        SlowMotor,
+        Done
     }
 }
