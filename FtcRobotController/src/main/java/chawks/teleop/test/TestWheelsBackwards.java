@@ -24,6 +24,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 @TeleOp(name = "Test Wheels Backwards", group = "Test")
 public class TestWheelsBackwards extends TestWheelsTurnRight {
     public TestWheelsBackwards() {
-        super(-2, -2);
+        super(-1, -1);
     }
 }

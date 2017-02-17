@@ -24,6 +24,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 @TeleOp(name = "Test Wheels Strafe Left", group = "Test")
 public class TestWheelsStrafeLeft extends TestWheelsTurnRight {
     public TestWheelsStrafeLeft() {
-        super(2, -2, -2, 2);
+        super(-1, 1, 1, -1);
     }
 }
