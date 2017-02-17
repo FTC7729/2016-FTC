@@ -110,14 +110,17 @@ public class TankTeleOp extends AbstractTeleOpWithSpinner {
         boolean isButtonX = gamepad.x;
         boolean isDirectionUp = gamepad.dpad_up;
         boolean isDirectionDown = gamepad.dpad_down;
-        final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
+        boolean isDirectionRight = gamepad.dpad_right;
+        boolean isDirectionLeft = gamepad.dpad_left;
+        final double INCREMENT = 0.01;     // amount to slew servo each CYCLE_MS cycle
 
-        final double MAX_POS     =  1.0;     // Maximum rotational position
-        final double MIN_POS     =  0.0;     // Minimum rotational position
+        final double MAX_POS = 1.0;     // Maximum rotational position
+        final double MIN_POS = 0.0;     // Minimum rotational position
+        long lastDpad;
 
         // Define class members
 
-        double  position = MIN_POS; //= (MAX_POS - MIN_POS) / 2; // Start at halfway position
+        double position = MIN_POS; //= (MAX_POS - MIN_POS) / 2; // Start at halfway position
         telemetry.addData("pad2", "a:%s, b:%s, up:%s, down:%s, lb:%s, rb%s",
                 isButtonA, isButtonB, isDirectionUp, isDirectionDown, gamepad.left_bumper, gamepad.right_bumper);
 
@@ -170,15 +173,31 @@ public class TankTeleOp extends AbstractTeleOpWithSpinner {
         }
 
         if (isDirectionUp) {
-            position += INCREMENT ;
+            position += INCREMENT;
             robot.arm.setPosition(position);
-           // armController.setPosition(position);
-          //  armController.adjustPosition(armController.getIncrement());
+            // armController.setPosition(position);
+            //  armController.adjustPosition(armController.getIncrement());
         } else if (isDirectionDown) {
-            position -= INCREMENT ;
+            position -= INCREMENT;
             robot.arm.setPosition(position);
             //armController.setPosition(position);
-          //armController.adjustPosition(-armController.getIncrement());
+            //armController.adjustPosition(-armController.getIncrement());
+        }
+
+        long now = System.currentTimeMillis();
+
+        if (isDirectionRight) {
+            if (now > lastDpad + 1000) {
+                shootingController.setTargetPower(ShootingController.MAX_SPIN_MOTOR_SPEED);
+                lastDpad = now;
+            }
+        }
+
+        else if (isDirectionLeft) {
+            if (now > lastDpad + 1000) {
+                shootingController.setTargetPower(ShootingController.MAX_SPIN_MOTOR_SPEED);
+                lastDpad = now;
+            }
         }
     }
 
