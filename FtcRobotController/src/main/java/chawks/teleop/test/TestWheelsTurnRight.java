@@ -45,7 +45,7 @@ public class TestWheelsTurnRight extends OpMode {
     private final int rightBackTarget;
 
     public TestWheelsTurnRight() {
-        this(2,-2);
+        this(1,-1);
     }
 
     public TestWheelsTurnRight(int leftTarget, int rightTarget) {
@@ -85,7 +85,7 @@ public class TestWheelsTurnRight extends OpMode {
 
                 robot.setWheelsToRunMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-                robot.setPowerAllWheels(0.5D);
+                robot.setPowerAllWheels(0.8D);
 
                 state = State.WaitUntilInPosition;
 
