@@ -103,13 +103,13 @@ public class TestWheelsTurnRight extends OpMode {
                 boolean rightFrontIsInPos = isAtTargetThreshold(rightFrontTarget, currRightFrontPos, THRESHOLD);
 
                 //Display if each motor is in position
-                telemetry.addLine("leftBackIsInPos: " + leftBackIsInPos);
-                telemetry.addLine("rightBackIsInPos: " + rightBackIsInPos);
-                telemetry.addLine("leftFrontIsInPos: " + leftFrontIsInPos);
-                telemetry.addLine("rightFrontIsInPos: " + rightFrontIsInPos);
+                telemetry.addLine("leftBackIsInPos: " + leftBackIsInPos + " (" + robot.lb.isBusy() + ")");
+                telemetry.addLine("rightBackIsInPos: " + rightBackIsInPos + " (" + robot.rb.isBusy() + ")");
+                telemetry.addLine("leftFrontIsInPos: " + leftFrontIsInPos + " (" + robot.lf.isBusy() + ")");
+                telemetry.addLine("rightFrontIsInPos: " + rightFrontIsInPos + " (" + robot.rf.isBusy() + ")");
 
                 //If the motors are in position, transition to the next state
-                if(leftBackIsInPos && rightBackIsInPos && leftFrontIsInPos && rightFrontIsInPos) {
+                if(!robot.lb.isBusy() && !robot.rb.isBusy() && !robot.lf.isBusy() && !robot.rf.isBusy()) {
                     //Change this to State.OptionalStopMotors if you want the robot to
                     //just stop moving the motors instead of holding position
                     state = State.StopMotors;

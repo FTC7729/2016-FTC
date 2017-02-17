@@ -116,7 +116,6 @@ public class TankTeleOp extends AbstractTeleOpWithSpinner {
 
         // Define class members
 
-        double  position = MIN_POS; //= (MAX_POS - MIN_POS) / 2; // Start at halfway position
         telemetry.addData("pad2", "a:%s, b:%s, up:%s, down:%s, lb:%s, rb%s",
                 isButtonA, isButtonB, isDirectionUp, isDirectionDown, gamepad.left_bumper, gamepad.right_bumper);
 
@@ -157,16 +156,17 @@ public class TankTeleOp extends AbstractTeleOpWithSpinner {
         }
 
         if (isDirectionUp) {
-            position += INCREMENT ;
+            double position = robot.arm.getPosition() + INCREMENT;
             robot.arm.setPosition(position);
            // armController.setPosition(position);
           //  armController.adjustPosition(armController.getIncrement());
         } else if (isDirectionDown) {
-            position -= INCREMENT ;
+            double position = robot.arm.getPosition() - INCREMENT;
             robot.arm.setPosition(position);
             //armController.setPosition(position);
           //armController.adjustPosition(-armController.getIncrement());
         }
+        telemetry.addData("Servo Actual Position = %.2f", robot.arm.getPosition());
     }
 
 }
