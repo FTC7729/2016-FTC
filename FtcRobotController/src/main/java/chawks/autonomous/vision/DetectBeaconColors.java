@@ -74,6 +74,14 @@ public class DetectBeaconColors extends LinearVisionOpMode {
                 if (isRightRed) {
                     telemetry.addLine("RIGHT IS RED");
                 }
+
+                if (isRightBlue && isLeftRed) {
+                    // TODO: TURN LEFT
+                } else if (isLeftBlue && isRightRed) {
+                    // TODO: TURN RIGHT
+                }
+
+
             } else {
                 // TODO: Unknown what to do when not moving
             }
