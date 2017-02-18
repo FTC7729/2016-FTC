@@ -77,6 +77,12 @@ public abstract class AbstractDeadReckoningOpMode extends LinearOpMode {
         robot.spin.setPower(0.27);
         sleep(250);
 
+        robot.spin.setPower(0.5);
+        sleep(250);
+
+        robot.spin.setPower(0.7);
+        sleep(500);
+
         launchBall(-1.0, 0.7, 5.0); //servo speed, spin speed, timeout
 
     }
