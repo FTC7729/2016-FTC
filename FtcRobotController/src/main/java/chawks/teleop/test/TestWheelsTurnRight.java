@@ -60,6 +60,14 @@ public class TestWheelsTurnRight extends OpMode {
         this.rightBackTarget = rightBackTarget * encoderCpr;
     }
 
+    public TestWheelsTurnRight(int leftFrontTarget, int leftBackTarget, int rightFrontTarget, int rightBackTarget, double strafeFactor) {
+        int encoderCpr = robot.getWheelConfiguration().getCountsPerMotorRev();
+        this.leftFrontTarget = (int) (leftFrontTarget * encoderCpr * strafeFactor);
+        this.leftBackTarget = (int) (leftBackTarget * encoderCpr * strafeFactor);
+        this.rightFrontTarget = (int) (rightFrontTarget * encoderCpr * strafeFactor);
+        this.rightBackTarget = (int) (rightBackTarget * encoderCpr * strafeFactor);
+    }
+
     private State state;
 
     public void init() {
@@ -85,7 +93,7 @@ public class TestWheelsTurnRight extends OpMode {
 
                 robot.setWheelsToRunMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-                robot.setPowerAllWheels(0.8D);
+                robot.setPowerAllWheels(0.4D);
 
                 state = State.WaitUntilInPosition;
 
@@ -103,13 +111,13 @@ public class TestWheelsTurnRight extends OpMode {
                 boolean rightFrontIsInPos = isAtTargetThreshold(rightFrontTarget, currRightFrontPos, THRESHOLD);
 
                 //Display if each motor is in position
-                telemetry.addLine("leftBackIsInPos: " + leftBackIsInPos);
-                telemetry.addLine("rightBackIsInPos: " + rightBackIsInPos);
-                telemetry.addLine("leftFrontIsInPos: " + leftFrontIsInPos);
-                telemetry.addLine("rightFrontIsInPos: " + rightFrontIsInPos);
+                telemetry.addLine("leftBackIsInPos: " + leftBackIsInPos + " (" + robot.lb.isBusy() + ")");
+                telemetry.addLine("rightBackIsInPos: " + rightBackIsInPos + " (" + robot.rb.isBusy() + ")");
+                telemetry.addLine("leftFrontIsInPos: " + leftFrontIsInPos + " (" + robot.lf.isBusy() + ")");
+                telemetry.addLine("rightFrontIsInPos: " + rightFrontIsInPos + " (" + robot.rf.isBusy() + ")");
 
                 //If the motors are in position, transition to the next state
-                if(leftBackIsInPos && rightBackIsInPos && leftFrontIsInPos && rightFrontIsInPos) {
+                if(!robot.lb.isBusy() && !robot.rb.isBusy() && !robot.lf.isBusy() && !robot.rf.isBusy()) {
                     //Change this to State.OptionalStopMotors if you want the robot to
                     //just stop moving the motors instead of holding position
                     state = State.StopMotors;

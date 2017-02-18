@@ -3,7 +3,6 @@ package chawks.hardware;
 import com.google.common.base.Preconditions;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
-import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -11,45 +10,43 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  * Handles movement of robot using "dead reckoning", e.g. moving robot for specified distance.
  */
 public class MovementController implements Runnable {
+    private final static int THRESHOLD = 10;
     /**
      * Robot that we are controlling
      */
     private final Dutchess robot;
-
     /**
      * Telemetry used for debugging
      */
     private final Telemetry telemetry;
-
     /**
      * Power applied to wheels when moving in a forward direction. Should be a positive value.
      */
     private double wheelPower;
-
     /**
      * If true, we need to exit
      */
     private boolean stopped;
-
-    /**
-     * If true, we have initiated a move
-     */
-    private boolean moving;
-
     /**
      * Driving direction
      **/
     private DrivingDirection drivingDirection = DrivingDirection.FORWARD;
+    private int leftFrontTarget;
+    private int leftBackTarget;
+    private int rightFrontTarget;
+    private int rightBackTarget;
 
-    /**
-     * Time our thread should stop motion at
-     */
-    private long stopTime;
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    private State state;
 
     public MovementController(Dutchess robot, Telemetry telemetry) {
         this.robot = robot;
         this.telemetry = telemetry;
-        setWheelPower(1d); // default
+        setWheelPower(.6d); // default
+        state = State.WaitUntilNewMovement;
     }
 
     public double getWheelPower() {
@@ -74,16 +71,67 @@ public class MovementController implements Runnable {
     }
 
     public void run() {
-        robot.setWheelsToRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.setWheelsToRunMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.setWheelsToRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         while (!stopped) {
-            if (moving) {
-                if(isWheelsInPosition()) {
-                    stopMoving();
-                }
+            switch (state) {
+                case ResetEncoders:
+
+                    robot.setWheelsToRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+                    state = State.initState;
+
+                    break;
+                case initState:
+                    robot.stopAllWheels();
+                    robot.setWheelsToRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                    robot.lf.setTargetPosition(leftFrontTarget);
+                    robot.lb.setTargetPosition(leftBackTarget);
+                    robot.rf.setTargetPosition(rightFrontTarget);
+                    robot.rb.setTargetPosition(rightBackTarget);
+
+                    robot.setWheelsToRunMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                    robot.setPowerAllWheels(wheelPower);
+
+                    state = State.WaitUntilInPosition;
+                    break;
+                case WaitUntilInPosition:
+                    int currLeftBackPos = robot.lb.getCurrentPosition();
+                    int currRightBackPos = robot.rb.getCurrentPosition();
+                    int currLeftFrontPos = robot.lf.getCurrentPosition();
+                    int currRightFrontPos = robot.rf.getCurrentPosition();
+
+                    //Check if the motors are close enough to being in position
+                    boolean leftBackIsInPos = isAtTargetThreshold(leftBackTarget, currLeftBackPos, THRESHOLD);
+                    boolean rightBackIsInPos = isAtTargetThreshold(rightBackTarget, currRightBackPos, THRESHOLD);
+                    boolean leftFrontIsInPos = isAtTargetThreshold(leftFrontTarget, currLeftFrontPos, THRESHOLD);
+                    boolean rightFrontIsInPos = isAtTargetThreshold(rightFrontTarget, currRightFrontPos, THRESHOLD);
+
+                    //Display if each motor is in position
+                    telemetry.addLine("leftBackIsInPos: " + leftBackIsInPos);
+                    telemetry.addLine("rightBackIsInPos: " + rightBackIsInPos);
+                    telemetry.addLine("leftFrontIsInPos: " + leftFrontIsInPos);
+                    telemetry.addLine("rightFrontIsInPos: " + rightFrontIsInPos);
+
+                    //If the motors are in position, transition to the next state
+                    if (leftBackIsInPos && rightBackIsInPos && leftFrontIsInPos && rightFrontIsInPos) {
+                        //Change this to State.OptionalStopMotors if you want the robot to
+                        //just stop moving the motors instead of holding position
+                        state = State.StopMotors;
+                    }
+                    break;
+                case StopMotors:
+                    robot.stopAllWheels();
+                    state = State.WaitUntilNewMovement;
+                    break;
             }
         }
         robot.stopAllWheels();
+    }
+
+    private boolean isAtTargetThreshold(int target, int current, int threshold) {
+        int error = target - current;
+        return Math.abs(error) < threshold;
     }
 
     public DrivingDirection getDrivingDirection() {
@@ -99,7 +147,7 @@ public class MovementController implements Runnable {
     }
 
     public void stopMoving() {
-        moving = false;
+        stopped = true;
         telemetry.addLine("stopped moving!");
         robot.stopAllWheels();
     }
@@ -131,7 +179,10 @@ public class MovementController implements Runnable {
         move(leftFrontDistanceInches, rightFrontDistanceInches, leftBackDistanceInches, rightBackDistanceInches);
     }
 
-    public void strafeLeft(double distanceInches) {
+    public void strafeLeft(double wheelRevolutions) {
+        // This multiplication is to contain the
+        double distanceInches = wheelRevolutions * (4.0/50);
+
         final double leftDistanceInches;
         final double rightDistanceInches;
         switch (drivingDirection) {
@@ -145,10 +196,13 @@ public class MovementController implements Runnable {
                 rightDistanceInches = -distanceInches;
                 break;
         }
-        move(leftDistanceInches, rightDistanceInches, leftDistanceInches, rightDistanceInches);
+        move(-leftDistanceInches, -rightDistanceInches, leftDistanceInches, rightDistanceInches);
     }
 
-    public void strafeRight(double distanceInches) {
+    public void strafeRight(double wheelRevolutions) {
+        // This multiplication is to contain the
+        double distanceInches = wheelRevolutions * (4.0/50);
+
         final double leftDistanceInches;
         final double rightDistanceInches;
         switch (drivingDirection) {
@@ -162,7 +216,7 @@ public class MovementController implements Runnable {
                 rightDistanceInches = distanceInches;
                 break;
         }
-        move(leftDistanceInches, rightDistanceInches, leftDistanceInches, rightDistanceInches);
+        move(leftDistanceInches, rightDistanceInches, -leftDistanceInches, -rightDistanceInches);
     }
 
     public void move(double distanceInches) {
@@ -189,29 +243,14 @@ public class MovementController implements Runnable {
         }
 
         // convert the distance that we want to travel into encoder "counts"
-        final double countsPerInch = robot.getWheelConfiguration().getCountsPerInch();
+        final double countsPerRev = robot.getWheelConfiguration().getCountsPerMotorRev();
 
-        robot.setPowerAllWheels(0);
-        robot.setWheelsToRunMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftFrontTarget = (int) (leftFrontDistanceInches * countsPerRev);
+        rightFrontTarget = (int) (rightFrontDistanceInches * countsPerRev);
+        leftBackTarget = (int) (leftBackDistanceInches * countsPerRev);
+        rightBackTarget = (int) (rightBackDistanceInches * countsPerRev);
 
-        // tell the encoder that we want it move it's "counter" reaches the given target, after which, if our wheel configuration
-        // is correct, the robot will have travelled the specified distance
-        final int leftTarget = robot.lf.getCurrentPosition() + (int) (leftFrontDistanceInches * countsPerInch);
-        final int rightTarget = robot.rf.getCurrentPosition() + (int) (rightFrontDistanceInches * countsPerInch);
-        final int leftBackTarget = robot.lb.getCurrentPosition() + (int) (leftBackDistanceInches * countsPerInch);
-        final int rightBackTarget = robot.rb.getCurrentPosition() + (int) (rightBackDistanceInches * countsPerInch);
-
-        RobotLog.i("move: %.2f, %.2f, %.2f, %.2f", leftFrontDistanceInches, rightFrontDistanceInches, leftBackDistanceInches, rightBackDistanceInches);
-        RobotLog.i("from: %d, %d, %d, %d", robot.lf.getCurrentPosition(), robot.rf.getCurrentPosition(), robot.lb.getCurrentPosition(), robot.rb.getCurrentPosition());
-        RobotLog.i("to:   %d, %d, %d, %d", leftTarget, rightTarget, leftBackTarget, rightBackTarget);
-
-        // tell robot wheels where to go
-        moving = true;
-        robot.lf.setTargetPosition(leftTarget);
-        robot.rf.setTargetPosition(rightTarget);
-        robot.lb.setTargetPosition(leftBackTarget);
-        robot.rb.setTargetPosition(rightBackTarget);
-        robot.setPowerAllWheels(wheelPower);
+        state = State.initState;
     }
 
     @Override
@@ -219,5 +258,9 @@ public class MovementController implements Runnable {
         return "MovementController{" +
                 "wheelPower=" + wheelPower +
                 '}';
+    }
+
+    public enum State {
+        ResetEncoders, initState, WaitUntilInPosition, StopMotors, WaitUntilNewMovement
     }
 }

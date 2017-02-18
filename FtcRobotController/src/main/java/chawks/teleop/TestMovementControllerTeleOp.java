@@ -49,17 +49,21 @@ public class TestMovementControllerTeleOp extends AbstractTeleOpMode {
         long now = System.currentTimeMillis();
         if (gamepad.x) {
             if (now > lastDpad + 1000) {
+                movementController.setWheelPower(1d);
                 movementController.strafeLeft(distance);
                 lastDpad = now;
             }
         } else if (gamepad.y) {
             if (now > lastDpad + 1000) {
+                movementController.setWheelPower(1d);
                 movementController.strafeRight(distance);
                 lastDpad = now;
             }
         } else if (gamepad.a) {
+            movementController.setWheelPower(0.4);
             movementController.turn(90);
         } else if (gamepad.b) {
+            movementController.setWheelPower(0.4);
             movementController.turn(-90);
         } else if (gamepad.dpad_up) {
             if (now > lastDpad + 100) {
