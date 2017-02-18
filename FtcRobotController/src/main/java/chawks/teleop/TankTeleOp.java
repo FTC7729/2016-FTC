@@ -107,6 +107,7 @@ public class TankTeleOp extends AbstractTeleOpWithSpinner {
     public void handleGamePad2(Gamepad gamepad) {
         boolean isButtonA = gamepad.a;
         boolean isButtonB = gamepad.b;
+        boolean isButtonX = gamepad.x;
         boolean isDirectionUp = gamepad.dpad_up;
         boolean isDirectionDown = gamepad.dpad_down;
         final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
@@ -126,7 +127,8 @@ public class TankTeleOp extends AbstractTeleOpWithSpinner {
         }
 
         if (isButtonB) {
-            // collect a ball
+            // Launch a ball
+            // arm collector is the ball colector which controls cont. servos in middle
             double armSpeed = armController.getArmSpeed();
             robot.s4.setPower(armSpeed);
             robot.s3.setPower(armSpeed);
@@ -138,13 +140,24 @@ public class TankTeleOp extends AbstractTeleOpWithSpinner {
         }
 
         if (isButtonA) {
-            // launch ball and move all 3 servos
+            // collect a ball and move 2 servos
+            // arm collector is the ball colector which controls cont. servos in middle
             double armSpeed = armController.getArmSpeed();
             robot.s2.setPower(armSpeed);
             robot.s3.setPower(armSpeed);
             robot.s2.setDirection(DcMotorSimple.Direction.REVERSE);
             robot.s3.setDirection(DcMotorSimple.Direction.REVERSE);
         }
+        if (isButtonX) {
+            // reject ball collect and move 2 servos
+            // this is an emergency reject if wrong color ball is taken in
+            double armSpeed = armController.getArmSpeed();
+            robot.s2.setPower(armSpeed);
+            robot.s3.setPower(armSpeed);
+            robot.s2.setDirection(DcMotorSimple.Direction.FORWARD);
+            robot.s3.setDirection(DcMotorSimple.Direction.FORWARD);
+        }
+
 
         if (!isButtonB && !isButtonA) {
             //back most servo - port 6
