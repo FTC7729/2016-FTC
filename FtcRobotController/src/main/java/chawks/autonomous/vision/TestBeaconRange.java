@@ -97,9 +97,9 @@ public class TestBeaconRange extends LinearVisionOpMode {
                 }
 
                 if (isRightBlue && isLeftRed) {
-                    //movementController.turn(-5);
+                    movementController.turn(-5);
                 } else if (isLeftBlue && isRightRed) {
-                    //movementController.turn(5);
+                    movementController.turn(5);
                 }
 
 
