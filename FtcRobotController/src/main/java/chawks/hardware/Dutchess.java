@@ -117,7 +117,7 @@ public class Dutchess {
 
         // beacon arm - port 3
         arm = hardwareMap.servo.get("s1");
-        arm.setPosition(1.0);
+        arm.setPosition(0);
 
         //back most servo - port 6
         s4 = hardwareMap.crservo.get("s4");
