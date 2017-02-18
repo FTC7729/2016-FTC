@@ -111,6 +111,9 @@ public class TestBeaconEllipse extends LinearVisionOpMode {
                     if (Math.abs(distanceFromCenter) > THRESHOLD && isRightRed) {
                         movementController.strafeRight(1);
                     }
+                    telemetry.addData("Distance: %.2f", distanceFromCenter);
+                    telemetry.addData("Frame Center X: %.2f", this.getFrameSize().width / 2);
+                    telemetry.addData("Right Button X: %.2f", rightButtonLocation.x);
                 } else {
                     telemetry.addLine("RightButton is NULL");
                 }
@@ -120,16 +123,18 @@ public class TestBeaconEllipse extends LinearVisionOpMode {
                     double distanceFromCenter = (this.getFrameSize().width / 2) - leftButtonLocation.x;
                     if (Math.abs(distanceFromCenter) > THRESHOLD && isLeftRed) {
                         movementController.strafeRight(1);
-                    } else {
-                        telemetry.addLine("LeftButton is NULL");
                     }
-
+                    telemetry.addData("Distance: %.2f", distanceFromCenter);
+                    telemetry.addData("Frame Center X: %.2f", this.getFrameSize().width / 2);
+                    telemetry.addData("Right Button X: %.2f", leftButtonLocation.x);
                 } else {
-                    // TODO: Unknown what to do when unaware of beacon
-                    telemetry.addLine("Aren't I supposed to be seeing something?");
+                    telemetry.addLine("LeftButton is NULL");
                 }
-                telemetry.addLine("Beacon Red and Blue: (" + beaconAnalysis.getColorString() + ")");
+            } else {
+                // TODO: Unknown what to do when unaware of beacon
+                telemetry.addLine("Aren't I supposed to be seeing something?");
             }
+            telemetry.addLine("Beacon Red and Blue: (" + beaconAnalysis.getColorString() + ")");
         }
     }
 
@@ -146,7 +151,7 @@ public class TestBeaconEllipse extends LinearVisionOpMode {
         enableExtensions();
 
         /** Beacon Analysis Method : COMMAND/CONTROL CLICK "AnalysisMethod" TO VIEW OTHER RENDERS */
-        beacon.setAnalysisMethod(Beacon.AnalysisMethod.FAST);
+        beacon.setAnalysisMethod(Beacon.AnalysisMethod.REALTIME);
 
         /**
          * Set color tolerances
