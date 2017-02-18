@@ -14,21 +14,42 @@ import org.opencv.core.Size;
 import chawks.hardware.Dutchess;
 import chawks.hardware.MovementController;
 
-@Autonomous(name = "DetectColorStandstill")
-public class DetectBeaconColors extends LinearVisionOpMode {
+@Autonomous(name = "TestBeaconRange", group = "Test")
+public class TestBeaconRange extends LinearVisionOpMode {
 
     private final int CAMERA_WIDTH = 900;
     private final int CAMERA_HEIGHT = CAMERA_WIDTH / 12 * 9;
     private final Size CAMERA_SIZE = new Size(CAMERA_WIDTH, CAMERA_HEIGHT);
 
+    private Dutchess robot = new Dutchess();
+
+    private MovementController movementController;
+    private Thread movementThread;
+
     @Override
     public void runOpMode() throws InterruptedException {
         initializeVision();
+        initHardware();
+
 
         // wait for op-mode start
         waitForStart();
 
         checkColors();
+
+        shutDown();
+    }
+
+    public void initHardware() {
+        robot.init(hardwareMap);
+        movementController = new MovementController(robot, telemetry);
+        movementThread = new Thread(movementController);
+        movementThread.start();
+    }
+
+    public void shutDown() {
+        robot.stopAllWheels();
+        movementController.stop();
     }
 
     private boolean checkColors() {
@@ -76,14 +97,16 @@ public class DetectBeaconColors extends LinearVisionOpMode {
                 }
 
                 if (isRightBlue && isLeftRed) {
-                    // TODO: TURN LEFT
+                    //movementController.turn(-5);
                 } else if (isLeftBlue && isRightRed) {
-                    // TODO: TURN RIGHT
+                    //movementController.turn(5);
                 }
 
 
             } else {
-                // TODO: Unknown what to do when not moving
+                // TODO: Unknown what to do when unaware of beacon
+                movementController.setState(MovementController.State.WaitUntilNewMovement);
+                robot.stopAllWheels();
             }
             telemetry.addLine("Beacon Red and Blue: (" + beaconAnalysis.getColorString() + ")");
         }

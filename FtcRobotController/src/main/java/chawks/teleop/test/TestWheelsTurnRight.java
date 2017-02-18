@@ -60,6 +60,14 @@ public class TestWheelsTurnRight extends OpMode {
         this.rightBackTarget = rightBackTarget * encoderCpr;
     }
 
+    public TestWheelsTurnRight(int leftFrontTarget, int leftBackTarget, int rightFrontTarget, int rightBackTarget, double strafeFactor) {
+        int encoderCpr = robot.getWheelConfiguration().getCountsPerMotorRev();
+        this.leftFrontTarget = (int) (leftFrontTarget * encoderCpr * strafeFactor);
+        this.leftBackTarget = (int) (leftBackTarget * encoderCpr * strafeFactor);
+        this.rightFrontTarget = (int) (rightFrontTarget * encoderCpr * strafeFactor);
+        this.rightBackTarget = (int) (rightBackTarget * encoderCpr * strafeFactor);
+    }
+
     private State state;
 
     public void init() {
@@ -85,7 +93,7 @@ public class TestWheelsTurnRight extends OpMode {
 
                 robot.setWheelsToRunMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-                robot.setPowerAllWheels(0.8D);
+                robot.setPowerAllWheels(0.4D);
 
                 state = State.WaitUntilInPosition;
 
