@@ -154,8 +154,10 @@ public class TankTeleOp extends AbstractTeleOpWithSpinner {
             double armSpeed = armController.getArmSpeed();
             robot.s2.setPower(armSpeed);
             robot.s3.setPower(armSpeed);
+            robot.s4.setPower(armSpeed);
             robot.s2.setDirection(DcMotorSimple.Direction.FORWARD);
             robot.s3.setDirection(DcMotorSimple.Direction.FORWARD);
+            robot.s4.setDirection(DcMotorSimple.Direction.FORWARD);
         }
 
 
