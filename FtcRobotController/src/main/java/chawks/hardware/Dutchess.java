@@ -23,6 +23,9 @@ public class Dutchess {
     public CRServo s2;
     public CRServo s3;
     public CRServo s4;
+    public DcMotor rcap;
+    public DcMotor lcap;
+    public Servo s5;
 
     public Dutchess() {
         // these settings are for AndyMark Motor Encoder with Mecanum wheels
@@ -99,6 +102,14 @@ public class Dutchess {
         lf = hardwareMap.dcMotor.get("lF");
         rf = hardwareMap.dcMotor.get("rF");
 
+        //initalize cap motors
+        rcap = hardwareMap.dcMotor.get("rcap");
+        lcap = hardwareMap.dcMotor.get("lcap");
+
+        //still initalize cap motors
+        rcap.setDirection(DcMotor.Direction.FORWARD);
+        lcap.setDirection(DcMotor.Direction.REVERSE);
+
         // configure spin
         spin = hardwareMap.dcMotor.get("spin");
         spin.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -127,6 +138,12 @@ public class Dutchess {
 
         // launch servo - port 4
         s2 = hardwareMap.crservo.get("s2");
+
+        //release cap mechanis
+        s5 = hardwareMap.servo.get("s5");
+        s5.setPosition(0);
+
+        //
         stopAllServos();
     }
 
