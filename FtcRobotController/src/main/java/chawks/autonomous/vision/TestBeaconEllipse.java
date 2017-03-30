@@ -10,6 +10,7 @@ import org.lasarobotics.vision.ftc.resq.Beacon.BeaconAnalysis;
 import org.lasarobotics.vision.opmode.LinearVisionOpMode;
 import org.lasarobotics.vision.opmode.extensions.CameraControlExtension;
 import org.lasarobotics.vision.util.ScreenOrientation;
+import org.opencv.core.Point;
 import org.opencv.core.Size;
 
 import chawks.hardware.Dutchess;
@@ -21,10 +22,17 @@ public class TestBeaconEllipse extends LinearVisionOpMode {
     private final int CAMERA_WIDTH = 900;
     private final int CAMERA_HEIGHT = CAMERA_WIDTH / 12 * 9;
     private final Size CAMERA_SIZE = new Size(CAMERA_WIDTH, CAMERA_HEIGHT);
+    private final int THRESHOLD = 20;
+
+    private Dutchess robot = new Dutchess();
+
+    private MovementController movementController;
+    private Thread movementThread;
 
     @Override
     public void runOpMode() throws InterruptedException {
         initializeVision();
+        initHardware();
 
         // wait for op-mode start
         waitForStart();
@@ -34,7 +42,17 @@ public class TestBeaconEllipse extends LinearVisionOpMode {
         shutDown();
     }
 
+    public void initHardware() {
+        robot.init(hardwareMap);
+        movementController = new MovementController(robot, telemetry);
+        movementThread = new Thread(movementController);
+        movementThread.start();
+    }
+
+
     public void shutDown() {
+        robot.stopAllWheels();
+        movementController.stop();
     }
 
     private boolean checkColors() {
@@ -42,6 +60,9 @@ public class TestBeaconEllipse extends LinearVisionOpMode {
         double sumConfidence = 0.0;
         int numMeasurements = 0;
         double minConfidence = .9;
+
+        Point rightButtonLocation;
+        Point leftButtonLocation;
 
         for (; ; ) {
             if (!opModeIsActive()) {
@@ -85,16 +106,33 @@ public class TestBeaconEllipse extends LinearVisionOpMode {
 
                 if (rightButton != null) {
                     telemetry.addLine("RightButton Location: " + rightButton.getLocationString());
+                    rightButtonLocation = rightButton.center();
+                    double distanceFromCenter = (this.getFrameSize().width / 2) - rightButtonLocation.x;
+                    if (Math.abs(distanceFromCenter) > THRESHOLD && isRightRed) {
+                        movementController.strafeRight(1);
+                    }
+                    telemetry.addData("Distance: %.2f", distanceFromCenter);
+                    telemetry.addData("Frame Center X: %.2f", this.getFrameSize().width / 2);
+                    telemetry.addData("Right Button X: %.2f", rightButtonLocation.x);
                 } else {
                     telemetry.addLine("RightButton is NULL");
                 }
                 if (leftButton != null) {
                     telemetry.addLine("LeftButton Location: " + leftButton.getLocationString());
+                    leftButtonLocation = leftButton.center();
+                    double distanceFromCenter = (this.getFrameSize().width / 2) - leftButtonLocation.x;
+                    if (Math.abs(distanceFromCenter) > THRESHOLD && isLeftRed) {
+                        movementController.strafeRight(1);
+                    }
+                    telemetry.addData("Distance: %.2f", distanceFromCenter);
+                    telemetry.addData("Frame Center X: %.2f", this.getFrameSize().width / 2);
+                    telemetry.addData("Right Button X: %.2f", leftButtonLocation.x);
                 } else {
                     telemetry.addLine("LeftButton is NULL");
                 }
             } else {
                 // TODO: Unknown what to do when unaware of beacon
+                telemetry.addLine("Aren't I supposed to be seeing something?");
             }
             telemetry.addLine("Beacon Red and Blue: (" + beaconAnalysis.getColorString() + ")");
         }
@@ -113,7 +151,7 @@ public class TestBeaconEllipse extends LinearVisionOpMode {
         enableExtensions();
 
         /** Beacon Analysis Method : COMMAND/CONTROL CLICK "AnalysisMethod" TO VIEW OTHER RENDERS */
-        beacon.setAnalysisMethod(Beacon.AnalysisMethod.FAST);
+        beacon.setAnalysisMethod(Beacon.AnalysisMethod.REALTIME);
 
         /**
          * Set color tolerances
